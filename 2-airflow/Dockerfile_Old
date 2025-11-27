@@ -1,0 +1,14 @@
+# The official Airflow image is the best base to start from.
+# Make sure the version matches the one your Helm chart uses.
+# The chart version 1.13.3 uses Airflow 2.9.2 by default.
+ARG AIRFLOW_VERSION=2.9.2
+FROM apache/airflow:${AIRFLOW_VERSION}
+
+USER root
+# The Airflow image has some system-level dependencies that might be needed by your providers.
+# It's good practice to run an update.
+RUN apt-get update && apt-get install -y --no-install-recommends gcc
+
+USER airflow
+COPY requirements.txt /
+RUN pip install --no-cache-dir -r /requirements.txt

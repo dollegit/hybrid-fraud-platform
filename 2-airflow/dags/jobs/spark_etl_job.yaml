@@ -1,0 +1,57 @@
+apiVersion: sparkoperator.k8s.io/v1beta2
+kind: SparkApplication
+metadata:
+  name: on-prem-etl-job
+  namespace: spark-jobs
+spec:
+  type: Python
+  pythonVersion: "3"
+  mode: cluster
+  image: "docker.io/library/spark-app:1.0.0"   # Your Spark image
+  imagePullPolicy: Never                        # Local image in Minikube
+  mainApplicationFile: "local:///app/src/main.py"  # Ensure this path exists in the image
+  sparkVersion: "3.4.1"
+  restartPolicy:
+    type: Never
+
+  # Keep pods alive for Airflow to fetch logs
+  sparkConf:
+    spark.kubernetes.driver.deleteOnTermination: "false"
+    spark.kubernetes.executor.deleteOnTermination: "false"
+    spark.eventLog.enabled: "true"
+    spark.eventLog.dir: "s3a://spark-logs/"   # MinIO bucket for event logs
+    spark.kubernetes.driver.label.app_kubernetes_io_name: "airflow-spark"
+
+  driver:
+    cores: 1
+    memory: "1g"
+    labels:
+      version: 3.4.1
+    serviceAccount: airflow-sa       # Use the Airflow SA so Airflow can watch pods
+    env:
+      - name: AWS_ACCESS_KEY_ID
+        valueFrom:
+          secretKeyRef:
+            name: minio-credentials
+            key: accesskey
+      - name: AWS_SECRET_ACCESS_KEY
+        valueFrom:
+          secretKeyRef:
+            name: minio-credentials
+            key: secretkey
+
+  executor:
+    cores: 1
+    instances: 2
+    memory: "2g"
+    labels:
+      version: 3.4.1
+
+  # Packages needed for Kafka + S3
+  packages:
+    - org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1
+    - org.apache.hadoop:hadoop-aws:3.3.4
+
+  # Optional: configure driver/executor logging to stdout/stderr if needed
+  sparkPodLabels:
+    app: airflow-spark

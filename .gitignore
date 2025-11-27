@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+env/
+
+# Generated Data Files
+*.csv
+
+# IDE and Editor folders
+.idea/
+.vscode/
+
+# Environment files
+.env

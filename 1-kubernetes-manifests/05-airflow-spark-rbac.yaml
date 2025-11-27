@@ -1,0 +1,37 @@
+# This manifest creates the necessary RBAC permissions for Airflow to submit jobs
+# to the Spark-on-Kubernetes operator in the 'spark-jobs' namespace.
+
+# 1. A ServiceAccount for Airflow workers to use.
+# This will be created in the 'airflow' namespace where Airflow itself is running.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: airflow-spark
+  namespace: airflow
+---
+# 2. A Role in the 'spark-jobs' namespace that defines the required permissions.
+# Airflow needs to be able to create, view, and delete SparkApplication resources.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: spark-job-manager
+  namespace: spark-jobs
+rules:
+- apiGroups: ["sparkoperator.k8s.io"]
+  resources: ["sparkapplications"]
+  verbs: ["create", "get", "list", "watch", "delete"]
+---
+# 3. A RoleBinding to grant the ServiceAccount the permissions defined in the Role.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: airflow-spark-job-manager-binding
+  namespace: spark-jobs
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: spark-job-manager
+subjects:
+- kind: ServiceAccount
+  name: airflow-spark
+  namespace: airflow # The namespace of the ServiceAccount

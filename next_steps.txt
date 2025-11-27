@@ -1,0 +1,22 @@
+### What to do next:
+
+1.  **Apply the changes** to your `create_project_structure.sh` and `install_prerequisites.sh` files.
+
+2.  **Completely stop and delete your current Minikube cluster** to start fresh:
+    ```bash
+    minikube stop
+    minikube delete
+    ```
+
+3.  **Log out and log back in.** This is crucial to make sure your user is correctly recognized as part of the `docker` group.
+
+4.  **Start Minikube again** using the updated command (without `sudo`):
+    ```bash
+    minikube start --cpus=6 --memory=16384 --disk-size=50g --driver=docker --kubernetes-version=v1.30.0
+    minikube addons enable ingress
+    ```
+
+5.  **Re-run your setup script**:
+    ```bash
+    ./setup-environment.sh
+    ```
