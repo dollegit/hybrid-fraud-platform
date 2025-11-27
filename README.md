@@ -7,7 +7,7 @@ This project demonstrates a complete, end-to-end data engineering platform for f
 *   **Orchestration**: Apache Airflow for scheduling and monitoring workflows.
 *   **Data Processing**: Apache Spark for large-scale batch and streaming data processing.
 *   **Messaging**: Apache Kafka (via Strimzi) for real-time event streaming.
-*   **Storage**: Minio for S3-compatible(data-like) object storage.
+*   **Storage**: Minio for S3-compatible(datalake-like) object storage.
 *   **Data Warehouse**: PostgreSQL for storing structured data and serving as the Airflow metadata database.
 *   **Transformation**: dbt for SQL-based data transformation.
 *   **Containerization**: Docker for creating custom application images.
