@@ -245,9 +245,9 @@ These features would be integrated as new services or jobs within the existing a
 *   **Text-to-SQL** could be a standalone web application that connects to the data warehouse.
 *   **Synthetic Data Generation** would be an offline tool for the data science team.
 
-By incorporating these AI/LLM capabilities, the platform can deliver significantly more value, moving beyond data consolidation to proactive, intelligent fraud detection and prevention.
 
-### APPENDIX
+
+### APPENDIX:
 
 #### Microsoft Azure
 
