@@ -97,7 +97,7 @@ This architecture leverages well-established open-source technologies that can b
 
 4.  **Serving Layer:**
     *   **Data Warehouse (e.g., Oracle, PostgreSQL):** The consolidated `unified_payment_intelligence` table is loaded here. It serves analytical queries for data scientists, analysts, and BI tools.
-    *   **Real-time Feature Store (e.g., Redis, Cassandra):** For sub-second lookups required by live transaction scoring models. This store would hold pre-computed features like `account_transaction_count_1h` or `account_risk_flag`.
+    *   **Real-time Feature Store (e.g., Mongo DB,Cassandra, Redis):** For sub-second lookups required by live transaction scoring models. This store would hold pre-computed features like `account_transaction_count_1h` or `account_risk_flag`.
 
 5.  **Orchestration:**
     *   **Apache Airflow:** Manages and schedules all batch workflows, ensuring dependencies are met and failures are handled.
