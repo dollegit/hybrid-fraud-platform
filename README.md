@@ -238,15 +238,6 @@ This simulation demonstrates the principles of stateful stream processing, which
 
 ---
 
-### Implementation Strategy
-
-These features would be integrated as new services or jobs within the existing architecture:
-*   **Feature Engineering** would become a new Spark or batch job in the pipeline, orchestrated by Airflow.
-*   **Text-to-SQL** could be a standalone web application that connects to the data warehouse.
-*   **Synthetic Data Generation** would be an offline tool for the data science team.
-
-
-
 ### APPENDIX:
 
 #### Microsoft Azure
