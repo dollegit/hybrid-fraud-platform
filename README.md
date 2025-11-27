@@ -104,7 +104,7 @@ This architecture leverages well-established open-source technologies that can b
 
 ---
 
-### Cloud-Native Architectures: AWS, Azure, and GCP
+### Cloud-Native Architectures: AWS
 
 Cloud platforms offer managed services that increase agility, reduce operational overhead, and provide elastic scalability. The same architectural pattern can be implemented across any major cloud provider, with flexibility in choosing serverless (lower ops) vs. provisioned (more control) services.
 
@@ -116,10 +116,9 @@ Cloud platforms offer managed services that increase agility, reduce operational
 
 ---
 
-#### Amazon Web Services (AWS)
+#### Amazon Web Services (AWS)(Favoured architecture)
 
-!AWS Architecture
-*(Diagram Placeholder: A diagram showing data sources, ingestion via API Gateway/Kinesis, storage in S3, processing with Glue/EMR, and serving from Redshift/DynamoDB.)*
+AWS Architecture
 
 *   **Ingestion:**
     *   **Batch:** Files are uploaded to **Amazon S3** via **AWS Transfer Family** (for SFTP) or direct API calls. S3 events can trigger processing.
@@ -134,26 +133,6 @@ Cloud platforms offer managed services that increase agility, reduce operational
 *   **Orchestration:** **AWS Step Functions** for serverless workflows or **Amazon MWAA** (Managed Workflows for Apache Airflow) for complex DAGs.
 
 ---
-
-#### Microsoft Azure
-
-!Azure Architecture
-*(Diagram Placeholder: A diagram showing ingestion via API Management/Event Hubs, storage in ADLS Gen2, processing with Synapse/Databricks, and serving from Synapse/Cosmos DB.)*
-
-*   **Ingestion:**
-    *   **Batch:** Files are uploaded to **Azure Data Lake Storage (ADLS) Gen2**. **Azure Data Factory** provides connectors and SFTP capabilities.
-    *   **Real-time:** **Azure API Management** ingests API data, which is streamed into **Azure Event Hubs** (Kafka-compatible).
-*   **Storage (Data Lake):** **Azure Data Lake Storage (ADLS) Gen2** serves as the scalable data lake.
-*   **Processing:**
-    *   **Batch:** **Azure Synapse Analytics** provides serverless Spark pools. **Azure Databricks** offers a highly optimized, collaborative Spark environment.
-    *   **Stream:** **Azure Stream Analytics** for real-time SQL-based analysis or **Azure Functions** for event-driven code.
-*   **Serving:**
-    *   **Data Warehouse:** **Azure Synapse Analytics** (Dedicated SQL Pools) for enterprise data warehousing.
-    *   **Real-time Feature Store:** **Azure Cosmos DB** (multi-model NoSQL) or **Azure Cache for Redis**.
-*   **Orchestration:** **Azure Data Factory** for building and scheduling data pipelines.
-
----
-
 
 ### Data Quality & Monitoring Strategy
 
@@ -185,7 +164,7 @@ For increased modularity, testability, and governance, an ELT (Extract, Load, Tr
 
 #### On-Premise ELT with dbt
 
-1.  **Ingestion & Load:** An Airflow-orchestrated **Spark** job reads source data and loads it into staging tables in **Greenplum/PostgreSQL**.
+1.  **Ingestion & Load:** An Airflow-orchestrated **Spark** job reads source data and loads it into staging tables in **Oracle/PostgreSQL**.
 2.  **Transform:** Airflow triggers a `dbt run` command. **dbt** connects to the warehouse, runs its SQL models to join the staging tables, and creates the final analytics-ready tables.
 3.  **Test:** Airflow triggers `dbt test` to validate the final tables.
 
@@ -295,3 +274,21 @@ These features would be integrated as new services or jobs within the existing a
 *   **Synthetic Data Generation** would be an offline tool for the data science team.
 
 By incorporating these AI/LLM capabilities, the platform can deliver significantly more value, moving beyond data consolidation to proactive, intelligent fraud detection and prevention.
+
+### APPENDIX
+
+#### Microsoft Azure
+
+Azure Architecture
+
+*   **Ingestion:**
+    *   **Batch:** Files are uploaded to **Azure Data Lake Storage (ADLS) Gen2**. **Azure Data Factory** provides connectors and SFTP capabilities.
+    *   **Real-time:** **Azure API Management** ingests API data, which is streamed into **Azure Event Hubs** (Kafka-compatible).
+*   **Storage (Data Lake):** **Azure Data Lake Storage (ADLS) Gen2** serves as the scalable data lake.
+*   **Processing:**
+    *   **Batch:** **Azure Synapse Analytics** provides serverless Spark pools. **Azure Databricks** offers a highly optimized, collaborative Spark environment.
+    *   **Stream:** **Azure Stream Analytics** for real-time SQL-based analysis or **Azure Functions** for event-driven code.
+*   **Serving:**
+    *   **Data Warehouse:** **Azure Synapse Analytics** (Dedicated SQL Pools) for enterprise data warehousing.
+    *   **Real-time Feature Store:** **Azure Cosmos DB** (multi-model NoSQL) or **Azure Cache for Redis**.
+*   **Orchestration:** **Azure Data Factory** for building and scheduling data pipelines.
