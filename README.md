@@ -238,34 +238,6 @@ This simulation demonstrates the principles of stateful stream processing, which
 
 ---
 
-## Future Proposal: AI/LLM Integration
-
-To evolve the platform from a data consolidation system into an intelligent fraud detection ecosystem, the next logical step is to integrate AI and Large Language Models (LLMs). This can be done in two key areas: enhancing the fraud detection models themselves and improving the analytics workflow for the teams using the data.
-
-### 1. AI/LLM for Advanced Feature Engineering
-
-LLMs can extract insights from unstructured text data that is typically ignored by traditional models.
-
-*   **Semantic Analysis of `payment_reference`:**
-    *   **Proposal:** Use an LLM to analyze the `payment_reference` field to generate new features. This could involve classifying the payment's intent (`Invoice`, `Gift`, `Urgent Request`), performing sentiment analysis to detect urgency or distress, and extracting named entities.
-    *   **Impact:** This would provide powerful new signals for detecting Authorized Push Payment (APP) fraud and social engineering scams.
-
-*   **Summarization and Extraction from Analyst Notes:**
-    *   **Proposal:** For historical fraud cases, an LLM could process unstructured analyst notes to automatically standardize fraud sub-types and extract all associated entities (accounts, names, etc.).
-    *   **Impact:** This would help build a structured knowledge graph of fraud networks, making it easier to identify connected money mule accounts.
-
-### 2. AI/LLM for Improving the Analytics Workflow
-
-LLMs can make the platform more accessible and efficient for data scientists and fraud analysts.
-
-*   **Natural Language to SQL (Text-to-SQL):**
-    *   **Proposal:** Implement a "Text-to-SQL" interface where users can ask questions about the data in plain English (e.g., "What is the total value of payments to accounts with a high risk flag in the last 24 hours?"). The LLM would translate this into a valid SQL query to run against the data warehouse.
-    *   **Impact:** This dramatically lowers the barrier to entry for data exploration, empowering less technical analysts and speeding up investigations.
-
-*   **Generative AI for Synthetic Data:**
-    *   **Proposal:** Use a generative AI model to create realistic, synthetic fraud data.
-    *   **Impact:** This helps address the "imbalanced data" problem where fraud events are rare. By augmenting training datasets with high-quality synthetic examples, the fraud detection models can become more robust and better at identifying novel or infrequent fraud patterns.
-
 ### Implementation Strategy
 
 These features would be integrated as new services or jobs within the existing architecture:
