@@ -1,13 +1,13 @@
 # Hybrid Fraud Detection Platform
 
-This project demonstrates a complete, end-to-end data engineering platform for fraud detection, built on modern, cloud-native technologies. It uses Kubernetes (via Minikube) to orchestrate a suite of tools including Airflow, Spark, Kafka, Minio, and PostgreSQL.
+This project demonstrates a complete, end-to-end data engineering platform for fraud detection, built on modern, cloud-native technologies. It uses Kubernetes (via Minikube) to orchestrate a suite of tools including Airflow, Spark, Kafka, MinIO, and PostgreSQL.
 
 ## Core Components
 
 *   **Orchestration**: Apache Airflow for scheduling and monitoring workflows.
 *   **Data Processing**: Apache Spark for large-scale batch and streaming data processing.
 *   **Messaging**: Apache Kafka (via Strimzi) for real-time event streaming.
-*   **Storage**: Minio for S3-compatible object storage.
+*   **Storage**: Minio for S3-compatible(data-like) object storage.
 *   **Data Warehouse**: PostgreSQL for storing structured data and serving as the Airflow metadata database.
 *   **Transformation**: dbt for SQL-based data transformation.
 *   **Containerization**: Docker for creating custom application images.
@@ -48,7 +48,7 @@ Before you begin, you need several tools installed on your local machine (tested
 
 To access the user interfaces for Airflow and Minio, you'll need to forward their ports from the Kubernetes cluster to your local machine.
 
-### Accessing the Minio UI
+### Accessing the MinIO UI
 
 Minio is used for object storage (e.g., Spark output, Airflow logs).
 
@@ -96,7 +96,7 @@ This architecture leverages well-established open-source technologies that can b
         *   **Spark Batch** jobs run on a schedule (managed by Airflow) to process daily account updates, external risk feeds, and perform large-scale feature engineering.
 
 4.  **Serving Layer:**
-    *   **Data Warehouse (e.g., PostgreSQL, Greenplum):** The consolidated `unified_payment_intelligence` table is loaded here. It serves analytical queries for data scientists, analysts, and BI tools.
+    *   **Data Warehouse (e.g., Oracle, PostgreSQL):** The consolidated `unified_payment_intelligence` table is loaded here. It serves analytical queries for data scientists, analysts, and BI tools.
     *   **Real-time Feature Store (e.g., Redis, Cassandra):** For sub-second lookups required by live transaction scoring models. This store would hold pre-computed features like `account_transaction_count_1h` or `account_risk_flag`.
 
 5.  **Orchestration:**
