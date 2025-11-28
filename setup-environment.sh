@@ -206,7 +206,7 @@ install_kafka
 install_minio
 # The following are disabled to use local Spark within Airflow workers
 install_spark_operator
-install_spark_cluster
+# install_spark_cluster
 
 # Create token secret for spark SA
 kubectl apply -n spark-jobs -f - <<EOF

@@ -1,7 +1,7 @@
 apiVersion: sparkoperator.k8s.io/v1beta2
 kind: SparkApplication
 metadata:
-  name: "consolidate-data-{{ ds_nanos }}"
+  name: "consolidate-data-{{ ts_nodash }}"
   namespace: spark-jobs
 spec:
   type: Python

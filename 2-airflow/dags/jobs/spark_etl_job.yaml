@@ -1,7 +1,7 @@
 apiVersion: sparkoperator.k8s.io/v1beta2
 kind: SparkApplication
 metadata:
-  name: "on-prem-etl-{{ ds_nanos }}"
+  name: "on-prem-etl-{{ ts_nodash }}"
   namespace: spark-jobs
 spec:
   type: Python
