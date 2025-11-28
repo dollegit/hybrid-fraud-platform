@@ -113,6 +113,10 @@ install_kafka() {
 install_minio() {
   info "4. Deploying MinIO..."
   kubectl apply -f 1-kubernetes-manifests/03-minio/minio-statefulset.yaml -n storage || true
+  kubectl create secret generic minio-credentials -n spark-jobs \
+  --from-literal=accesskey=minio \
+  --from-literal=secretkey=minio123
+
   # Verify MinIO secret exists
   kubectl get secret minio-credentials -n spark-jobs || echo "Create minio-credentials secret"
 }
@@ -124,8 +128,8 @@ install_spark_operator() {
   helm upgrade --install spark-operator spark-operator/spark-operator \
     --namespace spark-operator --create-namespace \
     --set sparkJobNamespace=spark-jobs \
+    --set operator.namespaced=true \
     --set webhook.healthProbe.port=8080 \
-    --set operator.namespaced=true \  # ← WATCHES ALL NAMESPACES
     --wait --timeout 30m
   
   kubectl create namespace spark-jobs --dry-run=client -o yaml | kubectl apply -f -
@@ -171,12 +175,16 @@ install_kafka
 install_minio
 # The following are disabled to use local Spark within Airflow workers
 install_spark_operator
-# 1. Create spark ServiceAccount
+# Create token secret for spark SA
 kubectl apply -n spark-jobs -f - <<EOF
 apiVersion: v1
-kind: ServiceAccount
+kind: Secret
 metadata:
-  name: spark
+  name: spark-token
+  namespace: spark-jobs
+  annotations:
+    kubernetes.io/service-account.name: spark
+type: kubernetes.io/service-account-token
 EOF
 # install_spark_cluster
 
