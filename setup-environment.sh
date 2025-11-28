@@ -128,14 +128,6 @@ install_spark_operator() {
     --wait --timeout 30m
   
   kubectl create namespace spark-jobs --dry-run=client -o yaml | kubectl apply -f -
-
-  # 1. Create spark ServiceAccount
-  kubectl apply -n spark-jobs -f - <<EOF
-  apiVersion: v1
-  kind: ServiceAccount
-  metadata:
-    name: spark
-  EOF
 }
 
 install_spark_cluster() {
@@ -178,6 +170,13 @@ install_kafka
 install_minio
 # The following are disabled to use local Spark within Airflow workers
 install_spark_operator
+# 1. Create spark ServiceAccount
+kubectl apply -n spark-jobs -f - <<EOF
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: spark
+EOF
 # install_spark_cluster
 
 # =============================================================================
