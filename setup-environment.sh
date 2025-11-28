@@ -113,7 +113,7 @@ install_kafka() {
 install_minio() {
   info "4. Deploying MinIO..."
   kubectl apply -f 1-kubernetes-manifests/03-minio/minio-statefulset.yaml -n storage || true
-  kubectl create secret generic minio-credentials -n spark-jobs \
+  kubectl create secret generic minio-credentials -n default \
   --from-literal=accesskey=minio \
   --from-literal=secretkey=minio123
 
@@ -125,12 +125,12 @@ install_spark_operator() {
   info "5. Installing Spark Operator..."
   helm repo add spark-operator https://kubeflow.github.io/spark-operator || true
   helm repo update
-  helm upgrade --install spark-operator spark-operator/spark-operator \
-    --namespace spark-operator --create-namespace \
-    --set sparkJobNamespace=spark-jobs \
-    --set operator.namespaced=true \
-    --set webhook.healthProbe.port=8080 \
-    --wait --timeout 30m
+helm upgrade --install spark-operator spark-operator/spark-operator \
+  --namespace spark-operator --create-namespace \
+  --set namespaces="{default,spark-jobs}" \  # ← WATCHES MULTIPLE NS!
+  --set webhook.healthProbe.port=8080 \
+  --wait --timeout 5m
+
   
   kubectl create namespace spark-jobs --dry-run=client -o yaml | kubectl apply -f -
 }

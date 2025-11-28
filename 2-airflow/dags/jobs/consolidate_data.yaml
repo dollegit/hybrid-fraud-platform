@@ -2,8 +2,7 @@ apiVersion: sparkoperator.k8s.io/v1beta2
 kind: SparkApplication
 metadata:
   name: "consolidate-data-{{ ds_nanos }}"  # Simple templating (ds_nanos works)
-  # namespace: default  # ← Test in default namespace 
-  namespace: spark-jobs
+  namespace: default  # ← Changed to default for Spark Operator to watch
 spec:
   type: Python
   pythonVersion: "3"
@@ -25,7 +24,7 @@ spec:
   driver:
     cores: 1
     memory: "1g"
-    serviceAccount: "spark"                          # ✅ Default Spark SA
+    serviceAccount: "default"                        # ← Changed to default SA 
     env:                                              # ✅ MinIO credentials
       - name: AWS_ACCESS_KEY_ID
         valueFrom:

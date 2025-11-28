@@ -1,39 +1,37 @@
 apiVersion: sparkoperator.k8s.io/v1beta2
 kind: SparkApplication
 metadata:
-  name: "on-prem-etl-{{ ds_nodash }}"  # ← ds_nodash ALWAYS works
-  # namespace: default  # ← Test in default namespace 
-  namespace: spark-jobs
+  name: "on-prem-etl-{{ ds_nodash }}"
+  namespace: default  # ← CHANGED! Operator watches this ✅
 spec:
   type: Python
   pythonVersion: "3"
   mode: cluster
-  image: "apache/spark-py:3.5.1"                      # ✅ VALID public image
-  imagePullPolicy: Always                            # ✅ Pull from registry (works with Minikube)
-  mainApplicationFile: "local:///app/src/main.py"    # ✅ Keep your custom app
-  sparkVersion: "3.5.1"                              # ✅ Match image version
+  image: "apache/spark-py:3.5.1"
+  imagePullPolicy: Always
+  mainApplicationFile: "local:///app/src/main.py"    
+  sparkVersion: "3.5.1"
   restartPolicy:
     type: Never
 
-  # Keep your excellent configs
   sparkConf:
     spark.kubernetes.driver.deleteOnTermination: "false"
     spark.kubernetes.executor.deleteOnTermination: "false"
     spark.eventLog.enabled: "true"
-    spark.eventLog.dir: "s3a://spark-logs/"          # ✅ MinIO logging
+    spark.eventLog.dir: "s3a://spark-logs/"
     spark.kubernetes.driver.label.app_kubernetes_io_name: "airflow-spark"
 
   driver:
     cores: 1
     memory: "1g"
     labels:
-      version: "3.5.1"                               # ✅ Match sparkVersion
-    serviceAccount: "spark"                          # ✅ Default Spark SA (create it)
-    env:                                             # ✅ Keep MinIO secrets
+      version: "3.5.1"
+    serviceAccount: "default"  # ← CHANGED! default SA in default ns ✅
+    env:
       - name: AWS_ACCESS_KEY_ID
         valueFrom:
           secretKeyRef:
-            name: minio-credentials
+            name: minio-credentials  # ← Create in default ns
             key: accesskey
       - name: AWS_SECRET_ACCESS_KEY
         valueFrom:
@@ -43,15 +41,14 @@ spec:
 
   executor:
     cores: 1
-    instances: 2                                     # ✅ Good for production
+    instances: 2
     memory: "2g"
     labels:
-      version: "3.5.1"                               # ✅ Match sparkVersion
+      version: "3.5.1"
 
-  # Keep your Kafka + S3 packages (perfect!)
   packages:
-    - org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1  # ✅ Updated version
-    - org.apache.hadoop:hadoop-aws:3.3.4              # ✅ S3/MinIO support
+    - org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1
+    - org.apache.hadoop:hadoop-aws:3.3.4
 
   sparkPodLabels:
-    app: airflow-spark                               # ✅ Airflow pod watching
+    app: airflow-spark
