@@ -1,24 +1,31 @@
 apiVersion: sparkoperator.k8s.io/v1beta2
 kind: SparkApplication
 metadata:
-  name: consolidate-data-job
+  name: "{{ task_instance.task_id }}-{{ ts_nanos }}"  # Dynamic Airflow name
   namespace: spark-jobs
 spec:
   type: Python
   pythonVersion: "3"
   mode: cluster
-  image: "docker.io/library/spark-app:1.0.0"   # your Spark image
-  imagePullPolicy: Never                        # local Minikube image
-  mainApplicationFile: "local:///app/src/consolidate_data.py"
-  sparkVersion: "3.4.1"
+  image: "apache/spark-py:3.5.1"                      # ✅ VALID public image
+  imagePullPolicy: Always                            # ✅ Minikube can pull
+  mainApplicationFile: "local:///app/src/consolidate_data.py"  # ✅ Your custom script
+  sparkVersion: "3.5.1"                              # ✅ Match image version
   restartPolicy:
     type: Never
+
+  sparkConf:                                          # ✅ Keep all your configs
+    spark.kubernetes.driver.deleteOnTermination: "false"
+    spark.kubernetes.executor.deleteOnTermination: "false"
+    spark.eventLog.enabled: "true"
+    spark.eventLog.dir: "s3a://spark-logs/"          # ✅ MinIO logging
+    spark.kubernetes.driver.label.app_kubernetes_io_name: "airflow-spark"
 
   driver:
     cores: 1
     memory: "1g"
-    serviceAccount: airflow-sa
-    env:
+    serviceAccount: "spark"                          # ✅ Default Spark SA
+    env:                                              # ✅ MinIO credentials
       - name: AWS_ACCESS_KEY_ID
         valueFrom:
           secretKeyRef:
@@ -32,15 +39,12 @@ spec:
 
   executor:
     cores: 1
-    instances: 2
+    instances: 2                                     # ✅ Production-ready
     memory: "2g"
 
-  packages:
-    - org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1
+  packages:                                           # ✅ Kafka + S3 (updated versions)
+    - org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1
     - org.apache.hadoop:hadoop-aws:3.3.4
 
-  sparkConf:
-    spark.kubernetes.driver.deleteOnTermination: "false"
-    spark.kubernetes.executor.deleteOnTermination: "false"
-    spark.eventLog.enabled: "true"
-    spark.eventLog.dir: "s3a://spark-logs/"
+  sparkPodLabels:
+    app: airflow-spark                               # ✅ Airflow pod watching
