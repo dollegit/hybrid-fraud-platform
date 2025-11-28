@@ -104,7 +104,7 @@ This architecture leverages well-established open-source technologies that can b
 
 ---
 
-### Cloud-Native Architectures: AWS
+### Cloud-Native Architectures: 
 
 Cloud platforms offer managed services that increase agility, reduce operational overhead, and provide elastic scalability. The same architectural pattern can be implemented across any major cloud provider, with flexibility in choosing serverless (lower ops) vs. provisioned (more control) services.
 
