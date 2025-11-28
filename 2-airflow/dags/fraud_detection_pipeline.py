@@ -8,6 +8,7 @@ from airflow.models.dag import DAG
 from airflow.operators.bash import BashOperator
 from airflow.providers.apache.spark.operators.spark_submit import SparkSubmitOperator
 from airflow.utils.task_group import TaskGroup
+from airflow.providers.cncf.kubernetes.operators.spark_kubernetes import SparkKubernetesOperator
 
 # =============================================================================
 # CONFIGURATION
@@ -57,14 +58,12 @@ with DAG(
     # This task runs the Python script as a Spark job.
     # NOTE: For a true ELT pattern, the `consolidate_data.py` script should be modified
     # to write its output to staging tables in a data warehouse, not to a single CSV file.
-    load_staging_data = SparkSubmitOperator(
-        task_id='load_staging_data_with_spark',
-        application=str(SPARK_APP_DIR / "consolidate_data.py"),
-        # conn_id=SPARK_CONN_ID,
-        conn_id=None,  # Using None for local mode; replace with SPARK_CONN_ID for a real cluster        
-        # Run Spark in local mode on the Airflow worker
-        conf={"spark.master": "local[*]"},
-        master="local[*]",
+    load_staging_data = SparkKubernetesOperator(
+        task_id="load_staging_data",
+        application_file=str(SPARK_APP_DIR / "consolidate_data.yaml"),
+        namespace="spark-jobs",
+        kubernetes_conn_id="kubernetes_default",
+        do_xcom_push=True,
         verbose=True,
         doc_md="""
         #### Spark Load Task

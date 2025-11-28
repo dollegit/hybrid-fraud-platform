@@ -23,7 +23,7 @@ images:
 kubernetes:
   namespace: airflow
   delete_worker_pods: false
-  worker_service_account_name: airflow-sa
+  worker_service_account_name: airflow-worker
   worker_pods_termination_grace_period: 30
 
 # ---------------------------------------
@@ -104,19 +104,21 @@ airflow:
 
     api:
       auth_backends: airflow.api.auth.backend.basic_auth
-  connections:
-    - id: kubernetes_default
-      type: kubernetes
-      extra: |
-        {
-          "in_cluster": true,
-          "disable_verify_ssl": true
-        }
-    - id: spark_default
-      type: spark
-      host: local[*]
-      port: 0
-      extra: "{}"
+      
+# ROOT LEVEL - Connections
+connections:
+  - id: kubernetes_default
+    type: kubernetes
+    extra: |
+      {
+        "in_cluster": true,
+        "disable_verify_ssl": true
+      }
+  - id: spark_default
+    type: spark
+    host: local[*]
+    port: 0
+    extra: "{}"
 
 # ---------------------------------------
 # Components
@@ -163,7 +165,7 @@ kubernetesPodTemplate: |
 # ---------------------------------------
 serviceAccount:
   create: true
-  name: airflow-sa
+  name: airflow-worker
 
 rbac:
   create: true
@@ -195,7 +197,7 @@ extraResources:
       namespace: airflow
     subjects:
       - kind: ServiceAccount
-        name: airflow-sa
+        name: airflow-worker
         namespace: airflow
     roleRef:
       kind: Role
@@ -225,7 +227,7 @@ extraResources:
       namespace: spark-jobs
     subjects:
       - kind: ServiceAccount
-        name: airflow-sa
+        name: airflow-worker
         namespace: airflow
     roleRef:
       kind: Role

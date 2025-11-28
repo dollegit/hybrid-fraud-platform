@@ -1,0 +1,46 @@
+apiVersion: sparkoperator.k8s.io/v1beta2
+kind: SparkApplication
+metadata:
+  name: consolidate-data-job
+  namespace: spark-jobs
+spec:
+  type: Python
+  pythonVersion: "3"
+  mode: cluster
+  image: "docker.io/library/spark-app:1.0.0"   # your Spark image
+  imagePullPolicy: Never                        # local Minikube image
+  mainApplicationFile: "local:///app/src/consolidate_data.py"
+  sparkVersion: "3.4.1"
+  restartPolicy:
+    type: Never
+
+  driver:
+    cores: 1
+    memory: "1g"
+    serviceAccount: airflow-sa
+    env:
+      - name: AWS_ACCESS_KEY_ID
+        valueFrom:
+          secretKeyRef:
+            name: minio-credentials
+            key: accesskey
+      - name: AWS_SECRET_ACCESS_KEY
+        valueFrom:
+          secretKeyRef:
+            name: minio-credentials
+            key: secretkey
+
+  executor:
+    cores: 1
+    instances: 2
+    memory: "2g"
+
+  packages:
+    - org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1
+    - org.apache.hadoop:hadoop-aws:3.3.4
+
+  sparkConf:
+    spark.kubernetes.driver.deleteOnTermination: "false"
+    spark.kubernetes.executor.deleteOnTermination: "false"
+    spark.eventLog.enabled: "true"
+    spark.eventLog.dir: "s3a://spark-logs/"
