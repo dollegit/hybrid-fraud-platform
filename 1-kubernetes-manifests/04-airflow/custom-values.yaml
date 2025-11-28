@@ -34,7 +34,7 @@ dags:
     enabled: false
   gitSync:
     enabled: true
-    repo: "https://github.com/psalmprax/hybrid-fraud-platform.git"
+    repo: "https://github.com/dollegit/hybrid-fraud-platform.git"
     branch: "master"
     subPath: "2-airflow/dags"
 
@@ -102,6 +102,8 @@ airflow:
       delete_worker_pods: false
       worker_pods_termination_grace_period: 150
 
+    api:
+      auth_backends: airflow.api.auth.backend.basic_auth
   connections:
     - id: kubernetes_default
       type: kubernetes
@@ -112,11 +114,9 @@ airflow:
         }
     - id: spark_default
       type: spark
-      extra: |
-        {
-          "master": "local[*]"
-        }
-      # The master URL for Spark must be in the 'extra' field.
+      host: local[*]
+      port: 0
+      extra: "{}"
 
 # ---------------------------------------
 # Components
@@ -125,6 +125,7 @@ scheduler:
   replicas: 1
 
 webserver:
+  enabled: true
   defaultUser:
     enabled: true
     username: admin
@@ -132,7 +133,6 @@ webserver:
     role: Admin
     email: admin@example.com
 
-apiServer: {}
 triggerer: {}
 dagProcessor: {}
 
@@ -172,8 +172,9 @@ rbac:
 # EXTRA RESOURCES (RBAC for Airflow + Spark)
 # ---------------------------------------
 extraResources:
-
-  # RBAC in AIRFLOW namespace
+  # ---------------------------------------
+  # RBAC: Airflow access inside AIRFLOW namespace
+  # ---------------------------------------
   - apiVersion: rbac.authorization.k8s.io/v1
     kind: Role
     metadata:
@@ -201,11 +202,13 @@ extraResources:
       name: airflow-k8s-role
       apiGroup: rbac.authorization.k8s.io
 
-  # RBAC in spark-jobs namespace (Spark Operator)
+  # ---------------------------------------
+  # RBAC: Airflow in spark-jobs namespace (SparkOperator)
+  # ---------------------------------------
   - apiVersion: rbac.authorization.k8s.io/v1
     kind: Role
     metadata:
-      name: airflow-k8s-spark-role
+      name: airflow-spark-role
       namespace: spark-jobs
     rules:
       - apiGroups: ["sparkoperator.k8s.io"]
@@ -218,7 +221,7 @@ extraResources:
   - apiVersion: rbac.authorization.k8s.io/v1
     kind: RoleBinding
     metadata:
-      name: airflow-k8s-spark-rolebinding
+      name: airflow-spark-rolebinding
       namespace: spark-jobs
     subjects:
       - kind: ServiceAccount
@@ -226,34 +229,5 @@ extraResources:
         namespace: airflow
     roleRef:
       kind: Role
-      name: airflow-k8s-spark-role
+      name: airflow-spark-role
       apiGroup: rbac.authorization.k8s.io
-
-  # RBAC in spark-cluster (Spark Cluster) with Airflow
-  - apiVersion: v1
-    kind: ServiceAccount
-    metadata:
-      name: airflow-spark
-      namespace: airflow
-  - apiVersion: rbac.authorization.k8s.io/v1
-    kind: Role
-    metadata:
-      name: spark-job-manager
-      namespace: spark-jobs
-    rules:
-    - apiGroups: ["sparkoperator.k8s.io"]
-      resources: ["sparkapplications"]
-      verbs: ["create", "get", "list", "watch", "delete"]
-  - apiVersion: rbac.authorization.k8s.io/v1
-    kind: RoleBinding
-    metadata:
-      name: airflow-spark-job-manager-binding
-      namespace: spark-jobs
-    roleRef:
-      apiGroup: rbac.authorization.k8s.io
-      kind: Role
-      name: spark-job-manager
-    subjects:
-    - kind: ServiceAccount
-      name: airflow-spark
-      namespace: airflow

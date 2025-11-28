@@ -159,7 +159,7 @@ helm upgrade --install "${AIRFLOW_RELEASE}" apache-airflow/airflow \
   --set airflow.image.tag="2.9.2-p1" \
   --set dags.persistence.enabled=false \
   --set dags.gitSync.enabled=true \
-  --set dags.gitSync.repo="https://github.com/psalmprax/hybrid-fraud-platform.git" \
+  --set dags.gitSync.repo="https://github.com/dollegit/hybrid-fraud-platform.git" \
   --set dags.gitSync.subPath="2-airflow/dags" \
   --set dags.gitSync.branch="master" \
   --set logs.persistence.enabled=false \

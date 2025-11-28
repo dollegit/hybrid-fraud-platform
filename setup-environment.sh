@@ -27,7 +27,7 @@ PUSH_TO_REGISTRY="${PUSH_TO_REGISTRY:-true}"
 DOCKER_USERNAME="${DOCKER_USERNAME:-psalmprax}"
 
 # GitSync
-GIT_REPO="https://github.com/psalmprax/hybrid-fraud-platform.git"
+GIT_REPO="https://github.com/dollegit/hybrid-fraud-platform.git"
 GIT_BRANCH="master"
 GIT_SUBPATH="2-airflow/dags"
 GIT_SYNC_SECRET_NAME=""
@@ -278,7 +278,7 @@ helm repo update
 
 helm upgrade --install "${AIRFLOW_RELEASE}" "${AIRFLOW_CHART}" \
   -n "${NAMESPACE}" \
-  -f ~/Downloads/daniel_project/hybrid-fraud-platform/1-kubernetes-manifests/04-airflow/custom-values.yaml \
+  -f ~/dmolle_project/hybrid-fraud-platform/1-kubernetes-manifests/04-airflow/custom-values.yaml \
   --timeout "${HELM_TIMEOUT}"
 
 # =============================================================================

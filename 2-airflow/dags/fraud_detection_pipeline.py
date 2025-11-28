@@ -1,3 +1,4 @@
+# COMMAND ----------
 from __future__ import annotations
 
 import pendulum
@@ -59,9 +60,11 @@ with DAG(
     load_staging_data = SparkSubmitOperator(
         task_id='load_staging_data_with_spark',
         application=str(SPARK_APP_DIR / "consolidate_data.py"),
-        conn_id=SPARK_CONN_ID,
+        # conn_id=SPARK_CONN_ID,
+        conn_id=None,  # Using None for local mode; replace with SPARK_CONN_ID for a real cluster        
         # Run Spark in local mode on the Airflow worker
         conf={"spark.master": "local[*]"},
+        master="local[*]",
         verbose=True,
         doc_md="""
         #### Spark Load Task
