@@ -7,7 +7,7 @@ spec:
   type: Python
   pythonVersion: "3"
   mode: cluster
-  image: "docker.io/bitnami/spark:3.5.1-debian-12-r13"
+  image: "apache/spark:3.5.1-python3"
   imagePullPolicy: IfNotPresent
   mainApplicationFile: "local:///opt/spark/work-dir/src/main.py"
   sparkVersion: "3.5.1"

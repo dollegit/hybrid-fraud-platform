@@ -131,7 +131,7 @@ install_spark_operator() {
   helm repo update
   helm upgrade --install spark-operator spark-operator/spark-operator \
     --namespace spark-operator --create-namespace \
-    --set namespaces="default,spark-jobs" \
+    --set namespaces="default\,spark-jobs" \
     --set webhook.healthProbe.port=8080 \
     --wait --timeout 5m
 
@@ -175,17 +175,17 @@ install_spark_cluster() {
 
   info "5.2 Pulling Spark image to host and loading into Minikube..."
   # Pull the image to the host's Docker daemon first
-  docker pull docker.io/bitnami/spark:3.5.1-debian-12-r13
+  docker pull apache/spark:3.5.1-python3
   # Now, load the image from the host into the Minikube cluster
-  minikube image load docker.io/bitnami/spark:3.5.1-debian-12-r13
+  minikube image load apache/spark:3.5.1-python3
 
   info "5.3 Installing Spark Standalone Cluster via Helm..."
   # Using the Bitnami chart with the compatible Bitnami image
   helm upgrade --install spark bitnami/spark \
     --namespace spark \
     --set image.registry=docker.io \
-    --set image.repository=bitnami/spark \
-    --set image.tag=3.5.1-debian-12-r13 \
+    --set image.repository=apache/spark \
+    --set image.tag=3.5.1-python3 \
     --set image.pullPolicy=IfNotPresent \
     --set global.security.allowInsecureImages=true \
     --set worker.replicas=2 \
@@ -206,6 +206,8 @@ install_kafka
 install_minio
 # The following are disabled to use local Spark within Airflow workers
 install_spark_operator
+install_spark_cluster
+
 # Create token secret for spark SA
 kubectl apply -n spark-jobs -f - <<EOF
 apiVersion: v1
@@ -217,7 +219,6 @@ metadata:
     kubernetes.io/service-account.name: spark
 type: kubernetes.io/service-account-token
 EOF
-# install_spark_cluster
 
 # =============================================================================
 # 6. POSTGRESQL
