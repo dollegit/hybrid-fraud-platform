@@ -1,15 +1,15 @@
 apiVersion: sparkoperator.k8s.io/v1beta2
 kind: SparkApplication
 metadata:
-  name: "on-prem-etl-{{ ds_nodash }}"
-  namespace: default  # ← CHANGED! Operator watches this ✅
+  name: "on-prem-etl-{{ ds_nanos }}"
+  namespace: spark-jobs
 spec:
   type: Python
   pythonVersion: "3"
   mode: cluster
-  image: "apache/spark-py:3.5.1"
-  imagePullPolicy: Always
-  mainApplicationFile: "local:///app/src/main.py"    
+  image: "docker.io/bitnami/spark:3.5.1-debian-12-r13"
+  imagePullPolicy: IfNotPresent
+  mainApplicationFile: "local:///opt/spark/work-dir/src/main.py"
   sparkVersion: "3.5.1"
   restartPolicy:
     type: Never
@@ -19,6 +19,8 @@ spec:
     spark.kubernetes.executor.deleteOnTermination: "false"
     spark.eventLog.enabled: "true"
     spark.eventLog.dir: "s3a://spark-logs/"
+    spark.hadoop.fs.s3a.endpoint: "http://minio.storage.svc.cluster.local:9000"
+    spark.hadoop.fs.s3a.path.style.access: "true"
     spark.kubernetes.driver.label.app_kubernetes_io_name: "airflow-spark"
 
   driver:
@@ -26,18 +28,26 @@ spec:
     memory: "1g"
     labels:
       version: "3.5.1"
-    serviceAccount: "default"  # ← CHANGED! default SA in default ns ✅
+    serviceAccount: "spark"
+    volumeMounts:
+      - name: "spark-job-script"
+        mountPath: "/opt/spark/work-dir/src"
     env:
       - name: AWS_ACCESS_KEY_ID
         valueFrom:
           secretKeyRef:
-            name: minio-credentials  # ← Create in default ns
+            name: minio-credentials
             key: accesskey
       - name: AWS_SECRET_ACCESS_KEY
         valueFrom:
           secretKeyRef:
             name: minio-credentials
             key: secretkey
+  
+  volumes:
+    - name: "spark-job-script"
+      configMap:
+        name: "on-prem-etl-script" # This ConfigMap will be created by the Airflow operator
 
   executor:
     cores: 1
@@ -48,7 +58,8 @@ spec:
 
   packages:
     - org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1
-    - org.apache.hadoop:hadoop-aws:3.3.4
+    - org.apache.hadoop:hadoop-aws:3.3.6 # Use a version compatible with Spark 3.5's Hadoop
+    - com.amazonaws:aws-java-sdk-bundle:1.12.262
 
   sparkPodLabels:
     app: airflow-spark

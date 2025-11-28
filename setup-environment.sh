@@ -115,9 +115,12 @@ install_minio() {
   info "4. Deploying MinIO..."
   kubectl apply -f 1-kubernetes-manifests/03-minio/minio-statefulset.yaml -n storage || true
   kubectl create secret generic minio-credentials -n default \
-  --from-literal=accesskey=minio \
-  --from-literal=secretkey=minio123
+    --from-literal=accesskey=minio \
+    --from-literal=secretkey=minio123 --dry-run=client -o yaml | kubectl apply -f -
 
+  kubectl create secret generic minio-credentials -n spark-jobs \
+    --from-literal=accesskey=minio \
+    --from-literal=secretkey=minio123 --dry-run=client -o yaml | kubectl apply -f -
   # Verify MinIO secret exists
   kubectl get secret minio-credentials -n spark-jobs || echo "Create minio-credentials secret"
 }

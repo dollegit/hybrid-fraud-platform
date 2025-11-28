@@ -1,16 +1,16 @@
 apiVersion: sparkoperator.k8s.io/v1beta2
 kind: SparkApplication
 metadata:
-  name: "consolidate-data-{{ ds_nanos }}"  # Simple templating (ds_nanos works)
-  namespace: default  # ← Changed to default for Spark Operator to watch
+  name: "consolidate-data-{{ ds_nanos }}"
+  namespace: spark-jobs
 spec:
   type: Python
   pythonVersion: "3"
   mode: cluster
-  image: "apache/spark-py:3.5.1"                      # ✅ VALID public image
-  imagePullPolicy: Always                            # ✅ Minikube can pull
-  mainApplicationFile: "local:///app/src/consolidate_data.py"  # ✅ Your custom script
-  sparkVersion: "3.5.1"                              # ✅ Match image version
+  image: "docker.io/bitnami/spark:3.5.1-debian-12-r13"
+  imagePullPolicy: IfNotPresent
+  mainApplicationFile: "local:///opt/spark/work-dir/src/consolidate_data.py"
+  sparkVersion: "3.5.1"
   restartPolicy:
     type: Never
 
@@ -19,12 +19,17 @@ spec:
     spark.kubernetes.executor.deleteOnTermination: "false"
     spark.eventLog.enabled: "true"
     spark.eventLog.dir: "s3a://spark-logs/"          # ✅ MinIO logging
+    spark.hadoop.fs.s3a.endpoint: "http://minio.storage.svc.cluster.local:9000"
+    spark.hadoop.fs.s3a.path.style.access: "true"
     spark.kubernetes.driver.label.app_kubernetes_io_name: "airflow-spark"
 
   driver:
     cores: 1
     memory: "1g"
-    serviceAccount: "default"                        # ← Changed to default SA 
+    serviceAccount: "spark"
+    volumeMounts:
+      - name: "spark-job-script"
+        mountPath: "/opt/spark/work-dir/src"
     env:                                              # ✅ MinIO credentials
       - name: AWS_ACCESS_KEY_ID
         valueFrom:
@@ -36,15 +41,23 @@ spec:
           secretKeyRef:
             name: minio-credentials
             key: secretkey
+  
+  volumes:
+    - name: "spark-job-script"
+      configMap:
+        name: "consolidate-data-script" # This ConfigMap will be created by the Airflow operator
 
   executor:
     cores: 1
     instances: 2                                     # ✅ Production-ready
     memory: "2g"
+    labels:
+      version: "3.5.1"
 
   packages:                                           # ✅ Kafka + S3 (updated versions)
     - org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1
-    - org.apache.hadoop:hadoop-aws:3.3.4
+    - org.apache.hadoop:hadoop-aws:3.3.6
+    - com.amazonaws:aws-java-sdk-bundle:1.12.262
 
   sparkPodLabels:
     app: airflow-spark                               # ✅ Airflow pod watching
