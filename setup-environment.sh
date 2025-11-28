@@ -310,6 +310,30 @@ subjects:
 - kind: ServiceAccount
   name: airflow-worker
   namespace: airflow
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: spark-jobs
+  name: airflow-spark-viewer
+rules:
+- apiGroups: ["sparkoperator.k8s.io"]
+  resources: ["sparkapplications"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  namespace: spark-jobs
+  name: airflow-spark-viewer-binding
+subjects:
+- kind: ServiceAccount
+  name: airflow-worker
+  namespace: airflow
+roleRef:
+  kind: Role
+  name: airflow-spark-viewer
+  apiGroup: rbac.authorization.k8s.io
 EOF
 
 echo "✅ RBAC for spark-jobs namespace created"
