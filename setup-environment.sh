@@ -68,6 +68,7 @@ info "0. Cleaning up previous resources..."
 set +e
 kubectl delete secret airflow-db-secret -n "${NAMESPACE}" --ignore-not-found=true
 kubectl delete secret "${PG_RELEASE}" -n "${NAMESPACE}" --ignore-not-found=true
+kubectl delete secret minio-credentials -n default --ignore-not-found=true
 
 # Cleanup Helm release secrets
 kubectl get secrets -n "${NAMESPACE}" -o name 2>/dev/null | 
@@ -125,14 +126,41 @@ install_spark_operator() {
   info "5. Installing Spark Operator..."
   helm repo add spark-operator https://kubeflow.github.io/spark-operator || true
   helm repo update
-helm upgrade --install spark-operator spark-operator/spark-operator \
-  --namespace spark-operator --create-namespace \
-  --set namespaces="{default,spark-jobs}" \  # ← WATCHES MULTIPLE NS!
-  --set webhook.healthProbe.port=8080 \
-  --wait --timeout 5m
+  helm upgrade --install spark-operator spark-operator/spark-operator \
+    --namespace spark-operator --create-namespace \
+    --set namespaces="default,spark-jobs" \
+    --set webhook.healthProbe.port=8080 \
+    --wait --timeout 5m
 
   
   kubectl create namespace spark-jobs --dry-run=client -o yaml | kubectl apply -f -
+
+  info "5.1. Granting Spark Operator permissions in spark-jobs namespace..."
+  cat <<EOF | kubectl apply -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: spark-operator-role
+  namespace: spark-jobs
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services", "configmaps", "secrets"]
+  verbs: ["create", "get", "watch", "list", "delete", "update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: spark-operator-role-binding
+  namespace: spark-jobs
+subjects:
+- kind: ServiceAccount
+  name: spark-operator # Assumes default SA name from Helm chart
+  namespace: spark-operator
+roleRef:
+  kind: Role
+  name: spark-operator-role
+  apiGroup: rbac.authorization.k8s.io
+EOF
 }
 
 install_spark_cluster() {
