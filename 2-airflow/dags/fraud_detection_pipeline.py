@@ -62,7 +62,7 @@ with DAG(
     # to write its output to staging tables in a data warehouse, not to a single CSV file.
     load_staging_data = SparkKubernetesOperator(
         task_id="load_staging_data",
-        application_file=str(SPARK_APP_DIR_YAML / "consolidate_data.yaml"),
+        application_file="jobs/consolidate_data.yaml",
         namespace="spark-jobs",
         kubernetes_conn_id="kubernetes_default",
         do_xcom_push=True,
