@@ -64,7 +64,6 @@ with DAG(
         namespace="spark-jobs",
         kubernetes_conn_id="kubernetes_default",
         do_xcom_push=True,
-        verbose=True,
         doc_md="""
         #### Spark Load Task
         This task extracts data from source systems (simulated by CSVs) and loads them into
