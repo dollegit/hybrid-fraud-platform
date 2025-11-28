@@ -125,6 +125,7 @@ install_spark_operator() {
     --namespace spark-operator --create-namespace \
     --set sparkJobNamespace=spark-jobs \
     --set webhook.healthProbe.port=8080 \
+    --set operator.namespaced=true \  # ← WATCHES ALL NAMESPACES
     --wait --timeout 30m
   
   kubectl create namespace spark-jobs --dry-run=client -o yaml | kubectl apply -f -
