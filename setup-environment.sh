@@ -268,6 +268,42 @@ kubectl run airflow-db-migrate -n "${NAMESPACE}" --rm -i --tty \
   --env "AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=${CONN}" \
   --command -- airflow db migrate
 
+# ---------------------------------------
+# 10_Prebuild. CREATE RBAC FOR AIRFLOW + SPARK OPERATOR
+# ---------------------------------------
+echo "10_Prebuild. Creating RBAC for Airflow SparkKubernetesOperator..."
+
+cat <<EOF | kubectl apply -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: airflow-spark-role
+  namespace: spark-jobs
+rules:
+- apiGroups: [""]
+  resources: ["pods", "pods/log", "services"]
+  verbs: ["get", "list", "watch", "create", "delete", "patch"]
+- apiGroups: ["sparkoperator.k8s.io"]
+  resources: ["sparkapplications", "sparkapplications/status"]
+  verbs: ["get", "list", "watch", "create", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: airflow-spark-rolebinding
+  namespace: spark-jobs
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: airflow-spark-role
+subjects:
+- kind: ServiceAccount
+  name: airflow-worker
+  namespace: airflow
+EOF
+
+echo "✅ RBAC for spark-jobs namespace created"
+
 # =============================================================================
 # 10. AIRFLOW HELM CHART
 # =============================================================================
@@ -280,6 +316,25 @@ helm upgrade --install "${AIRFLOW_RELEASE}" "${AIRFLOW_CHART}" \
   -n "${NAMESPACE}" \
   -f ~/dmolle_project/hybrid-fraud-platform/1-kubernetes-manifests/04-airflow/custom-values.yaml \
   --timeout "${HELM_TIMEOUT}"
+
+# ---------------------------------------
+# 10.1. CREATE AIRFLOW KUBERNETES CONNECTION
+# ---------------------------------------
+echo "10.1. Creating kubernetes_default connection..."
+
+kubectl exec -n airflow deploy/airflow-scheduler -- bash -c "
+airflow connections add kubernetes_default \
+  --conn-type kubernetes \
+  --conn-extra '{\"in_cluster\": true, \"disable_verify_ssl\": true}' || true
+
+airflow connections add spark_default \
+  --conn-type spark \
+  --conn-host 'local[*]' \
+  --conn-port 0 \
+  --conn-extra '{}' || true
+"
+
+echo "✅ kubernetes_default connection created"
 
 # =============================================================================
 # SUMMARY
