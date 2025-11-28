@@ -22,6 +22,8 @@ PROJECT_ROOT = Path(__file__).parent.parent.parent # Corrected: Go up three leve
 
 # Adjust paths to match the project's directory structure (e.g., '3-spark-app/src')
 SPARK_APP_DIR = PROJECT_ROOT / "3-spark-app" / "src"
+SPARK_APP_DIR_YAML = PROJECT_ROOT / "2-airflow" / "dags" / "jobs"
+
 DBT_PROJECT_DIR = PROJECT_ROOT / "dbt_project" # Assuming a 'dbt_project' folder exists at the root
 
 # The directory containing the dbt `profiles.yml` file.
@@ -60,7 +62,7 @@ with DAG(
     # to write its output to staging tables in a data warehouse, not to a single CSV file.
     load_staging_data = SparkKubernetesOperator(
         task_id="load_staging_data",
-        application_file=str(SPARK_APP_DIR / "consolidate_data.yaml"),
+        application_file=str(SPARK_APP_DIR_YAML / "consolidate_data.yaml"),
         namespace="spark-jobs",
         kubernetes_conn_id="kubernetes_default",
         do_xcom_push=True,
