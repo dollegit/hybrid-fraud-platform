@@ -1,7 +1,7 @@
 apiVersion: sparkoperator.k8s.io/v1beta2
 kind: SparkApplication
 metadata:
-  name: "{{ task_id }}-{{ execution_date.strftime('%Y%m%d-%H%M%S') }}"  # ✅ Valid 
+  name: "consolidate-data-{{ ds_nanos }}"  # Simple templating (ds_nanos always 
   namespace: spark-jobs
 spec:
   type: Python

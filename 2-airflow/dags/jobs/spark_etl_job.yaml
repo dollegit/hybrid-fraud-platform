@@ -1,7 +1,7 @@
 apiVersion: sparkoperator.k8s.io/v1beta2
 kind: SparkApplication
 metadata:
-  name: "{{ task_id }}-{{ execution_date.strftime('%Y%m%d-%H%M%S') }}"  # ✅ Valid 
+  name: "on-prem-etl-{{ ds_nodash }}"  # ← ds_nodash ALWAYS works
   namespace: spark-jobs
 spec:
   type: Python
