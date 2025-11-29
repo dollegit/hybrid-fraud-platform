@@ -1,0 +1,23 @@
+apiVersion: sparkoperator.k8s.io/v1beta2
+kind: SparkApplication
+metadata:
+  name: spark-test-print
+  namespace: spark-jobs
+spec:
+  type: Python
+  pythonVersion: "3"
+  mode: cluster
+  image: "psalmprax/spark-test:3.4.1" # <-- Use the image from your Docker registry
+  imagePullPolicy: Always # Pull from the registry, not the local cache
+  mainApplicationFile: "local:///opt/spark/scripts/simple_print.py"
+  sparkVersion: "3.4.1"
+
+  driver:
+    cores: 1
+    memory: "1g"
+    serviceAccount: "spark"
+
+  executor:
+    cores: 1
+    instances: 1
+    memory: "1g"

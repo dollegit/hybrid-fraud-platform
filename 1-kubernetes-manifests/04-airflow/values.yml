@@ -6,4 +6,4 @@ controller:
     tag: "2.4.0"
   replicas: 1
 webhook:
-  enable: false
+  enable: true

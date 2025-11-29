@@ -149,6 +149,27 @@ minikube image load "$IMAGE_FULL"
 popd >/dev/null
 
 # =============================================================================
+# 5.1 BUILD AND PUSH SPARK TEST IMAGE
+# =============================================================================
+info "5.1. Building and pushing Spark test image..."
+
+# Define variables for the Spark test image
+SPARK_TEST_CONTEXT_DIR="${SCRIPT_DIR}/2-airflow/dags/jobs"
+SPARK_TEST_IMAGE_NAME="psalmprax/spark-test:3.4.1"
+
+# The Airflow image build uses the minikube docker-env. We should unset it
+# before pushing to an external registry like Docker Hub.
+if [[ "${USE_MINIKUBE_DOCKER_ENV}" == "true" ]]; then
+  eval "$(minikube docker-env --unset)"
+fi
+
+info "Building Spark test image: ${SPARK_TEST_IMAGE_NAME}"
+docker build -t "${SPARK_TEST_IMAGE_NAME}" -f "${SPARK_TEST_CONTEXT_DIR}/Dockerfile" "${SPARK_TEST_CONTEXT_DIR}"
+
+info "Pushing Spark test image to Docker Hub..."
+docker push "${SPARK_TEST_IMAGE_NAME}"
+
+# =============================================================================
 # 6. DB MIGRATION
 # =============================================================================
 info "6. DB MIGRATION..."
@@ -292,7 +313,7 @@ kubectl delete configmap consolidate-data-script -n spark-jobs --ignore-not-foun
 #   --from-file=consolidate_data.py="${SPARK_APP_SRC_DIR}/consolidate_data.py" \
 #   --from-file=generate_sample_data.py="${SPARK_APP_SRC_DIR}/generate_sample_data.py" \
 #   --dry-run=client -o yaml | kubectl apply -f -
-./scripts/create_spark_configmaps.sh --namespace spark-jobs --root "$SCRIPT_DIR"/..
+./scripts/create_spark_configmaps.sh --namespace spark-jobs --root "$SCRIPT_DIR"/
 
 kubectl create clusterrolebinding spark-operator-binding \
   --clusterrole=cluster-admin \
@@ -353,15 +374,21 @@ spec:
   pythonVersion: "3"
   mode: cluster
   image: "apache/spark:3.5.1-python3"
-  mainApplicationFile: "local:///opt/spark/work-dir/src/main.py"
+  mainApplicationFile: "local:///opt/spark/work-dir/main.py"
   sparkVersion: "3.5.1"
+  restartPolicy:
+    type: Never
+  volumes:
+  - name: spark-job-script
+    configMap:
+      name: on-prem-etl-script
   driver:
     cores: 1
     memory: "1g"
     serviceAccount: spark
     volumeMounts:
     - name: spark-job-script
-      mountPath: /opt/spark/work-dir/src
+      mountPath: /opt/spark/work-dir
     env:
     - name: AWS_ACCESS_KEY_ID
       valueFrom:
@@ -377,10 +404,6 @@ spec:
     cores: 1
     instances: 2
     memory: "2g"
-  volumes:
-  - name: spark-job-script
-    configMap:
-      name: on-prem-etl-script
   sparkConf:
     "spark.hadoop.fs.s3a.endpoint": "http://minio.storage.svc.cluster.local:9000"
     "spark.hadoop.fs.s3a.path.style.access": "true"
