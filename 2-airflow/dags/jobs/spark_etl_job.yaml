@@ -3,37 +3,44 @@ kind: SparkApplication
 metadata:
   name: "on-prem-etl-{{ ts_nodash }}"
   namespace: spark-jobs
+
 spec:
   type: Python
   pythonVersion: "3"
   mode: cluster
   image: "apache/spark:3.5.1-python3"
   imagePullPolicy: IfNotPresent
-  mainApplicationFile: "local:///opt/spark/work-dir/main.py"
+  mainApplicationFile: "local:///opt/spark/work-dir/src/main.py"
   sparkVersion: "3.5.1"
+
   restartPolicy:
     type: Never
 
   sparkConf:
     spark.kubernetes.driver.deleteOnTermination: "false"
     spark.kubernetes.executor.deleteOnTermination: "false"
+
+    # Event Logging
     spark.eventLog.enabled: "true"
     spark.eventLog.dir: "s3a://spark-logs/"
     spark.hadoop.fs.s3a.endpoint: "http://minio.storage.svc.cluster.local:9000"
     spark.hadoop.fs.s3a.path.style.access: "true"
-    spark.kubernetes.driver.label.app_kubernetes_io_name: "airflow-spark"
-    # Kafka streaming + fraud platform configs
+
     spark.sql.streaming.checkpointLocation: "s3a://spark-logs/checkpoints"
+
+    # Correct SparkOperator PythonPath settings (best practice)
+    spark.driverEnv.PYTHONPATH: "/opt/spark/work-dir/src"
+    spark.executorEnv.PYTHONPATH: "/opt/spark/work-dir/src"
 
   driver:
     cores: 1
     memory: "1g"
+    serviceAccount: "spark"
     labels:
       version: "3.5.1"
-    serviceAccount: "spark"
     volumeMounts:
-      - name: "spark-job-script"
-        mountPath: "/opt/spark/work-dir/"
+      - name: spark-job-script
+        mountPath: /opt/spark/work-dir/src
     env:
       - name: AWS_ACCESS_KEY_ID
         valueFrom:
@@ -45,11 +52,6 @@ spec:
           secretKeyRef:
             name: minio-credentials
             key: secretkey
-  
-  volumes:
-    - name: "spark-job-script"
-      configMap:
-        name: "on-prem-etl-script" # This ConfigMap will be created by the Airflow operator
 
   executor:
     cores: 1
@@ -58,12 +60,17 @@ spec:
     labels:
       version: "3.5.1"
     volumeMounts:
-      - name: "spark-job-script"
-        mountPath: "/opt/spark/work-dir/"
+      - name: spark-job-script
+        mountPath: /opt/spark/work-dir/src
+
+  volumes:
+    - name: spark-job-script
+      configMap:
+        name: on-prem-etl-script
 
   packages:
     - org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1
-    - org.apache.hadoop:hadoop-aws:3.3.6 # Use a version compatible with Spark 3.5's Hadoop
+    - org.apache.hadoop:hadoop-aws:3.3.6
     - com.amazonaws:aws-java-sdk-bundle:1.12.262
 
   sparkPodLabels:
