@@ -61,3 +61,4 @@ spec:
   sparkConf:
     "spark.hadoop.fs.s3a.endpoint": "http://minio.storage.svc.cluster.local:9000"
     "spark.hadoop.fs.s3a.path.style.access": "true"
+    "spark.jars.packages": "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1"
