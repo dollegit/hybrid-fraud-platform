@@ -154,7 +154,7 @@ popd >/dev/null
 info "5.1. Building and pushing Spark test image..."
 
 # Define variables for the Spark test image
-SPARK_TEST_CONTEXT_DIR="${SCRIPT_DIR}/2-airflow/dags/jobs"
+SPARK_TEST_CONTEXT_DIR="${SCRIPT_DIR}/spark-test-app"
 SPARK_TEST_IMAGE_NAME="psalmprax/spark-test:3.4.1"
 
 # The Airflow image build uses the minikube docker-env. We should unset it
@@ -168,6 +168,26 @@ docker build -t "${SPARK_TEST_IMAGE_NAME}" -f "${SPARK_TEST_CONTEXT_DIR}/Dockerf
 
 info "Pushing Spark test image to Docker Hub..."
 docker push "${SPARK_TEST_IMAGE_NAME}"
+
+# =============================================================================
+# 5.2 BUILD AND PUSH SPARK MAIN APP IMAGE
+# =============================================================================
+info "5.2. Building and pushing Spark main application image..."
+
+# Define variables for the Spark main app image
+SPARK_APP_CONTEXT_DIR="${SCRIPT_DIR}/3-spark-app"
+SPARK_APP_IMAGE_NAME="psalmprax/spark-app:1.0.0"
+
+# Ensure we are not using the minikube docker-env
+if [[ "${USE_MINIKUBE_DOCKER_ENV}" == "true" ]]; then
+  eval "$(minikube docker-env --unset)"
+fi
+
+info "Building Spark main app image: ${SPARK_APP_IMAGE_NAME}"
+docker build -t "${SPARK_APP_IMAGE_NAME}" -f "${SPARK_APP_CONTEXT_DIR}/Dockerfile" "${SPARK_APP_CONTEXT_DIR}"
+
+info "Pushing Spark main app image to Docker Hub..."
+docker push "${SPARK_APP_IMAGE_NAME}"
 
 # =============================================================================
 # 6. DB MIGRATION
@@ -209,7 +229,7 @@ metadata:
   name: spark-role
 rules:
 - apiGroups: [""]
-  resources: ["pods","services","persistentvolumeclaims"]
+  resources: ["pods", "services", "persistentvolumeclaims", "configmaps"]
   verbs: ["*"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1

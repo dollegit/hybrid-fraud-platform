@@ -9,7 +9,7 @@ spec:
   mode: cluster
   image: "psalmprax/spark-test:3.4.1" # <-- Use the image from your Docker registry
   imagePullPolicy: Always # Pull from the registry, not the local cache
-  mainApplicationFile: "local:///opt/spark/scripts/simple_print.py"
+  mainApplicationFile: "local:///opt/spark/work-dir/simple_print.py"
   sparkVersion: "3.4.1"
 
   driver:

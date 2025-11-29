@@ -1,36 +1,23 @@
 apiVersion: sparkoperator.k8s.io/v1beta2
 kind: SparkApplication
 metadata:
-  name: "on-prem-etl-{{ ts_nodash }}"
+  name: spark-etl-job
   namespace: spark-jobs
 spec:
   type: Python
   pythonVersion: "3"
   mode: cluster
-  image: "apache/spark:3.5.1-python3"
-  mainApplicationFile: "local:///opt/spark/work-dir/src/main.py"
+  image: "psalmprax/spark-app:1.0.0"
+  imagePullPolicy: Always
+  mainApplicationFile: "local:///opt/spark/work-dir/main.py"
   sparkVersion: "3.5.1"
-  
-  sparkConf:
-    spark.kubernetes.driver.deleteOnTermination: "false"
-    spark.kubernetes.executor.deleteOnTermination: "false"
-    spark.eventLog.enabled: "true"
-    spark.eventLog.dir: "s3a://spark-logs/"
-    spark.hadoop.fs.s3a.endpoint: "http://minio.storage.svc.cluster.local:9000"
-    spark.hadoop.fs.s3a.path.style.access: "true"
-    spark.hadoop.fs.s3a.impl: "org.apache.hadoop.fs.s3a.S3AFileSystem"
-    spark.sql.streaming.checkpointLocation: "s3a://spark-logs/checkpoints"
-    spark.driverEnv.PYTHONPATH: "/opt/spark/work-dir/src"
-    spark.executorEnv.PYTHONPATH: "/opt/spark/work-dir/src"
-    
-    # 🔥 POD TEMPLATES - Official Spark Operator method
-    spark.kubernetes.driver.podTemplateFile: "local:///etc/spark-conf/driver-pod-template"
-    spark.kubernetes.executor.podTemplateFile: "local:///etc/spark-conf/executor-pod-template"
+  restartPolicy:
+    type: Never
 
   driver:
     cores: 1
     memory: "1g"
-    serviceAccount: "spark"
+    serviceAccount: spark
     env:
       - name: AWS_ACCESS_KEY_ID
         valueFrom:
@@ -43,28 +30,11 @@ spec:
             name: minio-credentials
             key: secretkey
 
-    # Mount the configmap containing Python sources into the driver's work-dir so
-    # the mainApplicationFile (local:///opt/spark/work-dir/src/main.py) is available.
-    volumeMounts:
-      - name: app-scripts
-        mountPath: /opt/spark/work-dir/src
-    # Provide the configmap as a volume for the driver. The configmap should
-    # be created by the helper script `scripts/create_spark_configmaps.sh`.
-    volumes:
-      - name: app-scripts
-        configMap:
-          name: on-prem-etl-script
-
   executor:
     cores: 1
     instances: 2
     memory: "2g"
-    # Executors also need the Python package path so they can import modules.
-    volumeMounts:
-      - name: app-scripts
-        mountPath: /opt/spark/work-dir/src
-    # Executors need the same volume definition so the mount exists.
-    volumes:
-      - name: app-scripts
-        configMap:
-          name: on-prem-etl-script
+
+  sparkConf:
+    "spark.hadoop.fs.s3a.endpoint": "http://minio.storage.svc.cluster.local:9000"
+    "spark.hadoop.fs.s3a.path.style.access": "true"

@@ -1,20 +1,17 @@
-# Use an official Spark base image
-FROM apache/spark:3.4.1-python3
+FROM apache/spark:3.5.1-python3
 
-# Switch to root to install packages
 USER root
 
-# Set working directory
-WORKDIR /app
+# Set the working directory for the application code
+WORKDIR /opt/spark/work-dir
 
-# Copy source code and requirements
-COPY src/ ./src/
+# Copy all Python source files from the 'src' directory into the image
+COPY ./src/ .
+
+# Copy the requirements file and install dependencies
+# Note: Add any required Python packages for your jobs (e.g., boto3, kafka-python) to requirements.txt
 COPY requirements.txt .
-
-# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Switch back to spark user (recommended for security)
+# Switch back to the non-privileged spark user
 USER spark
-
-# Done - main.py will be referenced by SparkApplication
