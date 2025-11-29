@@ -23,8 +23,12 @@ spec:
     spark.hadoop.fs.s3a.path.style.access: "true"
     spark.kubernetes.driver.label.app_kubernetes_io_name: "airflow-spark"
     # Your existing MinIO/S3a + CRITICAL volume fix:
+    spark.kubernetes.driver.volumes.configMap.spark_job_script.mount.path: "/opt/spark/work-dir/src"
+    spark.kubernetes.driver.volumes.configMap.spark_job_script.mount.readOnly: "true"
     spark.kubernetes.driver.volumes.configMap.spark_job_script.defaultMode: "420"
+    spark.kubernetes.executor.volumes.configMap.spark_job_script.mount.path: "/opt/spark/work-dir/src"
     spark.kubernetes.executor.volumes.configMap.spark_job_script.defaultMode: "420"
+    spark.kubernetes.executor.volumes.configMap.spark_job_script.mount.readOnly: "true"
     # Kafka streaming + fraud platform configs
     spark.sql.streaming.checkpointLocation: "s3a://spark-logs/checkpoints"
 

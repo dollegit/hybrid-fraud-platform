@@ -2,6 +2,8 @@
 set -euo pipefail
 
 NAMESPACE="airflow"
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+SPARK_APP_SRC_DIR="${SCRIPT_DIR}/3-spark-app/src"
 PG_RELEASE="airflow-postgresql"
 AIRFLOW_RELEASE="airflow"
 DOCKER_IMAGE="psalmprax/airflow-custom"
@@ -78,7 +80,7 @@ sleep 3
 helm install spark-operator spark-operator/spark-operator \
   -n spark-operator \
   --create-namespace \
-  -f ~/dmolle_project/hybrid-fraud-platform/1-kubernetes-manifests/04-airflow/values.yml \
+  -f "${SCRIPT_DIR}/1-kubernetes-manifests/04-airflow/values.yml" \
   --wait
 
 # helm install spark-operator spark-operator/spark-operator -n spark-operator --create-namespace \
@@ -162,7 +164,7 @@ info "7. Airflow deploy..."
 helm repo add apache-airflow https://airflow.apache.org || true
 helm repo update
 helm upgrade --install "${AIRFLOW_RELEASE}" apache-airflow/airflow -n "${NAMESPACE}" \
-  -f ~/dmolle_project/hybrid-fraud-platform/1-kubernetes-manifests/04-airflow/custom-values.yaml \
+  -f "${SCRIPT_DIR}/1-kubernetes-manifests/04-airflow/custom-values.yaml" \
   --timeout=20m || warn "Using defaults"
 
 # wait_ready "${NAMESPACE}" "app.kubernetes.io/component=scheduler"
@@ -262,20 +264,22 @@ EOF
 # 9. TEST SPARK JOB
 # =============================================================================
 info "9. TEST SPARK JOB..."
-kubectl delete configmap on-prem-etl-script -n spark-jobs
+kubectl delete configmap on-prem-etl-script -n spark-jobs --ignore-not-found || true
+kubectl delete configmap consolidate-data-script -n spark-jobs --ignore-not-found || true
+
 kubectl create configmap on-prem-etl-script -n spark-jobs \
   --from-literal="main.py"='print("🎉 HYBRID FRAUD LIVE!"); import sys; sys.exit(0)' \
   --dry-run=client -o yaml | kubectl apply -f -
 
-kubectl -n spark-jobs create configmap on-prem-etl-script \
-  --from-file=/opt/airflow/dags/repo/3-spark-app/src/main.py \
-  --from-file=/opt/airflow/dags/repo/3-spark-app/src/consolidate_data.py \
-  --from-file=/opt/airflow/dags/repo/3-spark-app/src/generate_sample_data.py
+# kubectl -n spark-jobs create configmap on-prem-etl-script \
+#   --from-file="${SPARK_APP_SRC_DIR}/main.py" \
+#   --from-file="${SPARK_APP_SRC_DIR}/consolidate_data.py" \
+#   --from-file="${SPARK_APP_SRC_DIR}/generate_sample_data.py"
 
 kubectl -n spark-jobs create configmap consolidate-data-script \
-  --from-file=/opt/airflow/dags/repo/3-spark-app/src/main.py \
-  --from-file=/opt/airflow/dags/repo/3-spark-app/src/consolidate_data.py \
-  --from-file=/opt/airflow/dags/repo/3-spark-app/src/generate_sample_data.py
+  --from-file="${SPARK_APP_SRC_DIR}/main.py" \
+  --from-file="${SPARK_APP_SRC_DIR}/consolidate_data.py" \
+  --from-file="${SPARK_APP_SRC_DIR}/generate_sample_data.py"
 
 kubectl create clusterrolebinding spark-operator-binding \
   --clusterrole=cluster-admin \
