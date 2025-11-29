@@ -32,8 +32,12 @@ spec:
     volumeMounts:
       - name: spark-scripts
         mountPath: /opt/spark/work-dir
+      - name: ivy-cache
+        mountPath: /tmp/.ivy2
     volumes:
       - name: spark-scripts
+        emptyDir: {}
+      - name: ivy-cache
         emptyDir: {}
 
   executor:
@@ -54,12 +58,17 @@ spec:
     volumeMounts:
       - name: spark-scripts
         mountPath: /opt/spark/work-dir
+      - name: ivy-cache
+        mountPath: /tmp/.ivy2
     volumes:
       - name: spark-scripts
+        emptyDir: {}
+      - name: ivy-cache
         emptyDir: {}
 
   sparkConf:
     "spark.hadoop.fs.s3a.endpoint": "http://minio.storage.svc.cluster.local:9000"
     "spark.hadoop.fs.s3a.path.style.access": "true"
     "spark.jars.packages": "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1"
-    "spark.ivy.dir": "/opt/spark/work-dir/.ivy2"
+    # Point Ivy to a writable directory within the pod
+    "spark.ivy.dir": "/tmp/.ivy2"

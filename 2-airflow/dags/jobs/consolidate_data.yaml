@@ -32,8 +32,12 @@ spec:
     volumeMounts:
       - name: spark-scripts
         mountPath: /opt/spark/work-dir
+      - name: ivy-cache
+        mountPath: /tmp/.ivy2
     volumes:
       - name: spark-scripts
+        emptyDir: {}
+      - name: ivy-cache
         emptyDir: {}
 
   executor:
@@ -54,8 +58,12 @@ spec:
     volumeMounts:
       - name: spark-scripts
         mountPath: /opt/spark/work-dir
+      - name: ivy-cache
+        mountPath: /tmp/.ivy2
     volumes:
       - name: spark-scripts
+        emptyDir: {}
+      - name: ivy-cache
         emptyDir: {}
 
   sparkConf:
