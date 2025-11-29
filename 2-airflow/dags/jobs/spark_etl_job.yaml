@@ -10,25 +10,24 @@ spec:
   mode: cluster
   image: "apache/spark:3.5.1-python3"
   imagePullPolicy: IfNotPresent
-  mainApplicationFile: "local:///opt/spark/work-dir/src/main.py"
+  mainApplicationFile: "local:///opt/spark/work-dir/src/consolidate_data.py"  # Note: needs consolidate_data.py in ConfigMap
   sparkVersion: "3.5.1"
-
   restartPolicy:
     type: Never
 
   sparkConf:
     spark.kubernetes.driver.deleteOnTermination: "false"
     spark.kubernetes.executor.deleteOnTermination: "false"
-
-    # Event Logging
     spark.eventLog.enabled: "true"
     spark.eventLog.dir: "s3a://spark-logs/"
     spark.hadoop.fs.s3a.endpoint: "http://minio.storage.svc.cluster.local:9000"
     spark.hadoop.fs.s3a.path.style.access: "true"
-
     spark.sql.streaming.checkpointLocation: "s3a://spark-logs/checkpoints"
-
-    # Correct SparkOperator PythonPath settings (best practice)
+    
+    # ✅ CORRECT VOLUME MOUNTS
+    spark.kubernetes.driver.volumes.configMaps.src: "on-prem-etl-script"
+    spark.kubernetes.executor.volumes.configMaps.src: "on-prem-etl-script"
+    
     spark.driverEnv.PYTHONPATH: "/opt/spark/work-dir/src"
     spark.executorEnv.PYTHONPATH: "/opt/spark/work-dir/src"
 
@@ -36,11 +35,6 @@ spec:
     cores: 1
     memory: "1g"
     serviceAccount: "spark"
-    labels:
-      version: "3.5.1"
-    volumeMounts:
-      - name: spark-job-script
-        mountPath: /opt/spark/work-dir/src
     env:
       - name: AWS_ACCESS_KEY_ID
         valueFrom:
@@ -57,21 +51,14 @@ spec:
     cores: 1
     instances: 2
     memory: "2g"
-    labels:
-      version: "3.5.1"
-    volumeMounts:
-      - name: spark-job-script
-        mountPath: /opt/spark/work-dir/src
-
-  volumes:
-    - name: spark-job-script
-      configMap:
-        name: on-prem-etl-script
 
   packages:
     - org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1
     - org.apache.hadoop:hadoop-aws:3.3.6
     - com.amazonaws:aws-java-sdk-bundle:1.12.262
+    - com.amazonaws:aws-java-sdk-s3:1.12.262
+    - io.delta:delta-core_2.12:2.4.0
+    - org.apache.spark:spark-avro_2.12:3.5.1
 
   sparkPodLabels:
     app: airflow-spark
