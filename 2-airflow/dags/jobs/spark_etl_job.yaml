@@ -72,3 +72,6 @@ spec:
     "spark.jars.packages": "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1"
     # Point Ivy to a writable directory within the pod
     "spark.ivy.dir": "/tmp/.ivy2"
+    # Ensure driver and executors use the specified ivy directory
+    "spark.driver.extraJavaOptions": "-Divy.home=/tmp/.ivy2"
+    "spark.executor.extraJavaOptions": "-Divy.home=/tmp/.ivy2"
