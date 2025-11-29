@@ -352,7 +352,7 @@ echo "  Airflow:     kubectl get po -n airflow"
 echo "  Spark:       kubectl get po -n spark-operator"
 echo "  Jobs:        kubectl get all -n spark-jobs"
 echo
-URL=$(minikube service airflow-webserver -n airflow --url | head -1 | awk '{print $4}')
+URL=$(minikube service airflow-api-server -n airflow --url | head -1 | awk '{print $4}')
 echo "🌐 AIRFLOW UI: $URL"
 echo
 echo "🧪 TEST 3 PODS:"
