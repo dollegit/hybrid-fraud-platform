@@ -1,0 +1,9 @@
+spark:
+  jobNamespaces:
+    - spark-jobs
+controller:
+  image:
+    tag: "2.4.0"
+  replicas: 1
+webhook:
+  enable: false
