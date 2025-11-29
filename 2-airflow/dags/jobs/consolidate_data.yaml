@@ -13,11 +13,51 @@ spec:
   sparkVersion: "3.5.1"
   restartPolicy:
     type: Never
+
   driver:
     cores: 1
     memory: "1g"
     serviceAccount: spark
+    env:
+      - name: AWS_ACCESS_KEY_ID
+        valueFrom:
+          secretKeyRef:
+            name: minio-credentials
+            key: accesskey
+      - name: AWS_SECRET_ACCESS_KEY
+        valueFrom:
+          secretKeyRef:
+            name: minio-credentials
+            key: secretkey
+    volumeMounts:
+      - name: spark-scripts
+        mountPath: /opt/spark/work-dir
+    volumes:
+      - name: spark-scripts
+        emptyDir: {}
+
   executor:
     cores: 1
     instances: 1
     memory: "1g"
+    env:
+      - name: AWS_ACCESS_KEY_ID
+        valueFrom:
+          secretKeyRef:
+            name: minio-credentials
+            key: accesskey
+      - name: AWS_SECRET_ACCESS_KEY
+        valueFrom:
+          secretKeyRef:
+            name: minio-credentials
+            key: secretkey
+    volumeMounts:
+      - name: spark-scripts
+        mountPath: /opt/spark/work-dir
+    volumes:
+      - name: spark-scripts
+        emptyDir: {}
+
+  sparkConf:
+    "spark.hadoop.fs.s3a.endpoint": "http://minio.storage.svc.cluster.local:9000"
+    "spark.hadoop.fs.s3a.path.style.access": "true"

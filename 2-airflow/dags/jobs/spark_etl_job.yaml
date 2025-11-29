@@ -61,5 +61,3 @@ spec:
   sparkConf:
     "spark.hadoop.fs.s3a.endpoint": "http://minio.storage.svc.cluster.local:9000"
     "spark.hadoop.fs.s3a.path.style.access": "true"
-    # "spark.kubernetes.executor.volumes.emptyDir.spark-scripts.mount.path": "/opt/spark/work-dir"
-    # "spark.kubernetes.driver.volumes.emptyDir.spark-scripts.mount.path": "/opt/spark/work-dir"
