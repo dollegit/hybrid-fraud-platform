@@ -13,16 +13,8 @@ with DAG(
 ) as dag:
     process_payments = SparkKubernetesOperator(
         task_id="process_on_prem_payments",
-        application_file="jobs/spark_etl_job.yaml",  # ✅ Relative path from /opt/airflow/dags/
+        application_file="jobs/spark_etl_job.yaml",
         namespace="spark-jobs",
         kubernetes_conn_id="kubernetes_default",
-        # 👇 Copy the logic from the fix here
-        spark_conf={
-            "spark.hadoop.fs.s3a.endpoint": "http://minio.storage.svc.cluster.local:9000",
-            "spark.hadoop.fs.s3a.path.style.access": "true",
-            "spark.kubernetes.executor.volumes.configMap.spark-job-script.mount.path": "/opt/spark/work-dir",
-            "spark.kubernetes.executor.volumes.configMap.spark-job-script.mount.readOnly": "true",
-            "spark.kubernetes.executor.volumes.configMap.spark-job-script.options.name": "on-prem-etl-script"
-        },
         do_xcom_push=True,
     )
