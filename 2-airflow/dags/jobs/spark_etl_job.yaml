@@ -29,12 +29,37 @@ spec:
           secretKeyRef:
             name: minio-credentials
             key: secretkey
+    volumeMounts:
+      - name: spark-scripts
+        mountPath: /opt/spark/work-dir
+    volumes:
+      - name: spark-scripts
+        emptyDir: {}
 
   executor:
     cores: 1
     instances: 2
     memory: "2g"
+    env:
+      - name: AWS_ACCESS_KEY_ID
+        valueFrom:
+          secretKeyRef:
+            name: minio-credentials
+            key: accesskey
+      - name: AWS_SECRET_ACCESS_KEY
+        valueFrom:
+          secretKeyRef:
+            name: minio-credentials
+            key: secretkey
+    volumeMounts:
+      - name: spark-scripts
+        mountPath: /opt/spark/work-dir
+    volumes:
+      - name: spark-scripts
+        emptyDir: {}
 
   sparkConf:
     "spark.hadoop.fs.s3a.endpoint": "http://minio.storage.svc.cluster.local:9000"
     "spark.hadoop.fs.s3a.path.style.access": "true"
+    # "spark.kubernetes.executor.volumes.emptyDir.spark-scripts.mount.path": "/opt/spark/work-dir"
+    # "spark.kubernetes.driver.volumes.emptyDir.spark-scripts.mount.path": "/opt/spark/work-dir"
