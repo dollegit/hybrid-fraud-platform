@@ -43,7 +43,28 @@ spec:
             name: minio-credentials
             key: secretkey
 
+    # Mount the configmap containing Python sources into the driver's work-dir so
+    # the mainApplicationFile (local:///opt/spark/work-dir/src/main.py) is available.
+    volumeMounts:
+      - name: app-scripts
+        mountPath: /opt/spark/work-dir/src
+    # Provide the configmap as a volume for the driver. The configmap should
+    # be created by the helper script `scripts/create_spark_configmaps.sh`.
+    volumes:
+      - name: app-scripts
+        configMap:
+          name: on-prem-etl-script
+
   executor:
     cores: 1
     instances: 2
     memory: "2g"
+    # Executors also need the Python package path so they can import modules.
+    volumeMounts:
+      - name: app-scripts
+        mountPath: /opt/spark/work-dir/src
+    # Executors need the same volume definition so the mount exists.
+    volumes:
+      - name: app-scripts
+        configMap:
+          name: on-prem-etl-script

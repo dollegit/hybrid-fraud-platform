@@ -267,19 +267,32 @@ info "9. TEST SPARK JOB..."
 kubectl delete configmap on-prem-etl-script -n spark-jobs --ignore-not-found || true
 kubectl delete configmap consolidate-data-script -n spark-jobs --ignore-not-found || true
 
-kubectl create configmap on-prem-etl-script -n spark-jobs \
-  --from-literal="main.py"='print("🎉 HYBRID FRAUD LIVE!"); import sys; sys.exit(0)' \
-  --dry-run=client -o yaml | kubectl apply -f -
+# kubectl create configmap on-prem-etl-script -n spark-jobs \
+#   --from-literal="main.py"='print("🎉 HYBRID FRAUD LIVE!"); import sys; sys.exit(0)' \
+#   --dry-run=client -o yaml | kubectl apply -f -
 
 # kubectl -n spark-jobs create configmap on-prem-etl-script \
 #   --from-file="${SPARK_APP_SRC_DIR}/main.py" \
 #   --from-file="${SPARK_APP_SRC_DIR}/consolidate_data.py" \
 #   --from-file="${SPARK_APP_SRC_DIR}/generate_sample_data.py"
 
-kubectl -n spark-jobs create configmap consolidate-data-script \
-  --from-file="${SPARK_APP_SRC_DIR}/main.py" \
-  --from-file="${SPARK_APP_SRC_DIR}/consolidate_data.py" \
-  --from-file="${SPARK_APP_SRC_DIR}/generate_sample_data.py"
+# kubectl -n spark-jobs create configmap consolidate-data-script \
+#   --from-file="${SPARK_APP_SRC_DIR}/main.py" \
+#   --from-file="${SPARK_APP_SRC_DIR}/consolidate_data.py" \
+#   --from-file="${SPARK_APP_SRC_DIR}/generate_sample_data.py"
+
+# kubectl create configmap on-prem-etl-script -n spark-jobs \
+#   --from-file=main.py="${SPARK_APP_SRC_DIR}/main.py" \
+#   --from-file=consolidate_data.py="${SPARK_APP_SRC_DIR}/consolidate_data.py" \
+#   --from-file=generate_sample_data.py="${SPARK_APP_SRC_DIR}/generate_sample_data.py" \
+#   --dry-run=client -o yaml | kubectl apply -f -
+
+# kubectl create configmap consolidate-data-script -n spark-jobs \
+#   --from-file=main.py="${SPARK_APP_SRC_DIR}/main.py" \
+#   --from-file=consolidate_data.py="${SPARK_APP_SRC_DIR}/consolidate_data.py" \
+#   --from-file=generate_sample_data.py="${SPARK_APP_SRC_DIR}/generate_sample_data.py" \
+#   --dry-run=client -o yaml | kubectl apply -f -
+./scripts/create_spark_configmaps.sh --namespace spark-jobs --root "$SCRIPT_DIR"/..
 
 kubectl create clusterrolebinding spark-operator-binding \
   --clusterrole=cluster-admin \

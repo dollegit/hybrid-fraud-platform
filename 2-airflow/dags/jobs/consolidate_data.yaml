@@ -44,57 +44,28 @@ spec:
           secretKeyRef:
             name: minio-credentials
             key: secretkey
-    # 🔥 SAME INIT CONTAINER PATTERN
-    initContainers:
-      - name: copy-scripts
-        image: busybox:1.36
-        command: ["sh", "-c"]
-        args:
-          - |
-            cp -r /scripts/* /opt/spark/work-dir/src/
-            chmod +x /opt/spark/work-dir/src/*.py
-        volumeMounts:
-          - name: scripts
-            mountPath: /scripts
-          - name: work-dir
-            mountPath: /opt/spark/work-dir
+    # Mount the consolidate job sources directly from the ConfigMap so
+    # the driver can find local:///opt/spark/work-dir/src/consolidate_data.py
     volumeMounts:
-      - name: work-dir
-        mountPath: /opt/spark/work-dir
+      - name: app-scripts
+        mountPath: /opt/spark/work-dir/src
     volumes:
-      - name: scripts
+      - name: app-scripts
         configMap:
-          name: fraud-etl-scripts  # SAME ConfigMap!
-      - name: work-dir
-        emptyDir: {}
+          name: consolidate-data-script
 
   executor:
     cores: 1
     instances: 2
     memory: "2g"
-    # 🔥 SAME INIT CONTAINER FOR EXECUTORS
-    initContainers:
-      - name: copy-scripts
-        image: busybox:1.36
-        command: ["sh", "-c"]
-        args:
-          - |
-            cp -r /scripts/* /opt/spark/work-dir/src/
-            chmod +x /opt/spark/work-dir/src/*.py
-        volumeMounts:
-          - name: scripts
-            mountPath: /scripts
-          - name: work-dir
-            mountPath: /opt/spark/work-dir
+    # Executors also mount the same ConfigMap so imports work on executors.
     volumeMounts:
-      - name: work-dir
-        mountPath: /opt/spark/work-dir
+      - name: app-scripts
+        mountPath: /opt/spark/work-dir/src
     volumes:
-      - name: scripts
+      - name: app-scripts
         configMap:
-          name: fraud-etl-scripts
-      - name: work-dir
-        emptyDir: {}
+          name: consolidate-data-script
 
   packages:
     - org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1
