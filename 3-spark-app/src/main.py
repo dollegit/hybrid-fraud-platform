@@ -26,8 +26,6 @@ def main():
         .config("spark.hadoop.fs.s3a.path.style.access", "true")
         .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
         .config("spark.sql.streaming.checkpointLocation", "s3a://spark-logs/checkpoints")
-        .config("spark.kubernetes.driver.volumes.configMap.spark_job_script.defaultMode", "420")
-        .config("spark.kubernetes.executor.volumes.configMap.spark_job_script.defaultMode", "420")
         .getOrCreate()
     )
     print("Spark Session created successfully.")
