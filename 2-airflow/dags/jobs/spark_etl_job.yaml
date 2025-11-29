@@ -8,14 +8,10 @@ spec:
   pythonVersion: "3"
   mode: cluster
   image: "apache/spark:3.5.1-python3"
-  imagePullPolicy: IfNotPresent
   mainApplicationFile: "local:///opt/spark/work-dir/src/main.py"
   sparkVersion: "3.5.1"
-  restartPolicy:
-    type: Never
-
+  
   sparkConf:
-    # MinIO S3a + streaming (NO volume configs)
     spark.kubernetes.driver.deleteOnTermination: "false"
     spark.kubernetes.executor.deleteOnTermination: "false"
     spark.eventLog.enabled: "true"
@@ -26,6 +22,10 @@ spec:
     spark.sql.streaming.checkpointLocation: "s3a://spark-logs/checkpoints"
     spark.driverEnv.PYTHONPATH: "/opt/spark/work-dir/src"
     spark.executorEnv.PYTHONPATH: "/opt/spark/work-dir/src"
+    
+    # 🔥 POD TEMPLATES - Official Spark Operator method
+    spark.kubernetes.driver.podTemplateFile: "local:///etc/spark-conf/driver-pod-template"
+    spark.kubernetes.executor.podTemplateFile: "local:///etc/spark-conf/executor-pod-template"
 
   driver:
     cores: 1
@@ -42,62 +42,8 @@ spec:
           secretKeyRef:
             name: minio-credentials
             key: secretkey
-    # 🔥 INIT CONTAINER copies ConfigMap to shared volume
-    initContainers:
-      - name: copy-scripts
-        image: busybox:1.36
-        command: ["sh", "-c"]
-        args:
-          - |
-            cp -r /scripts/* /opt/spark/work-dir/src/
-            chmod +x /opt/spark/work-dir/src/*.py
-        volumeMounts:
-          - name: scripts
-            mountPath: /scripts
-          - name: work-dir
-            mountPath: /opt/spark/work-dir
-    volumeMounts:
-      - name: work-dir
-        mountPath: /opt/spark/work-dir
-    volumes:
-      - name: scripts
-        configMap:
-          name: fraud-etl-scripts
-      - name: work-dir
-        emptyDir: {}
 
   executor:
     cores: 1
     instances: 2
     memory: "2g"
-    # Same init container for executors
-    initContainers:
-      - name: copy-scripts
-        image: busybox:1.36
-        command: ["sh", "-c"]
-        args:
-          - |
-            cp -r /scripts/* /opt/spark/work-dir/src/
-            chmod +x /opt/spark/work-dir/src/*.py
-        volumeMounts:
-          - name: scripts
-            mountPath: /scripts
-          - name: work-dir
-            mountPath: /opt/spark/work-dir
-    volumeMounts:
-      - name: work-dir
-        mountPath: /opt/spark/work-dir
-    volumes:
-      - name: scripts
-        configMap:
-          name: fraud-etl-scripts
-      - name: work-dir
-        emptyDir: {}
-
-  packages:
-    - org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1
-    - org.apache.hadoop:hadoop-aws:3.3.6
-    - com.amazonaws:aws-java-sdk-bundle:1.12.262
-
-  sparkPodLabels:
-    app: airflow-spark
