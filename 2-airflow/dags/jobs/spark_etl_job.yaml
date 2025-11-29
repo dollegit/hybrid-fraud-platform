@@ -9,7 +9,7 @@ spec:
   mode: cluster
   image: "apache/spark:3.5.1-python3"
   imagePullPolicy: IfNotPresent
-  mainApplicationFile: "local:///opt/spark/work-dir/src/main.py"
+  mainApplicationFile: "local:///opt/spark/work-dir/main.py"
   sparkVersion: "3.5.1"
   restartPolicy:
     type: Never
@@ -33,7 +33,7 @@ spec:
     serviceAccount: "spark"
     volumeMounts:
       - name: "spark-job-script"
-        mountPath: "/opt/spark/work-dir/src"
+        mountPath: "/opt/spark/work-dir/"
     env:
       - name: AWS_ACCESS_KEY_ID
         valueFrom:
@@ -59,7 +59,7 @@ spec:
       version: "3.5.1"
     volumeMounts:
       - name: "spark-job-script"
-        mountPath: "/opt/spark/work-dir/src"
+        mountPath: "/opt/spark/work-dir/"
 
   packages:
     - org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1
