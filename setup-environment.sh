@@ -402,5 +402,9 @@ spec:
   sparkConf:
     "spark.hadoop.fs.s3a.endpoint": "http://minio.storage.svc.cluster.local:9000"
     "spark.hadoop.fs.s3a.path.style.access": "true"
+    # 🔥 FIX: Propagate driver's ConfigMap volume to executors
+    "spark.kubernetes.executor.volumes.configMap.spark-job-script.mount.path": "/opt/spark/work-dir"
+    "spark.kubernetes.executor.volumes.configMap.spark-job-script.mount.readOnly": "true"
+    "spark.kubernetes.executor.volumes.configMap.spark-job-script.options.name": "on-prem-etl-script"
 EOF
 echo "EOF"

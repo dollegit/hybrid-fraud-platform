@@ -65,6 +65,14 @@ with DAG(
         application_file="jobs/consolidate_data.yaml",
         namespace="spark-jobs",
         kubernetes_conn_id="kubernetes_default",
+        # 👇 Copy the logic from the fix here
+        conf={
+            "spark.hadoop.fs.s3a.endpoint": "http://minio.storage.svc.cluster.local:9000",
+            "spark.hadoop.fs.s3a.path.style.access": "true",
+            "spark.kubernetes.executor.volumes.configMap.spark-job-script.mount.path": "/opt/spark/work-dir",
+            "spark.kubernetes.executor.volumes.configMap.spark-job-script.mount.readOnly": "true",
+            "spark.kubernetes.executor.volumes.configMap.spark-job-script.options.name": "on-prem-etl-script"
+        },
         do_xcom_push=True,
         doc_md="""
         #### Spark Load Task
