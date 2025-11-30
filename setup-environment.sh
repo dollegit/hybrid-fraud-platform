@@ -79,6 +79,10 @@ kubectl apply -f 1-kubernetes-manifests/02-kafka-strimzi/kafka-cluster.yaml -n k
 info "Waiting for Kafka cluster to be ready..."
 kubectl wait kafka/my-kafka-cluster --for=condition=Ready -n kafka --timeout=15m
 
+info "Creating Kafka topic 'payment-events'..."
+kubectl apply -f 1-kubernetes-manifests/02-kafka-strimzi/kafka-topic-payments.yaml -n kafka
+kubectl wait kafkatopic/payment-events --for=condition=Ready -n kafka --timeout=2m
+
 # =============================================================================
 # 3. SPARK OPERATOR - FIXED SELECTOR!
 # =============================================================================

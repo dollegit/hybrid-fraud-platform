@@ -1,3 +1,4 @@
+# COMMAND ----------
 import time
 import random
 from datetime import datetime, timedelta
@@ -127,7 +128,7 @@ def process_streams(payment_stream, fraud_stream, account_details, risk_feed, wa
             finalized_records.append(payment_to_finalize)
         
         if not unmatched_payments and 'payment' not in locals(): # End condition
-             break
+            break
 
     # Add any remaining payments in the waiting room as non-fraudulent
     for pid, p in unmatched_payments.items():
