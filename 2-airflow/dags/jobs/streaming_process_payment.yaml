@@ -34,7 +34,10 @@ spec:
           secretKeyRef:
             name: minio-credentials
             key: secretkey
-
+      - name: KAFKA_BOOTSTRAP_SERVERS
+        value: my-kafka-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092
+      - name: KAFKA_TOPIC
+        value: payment-events
   executor:
     cores: 1
     instances: 2
@@ -52,7 +55,10 @@ spec:
           secretKeyRef:
             name: minio-credentials
             key: secretkey
-
+      - name: KAFKA_BOOTSTRAP_SERVERS
+        value: my-kafka-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092
+      - name: KAFKA_TOPIC
+        value: payment-events
   # 🔥 FIXED: COMPLETE sparkConf
   sparkConf:
     # MinIO S3A (NO hardcoded credentials - use env vars)

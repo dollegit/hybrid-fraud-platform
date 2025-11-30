@@ -62,7 +62,10 @@ spec:
           secretKeyRef:
             name: postgres-credentials
             key: password
-
+      - name: KAFKA_BOOTSTRAP_SERVERS
+        value: my-kafka-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092
+      - name: KAFKA_TOPIC
+        value: payment-events
   executor:
     cores: 1
     instances: 1
@@ -95,3 +98,7 @@ spec:
           secretKeyRef:
             name: postgres-credentials
             key: password
+      - name: KAFKA_BOOTSTRAP_SERVERS
+        value: my-kafka-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092
+      - name: KAFKA_TOPIC
+        value: payment-events
