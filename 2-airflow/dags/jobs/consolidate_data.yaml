@@ -75,8 +75,7 @@ spec:
     "spark.hadoop.fs.s3a.path.style.access": "true"
     "spark.sql.shuffle.partitions": "500"
     "spark.jars.ivy": "/tmp/.ivy2"
-    "spark.jars.packages": "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1,org.apache.kafka:kafka-clients:3.6.0"
+    # Add required packages for Kafka and S3A filesystem access (for MinIO)
+    # Ensure versions are compatible with your Spark/Hadoop version.
+    "spark.jars.packages": "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1,org.apache.kafka:kafka-clients:3.6.0,com.amazonaws:aws-java-sdk-bundle:1.12.262"
     "spark.ivy.dir": "/opt/spark/work-dir/.ivy2"
-    # # Ensure driver and executors use the specified ivy directory
-    # "spark.driver.extraJavaOptions": "-Divy.home=/tmp/.ivy2"
-    # "spark.executor.extraJavaOptions": "-Divy.home=/tmp/.ivy2"
