@@ -23,11 +23,21 @@ def main():
     kafka_bootstrap_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "my-kafka-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092")
     kafka_topic = os.getenv("KAFKA_TOPIC", "payment_events")
     minio_endpoint = os.getenv("MINIO_ENDPOINT", "http://minio.storage.svc.cluster.local:9000")
+    minio_access_key = os.getenv("MINIO_ACCESS_KEY", "minio")
+    minio_secret_key = os.getenv("MINIO_SECRET_KEY", "minio123")
     output_path = os.getenv("OUTPUT_PATH", "s3a://bronze/streaming_payments")
     checkpoint_location = os.getenv("CHECKPOINT_LOCATION", "s3a://bronze/checkpoints/streaming_payments_checkpoint")
 
     # --- Spark Session ---
-    spark = SparkSession.builder.appName("PaymentStreamingProcessor").getOrCreate()
+    spark = (
+        SparkSession.builder.appName("PaymentStreamingProcessor")
+        .config("spark.hadoop.fs.s3a.endpoint", minio_endpoint)
+        .config("spark.hadoop.fs.s3a.access.key", minio_access_key)
+        .config("spark.hadoop.fs.s3a.secret.key", minio_secret_key)
+        .config("spark.hadoop.fs.s3a.path.style.access", "true")
+        .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
+        .getOrCreate()
+    )
     spark.sparkContext.setLogLevel("WARN")
 
     print("Spark Session created. Starting stream processing...")

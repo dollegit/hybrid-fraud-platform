@@ -16,6 +16,8 @@ def main():
     minio_secret_key = "minio123"
     bronze_path = "s3a://datalake/bronze/payments"
     silver_path = "s3a://datalake/silver/transactions"
+    bronze_checkpoint_path = "s3a://spark-logs/checkpoints/bronze"
+    silver_checkpoint_path = "s3a://spark-logs/checkpoints/silver"
 
     # --- Spark Session Initialization ---
     spark = (
@@ -24,8 +26,7 @@ def main():
         .config("spark.hadoop.fs.s3a.access.key", minio_access_key)
         .config("spark.hadoop.fs.s3a.secret.key", minio_secret_key)
         .config("spark.hadoop.fs.s3a.path.style.access", "true")
-        .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
-        .config("spark.sql.streaming.checkpointLocation", "s3a://spark-logs/checkpoints")
+        .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") 
         .getOrCreate()
     )
     print("Spark Session created successfully.")
@@ -63,7 +64,7 @@ def main():
         bronze_df.writeStream.format("parquet")
         .outputMode("append")
         .option("path", bronze_path)
-        .option("checkpointLocation", "/tmp/checkpoints/bronze")
+        .option("checkpointLocation", bronze_checkpoint_path)
         .partitionBy("processing_ts")
         .start()
     )
@@ -77,7 +78,7 @@ def main():
         silver_df.writeStream.format("parquet")
         .outputMode("append")
         .option("path", silver_path)
-        .option("checkpointLocation", "/tmp/checkpoints/silver")
+        .option("checkpointLocation", silver_checkpoint_path)
         .start()
     )
     print(f"Writing transformed data to Silver layer at: {silver_path}")
