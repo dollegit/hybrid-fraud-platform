@@ -9,6 +9,13 @@ ADD https://repo1.maven.org/maven2/org/apache/spark/spark-sql-kafka-0-10_2.12/3.
 ADD https://repo1.maven.org/maven2/org/apache/kafka/kafka-clients/3.6.0/kafka-clients-3.6.0.jar /opt/spark/jars/
 ADD https://repo1.maven.org/maven2/org/apache/commons/commons-pool2/2.11.1/commons-pool2-2.11.1.jar /opt/spark/jars/
 
+# S3A filesystem (Hadoop AWS)
+ADD https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.4/hadoop-aws-3.3.4.jar /opt/spark/jars/hadoop-aws-3.3.4.jar
+
+# AWS SDK v1 bundle compatible with Hadoop 3.3.4
+ADD https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.470/aws-java-sdk-bundle-1.12.470.jar /opt/spark/jars/aws-java-sdk-bundle-1.12.470.jar
+
+
 # Set the working directory for the application code
 WORKDIR /opt/spark/work-dir
 

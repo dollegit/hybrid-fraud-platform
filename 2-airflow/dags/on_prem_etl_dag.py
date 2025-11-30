@@ -17,4 +17,6 @@ with DAG(
         namespace="spark-jobs",
         kubernetes_conn_id="kubernetes_default",
         do_xcom_push=True,
+        delete_on_termination=True,
+        deferrable=False,
     )
