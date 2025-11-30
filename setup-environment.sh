@@ -168,6 +168,7 @@ docker build -t "${SPARK_TEST_IMAGE_NAME}" -f "${SPARK_TEST_CONTEXT_DIR}/Dockerf
 
 info "Pushing Spark test image to Docker Hub..."
 docker push "${SPARK_TEST_IMAGE_NAME}"
+docker push "${SPARK_TEST_IMAGE_NAME}" || warn "Failed to push ${SPARK_TEST_IMAGE_NAME}. Continuing..."
 
 # =============================================================================
 # 5.2 BUILD AND PUSH SPARK MAIN APP IMAGE
@@ -176,18 +177,21 @@ info "5.2. Building and pushing Spark main application image..."
 
 # Define variables for the Spark main app image
 SPARK_APP_CONTEXT_DIR="${SCRIPT_DIR}/3-spark-app"
-SPARK_APP_IMAGE_NAME="psalmprax/spark-app:1.0.0"
+SPARK_APP_IMAGE_NAME="psalmprax/spark-app:1.1.0"
 
-# Ensure we are not using the minikube docker-env
+# Set minikube docker-env to build directly into minikube's daemon
 if [[ "${USE_MINIKUBE_DOCKER_ENV}" == "true" ]]; then
-  eval "$(minikube docker-env --unset)"
+  eval "$(minikube -p minikube docker-env)"
 fi
 
 info "Building Spark main app image: ${SPARK_APP_IMAGE_NAME}"
 docker build -t "${SPARK_APP_IMAGE_NAME}" -f "${SPARK_APP_CONTEXT_DIR}/Dockerfile" "${SPARK_APP_CONTEXT_DIR}"
 
+info "Loading Spark main app image into Minikube..."
+minikube image load "${SPARK_APP_IMAGE_NAME}"
+
 info "Pushing Spark main app image to Docker Hub..."
-docker push "${SPARK_APP_IMAGE_NAME}"
+docker push "${SPARK_APP_IMAGE_NAME}" || warn "Failed to push ${SPARK_APP_IMAGE_NAME}. Continuing..."
 
 # =============================================================================
 # 6. DB MIGRATION
