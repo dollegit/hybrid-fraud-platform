@@ -402,12 +402,11 @@ spec:
   executor:
     cores: 1
     instances: 2
-    memory: "2g"
+    memory: "1g"
   sparkConf:
     "spark.hadoop.fs.s3a.endpoint": "http://minio.storage.svc.cluster.local:9000"
     "spark.hadoop.fs.s3a.path.style.access": "true"
-    "spark.jars.packages": "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1"
-    # 🔥 FIX: Propagate driver's ConfigMap volume to executors
+    # spark.jars.packages is no longer needed as the JARs are baked into the image.
     # "spark.kubernetes.executor.volumes.configMap.spark-job-script.mount.path": "/opt/spark/work-dir"
     # "spark.kubernetes.executor.volumes.configMap.spark-job-script.mount.readOnly": "true"
     # "spark.kubernetes.executor.volumes.configMap.spark-job-script.options.name": "on-prem-etl-script"
