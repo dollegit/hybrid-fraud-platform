@@ -1,3 +1,4 @@
+# COMMAND ----------
 import json
 import random
 import time
@@ -26,7 +27,7 @@ def main():
     # In a containerized setup, you might use a service name like 'my-kafka.kafka.svc.cluster.local:9092'
     # For local testing, 'localhost:9092' is common if you've port-forwarded Kafka.
     bootstrap_servers = "localhost:9092"
-    topic_name = "payment_events"
+    topic_name = "payment_events_test"
 
     try:
         producer = KafkaProducer(
