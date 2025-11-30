@@ -19,6 +19,7 @@ def create_random_payment():
         "currency": random.choice(["USD", "EUR", "GBP"]),
         "merchant_id": f"merchant_{random.randint(1, 100)}",
         "event_timestamp": datetime.utcnow().isoformat() + "Z",
+        
     }
 
 
