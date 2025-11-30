@@ -66,6 +66,20 @@ kubectl create secret generic minio-credentials -n spark-jobs \
 wait_ready storage "app=minio"
 
 # =============================================================================
+# 2.1 KAFKA (STRIMZI)
+# =============================================================================
+info "2.1. Kafka (Strimzi)..."
+helm repo add strimzi https://strimzi.io/charts/ || true
+helm repo update
+helm upgrade --install strimzi-kafka-operator strimzi/strimzi-kafka-operator \
+  -n kafka --create-namespace --version 0.49.0 --wait --timeout 30m
+
+info "Deploying Kafka cluster..."
+kubectl apply -f 1-kubernetes-manifests/02-kafka-strimzi/kafka-cluster.yaml -n kafka || true
+info "Waiting for Kafka cluster to be ready..."
+kubectl wait kafka/my-kafka-cluster --for=condition=Ready -n kafka --timeout=15m
+
+# =============================================================================
 # 3. SPARK OPERATOR - FIXED SELECTOR!
 # =============================================================================
 info "3. Spark Operator..."

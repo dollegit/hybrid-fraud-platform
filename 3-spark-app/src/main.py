@@ -1,5 +1,6 @@
 # COMMAND ----------
 import os
+import sys
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, from_json, current_timestamp
 from pyspark.sql.types import StructType, StructField, StringType, DoubleType, TimestampType
@@ -7,33 +8,27 @@ from pyspark.sql.types import StructType, StructField, StringType, DoubleType, T
 def main():
     """
     Main ETL script for processing payment data from Kafka to MinIO.
+    Uses SparkApplication sparkConf + Kubernetes env vars.
     """
-    # --- Configuration ---
-    kafka_bootstrap_servers = "my-kafka-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
+    # --- USE KUBERNETES ENV VARS ---
+    kafka_bootstrap_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "my-kafka-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092")
     kafka_topic = "payment_events"
-    minio_endpoint = "http://minio.storage.svc.cluster.local:9000"
-    minio_access_key = "minio"
-    minio_secret_key = "minio123"
+    
+    # ✅ S3A paths - sparkConf handles endpoint/auth automatically!
     bronze_path = "s3a://datalake/bronze/payments"
     silver_path = "s3a://datalake/silver/transactions"
     bronze_checkpoint_path = "s3a://spark-logs/checkpoints/bronze"
     silver_checkpoint_path = "s3a://spark-logs/checkpoints/silver"
 
-    # --- Spark Session Initialization ---
-    spark = (
-        SparkSession.builder.appName("OnPremPaymentETL")
-        .config("spark.hadoop.fs.s3a.endpoint", minio_endpoint)
-        .config("spark.hadoop.fs.s3a.access.key", minio_access_key)
-        .config("spark.hadoop.fs.s3a.secret.key", minio_secret_key)
-        .config("spark.hadoop.fs.s3a.path.style.access", "true")
-        .config("spark.hadoop.fs.s3a.connection.ssl.enabled", "false")
-        .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") 
+    # --- SPARK SESSION: NO S3A CONFIGS (already in sparkConf) ---
+    spark = SparkSession.builder \
+        .appName("OnPremPaymentETL") \
         .getOrCreate()
-    )
-    print("Spark Session created successfully.")
+    
+    print("✅ Spark Session created (S3A pre-configured by SparkApplication)")
+    print(f"✅ Kafka servers: {kafka_bootstrap_servers}")
 
     # --- Read from Kafka (Bronze Layer) ---
-    print(f"Reading from Kafka topic: {kafka_topic}")
     kafka_df = (
         spark.readStream.format("kafka")
         .option("kafka.bootstrap.servers", kafka_bootstrap_servers)
@@ -42,7 +37,7 @@ def main():
         .load()
     )
 
-    # Define schema for the incoming JSON data
+    # Schema (unchanged)
     payment_schema = StructType([
         StructField("transaction_id", StringType(), True),
         StructField("user_id", StringType(), True),
@@ -52,29 +47,24 @@ def main():
         StructField("event_timestamp", TimestampType(), True),
     ])
 
-    # Parse the JSON data from the Kafka 'value' column
     parsed_df = kafka_df.select(
         from_json(col("value").cast("string"), payment_schema).alias("data")
     ).select("data.*")
 
-    # --- Write to Bronze Layer (Raw Data as Parquet) ---
-    # Adding a processing timestamp for partitioning
+    # --- Bronze Layer (Raw) ---
     bronze_df = parsed_df.withColumn("processing_ts", current_timestamp())
-
     bronze_writer = (
         bronze_df.writeStream.format("parquet")
         .outputMode("append")
-        .option("path", bronze_path)
+        .option("path", bronze_path)  # ✅ S3A works automatically
         .option("checkpointLocation", bronze_checkpoint_path)
         .partitionBy("processing_ts")
         .start()
     )
-    print(f"Writing raw data to Bronze layer at: {bronze_path}")
+    print(f"✅ Bronze streaming to: {bronze_path}")
 
-    # --- Simple Transformation for Silver Layer ---
-    # Example: Add a risk score placeholder
+    # --- Silver Layer (Transformed) ---
     silver_df = parsed_df.withColumn("risk_score", col("amount") * 0.01)
-
     silver_writer = (
         silver_df.writeStream.format("parquet")
         .outputMode("append")
@@ -82,9 +72,9 @@ def main():
         .option("checkpointLocation", silver_checkpoint_path)
         .start()
     )
-    print(f"Writing transformed data to Silver layer at: {silver_path}")
+    print(f"✅ Silver streaming to: {silver_path}")
 
-    # Wait for streams to terminate
+    # Keep streaming
     spark.streams.awaitAnyTermination()
 
 if __name__ == "__main__":
