@@ -1,0 +1,16 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+
+repos:
+-   repo: local
+    hooks:
+    -   id: project-cleanup
+        name: Project File Cleanup
+        description: "Ensures important project files are in their correct directories and removes duplicates."
+        entry: ./cleanup_project.sh
+        language: script
+        # This ensures the hook checks all files, not just staged ones.
+        # It's useful for a script that moves files around.
+        files: '.*'
+        # Always run this check
+        always_run: true

@@ -63,6 +63,36 @@ Minio is used for object storage (e.g., Spark output, Airflow logs).
     *   **Username**: `minio`
     *   **Password**: `minio123`
 
+## Project Maintenance
+
+This project includes tools to help maintain code quality and a consistent file structure, which is especially important when collaborating.
+
+### Automatic File Cleanup with Git Hooks
+
+To prevent misplaced files from being committed, this project uses a `pre-commit` hook that automatically runs a cleanup script (`cleanup_project.sh`). This ensures that key files for the streaming and batch pipelines are always in their correct directories.
+
+**One-Time Setup for Each Developer:**
+
+1.  **Install the pre-commit framework**:
+    ```bash
+    pip install pre-commit
+    ```
+
+2.  **Install the Git hook**:
+    From the root of the project, run:
+    ```bash
+    pre-commit install
+    ```
+
+Now, every time you run `git commit`, the cleanup script will run first. If it moves or deletes any files, the commit will be aborted. Simply `git add` the changes made by the script and commit again.
+
+### Manual Cleanup
+
+If you prefer to run the cleanup script manually, you can do so at any time.
+
+1.  Make the script executable: `chmod +x cleanup_project.sh`
+2.  Run the script: `./cleanup_project.sh`
+
 ## Running the Pipelines
 
 This project contains two primary data pipelines: a batch ELT pipeline and a real-time streaming pipeline.
