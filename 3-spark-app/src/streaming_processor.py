@@ -1,3 +1,4 @@
+# COMMAND ----------
 from __future__ import annotations
 
 import os
@@ -17,7 +18,7 @@ def main():
     """
     # --- ENV VARS ONLY (NO S3A configs) ---
     kafka_bootstrap_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "my-kafka-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092")
-    kafka_topic = os.getenv("KAFKA_TOPIC", "payment_events")
+    kafka_topic = os.getenv("KAFKA_TOPIC", "payment-events")
     
     # ✅ S3A paths - sparkConf handles ALL endpoint/auth!
     output_path = os.getenv("OUTPUT_PATH", "s3a://bronze/streaming_payments")

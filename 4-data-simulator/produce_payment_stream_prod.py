@@ -1,3 +1,4 @@
+# COMMAND ----------
 import json
 import time
 import uuid
@@ -24,7 +25,7 @@ def main():
         bootstrap_servers="localhost:9092",
         value_serializer=lambda v: json.dumps(v).encode("utf-8"),
     )
-    topic_name = "payment_events"
+    topic_name = "payment-events"
     print(f"Producing messages to Kafka topic: '{topic_name}'. Press Ctrl+C to stop.")
 
     try:
