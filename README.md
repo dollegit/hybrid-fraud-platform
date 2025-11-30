@@ -63,6 +63,75 @@ Minio is used for object storage (e.g., Spark output, Airflow logs).
     *   **Username**: `minio`
     *   **Password**: `minio123`
 
+## Running the Pipelines
+
+This project contains two primary data pipelines: a batch ELT pipeline and a real-time streaming pipeline.
+
+### Streaming Payment Processing Pipeline
+
+This pipeline provides real-time data ingestion. It captures a continuous stream of payment events from Kafka, processes them with Spark Streaming, and stores them in MinIO.
+
+#### Components
+
+*   **Data Simulator (`4-data-simulator/produce_payment_stream.py`)**: Generates mock payment data and publishes it to a Kafka topic.
+*   **Spark Streaming Application (`3-spark-app/src/streaming_processor.py`)**: Reads from Kafka in micro-batches and writes the data to MinIO in Parquet format.
+*   **Airflow DAG (`2-airflow/dags/streaming_payment_dag.py`)**: A manually triggered DAG that launches the long-running Spark Streaming job on Kubernetes.
+
+#### How to Run
+
+Follow these steps to activate the end-to-end streaming pipeline.
+
+**Step 1: Update the Spark Docker Image**
+
+The new `streaming_processor.py` script must be included in the Docker image used by Spark.
+
+1.  Ensure `streaming_processor.py` is in the `3-spark-app/src` directory.
+2.  Ensure your Docker daemon is connected to Minikube's by running `eval $(minikube -p minikube docker-env)`.
+3.  Rebuild and push your Docker image:
+
+    ```bash
+    # Navigate to the directory with your Spark Dockerfile
+    cd 3-spark-app/
+
+    # Build the image
+    docker build -t psalmprax/spark-app:1.0.0 .
+    ```
+
+**Step 2: Start the Data Producer**
+
+1.  Open a **new terminal** and forward the Kafka port:
+
+    ```bash
+    # This command forwards your local port 9092 to the Kafka service in the 'kafka' namespace
+    kubectl port-forward svc/my-kafka-cluster-kafka-bootstrap -n kafka 9092:9092
+    ```
+
+2.  Open a **second terminal** and run the producer script:
+
+    ```bash
+    python 4-data-simulator/produce_payment_stream.py
+    ```
+    You should see output indicating that messages are being sent to Kafka.
+
+**Step 3: Launch the Spark Streaming Job via Airflow**
+
+1.  Navigate to your Airflow UI.
+2.  Find and un-pause the `streaming_payment_processor_dag`.
+3.  Manually trigger the DAG by clicking the "Play" button.
+
+**Step 4: Verify the Output in MinIO**
+
+1.  Access your MinIO dashboard at http://localhost:9001.
+2.  Navigate to the `bronze` bucket. After a minute or two, you will see a new directory named `streaming_payments` containing the output Parquet files.
+
+**Step 5: Stopping the Streaming Job**
+
+Since this is a continuous job, it must be stopped manually by deleting the `SparkApplication` resource from Kubernetes:
+
+```bash
+kubectl delete sparkapplication spark-streaming-payment-processor -n spark-jobs
+```
+
 ---
 
 # Architectural Overview: Data Consolidation Strategy
