@@ -177,7 +177,7 @@ info "5.2. Building and pushing Spark main application image..."
 
 # Define variables for the Spark main app image
 SPARK_APP_CONTEXT_DIR="${SCRIPT_DIR}/3-spark-app"
-SPARK_APP_IMAGE_NAME="psalmprax/spark-app:1.1.0"
+SPARK_APP_IMAGE_NAME="psalmprax/spark-app:1.0.0"
 
 # Set minikube docker-env to build directly into minikube's daemon
 if [[ "${USE_MINIKUBE_DOCKER_ENV}" == "true" ]]; then
