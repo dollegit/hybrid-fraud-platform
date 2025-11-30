@@ -53,6 +53,8 @@ spec:
   sparkConf:
     "spark.hadoop.fs.s3a.endpoint": "http://minio.storage.svc.cluster.local:9000"
     "spark.hadoop.fs.s3a.path.style.access": "true"
+    "spark.hadoop.fs.s3a.access.key": "minio"
+    "spark.hadoop.fs.s3a.secret.key": "minio123"
     "spark.sql.shuffle.partitions": "500"
     "spark.jars.ivy": "/tmp/.ivy2"
     # Add required packages for Kafka and S3A filesystem access (for MinIO)
