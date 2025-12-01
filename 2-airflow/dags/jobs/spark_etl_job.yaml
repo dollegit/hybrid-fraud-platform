@@ -30,7 +30,7 @@ spec:
             name: minio-credentials
             key: secretkey
       - name: KAFKA_BOOTSTRAP_SERVERS
-        value: my-kafka-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092
+        value: my-kafka-cluster-my-nodepool-0.my-kafka-cluster-kafka-brokers.kafka.svc.cluster.local:9092
       - name: KAFKA_TOPIC
         value: payment-events
   executor:
@@ -49,7 +49,7 @@ spec:
             name: minio-credentials
             key: secretkey
       - name: KAFKA_BOOTSTRAP_SERVERS
-        value: my-kafka-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092
+        value: my-kafka-cluster-my-nodepool-0.my-kafka-cluster-kafka-brokers.kafka.svc.cluster.local:9092
       - name: KAFKA_TOPIC
         value: payment-events
   sparkConf:
