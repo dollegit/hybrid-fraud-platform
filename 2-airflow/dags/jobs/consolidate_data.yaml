@@ -21,8 +21,6 @@ spec:
     "spark.hadoop.fs.s3a.connection.ssl.enabled": "false"
     "spark.hadoop.fs.s3a.impl": "org.apache.hadoop.fs.s3a.S3AFileSystem"
     "spark.sql.shuffle.partitions": "500"
-    "spark.jars.ivy": "/tmp/.ivy2"
-    "spark.ivy.dir": "/opt/spark/work-dir/.ivy2"
 
   driver:
     cores: 1
