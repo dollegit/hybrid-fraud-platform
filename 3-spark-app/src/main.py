@@ -19,7 +19,7 @@ def main():
     """
     # --- USE KUBERNETES ENV VARS ---
     kafka_bootstrap_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "my-kafka-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092")
-    kafka_topic = os.getenv("KAFKA_TOPIC", "payment-events")
+    kafka_topic = os.getenv("KAFKA_TOPIC", "paymentevents")
 
     # ✅ S3A paths - sparkConf handles endpoint/auth automatically!
     bronze_path = "s3a://datalake/bronze/payments"

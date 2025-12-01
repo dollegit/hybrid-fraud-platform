@@ -65,7 +65,7 @@ spec:
       - name: KAFKA_BOOTSTRAP_SERVERS
         value: my-kafka-cluster-my-nodepool-0.my-kafka-cluster-kafka-brokers.kafka.svc.cluster.local:9092
       - name: KAFKA_TOPIC
-        value: payment-events
+        value: paymentevents
   executor:
     cores: 1
     instances: 1
@@ -101,4 +101,4 @@ spec:
       - name: KAFKA_BOOTSTRAP_SERVERS
         value: my-kafka-cluster-my-nodepool-0.my-kafka-cluster-kafka-brokers.kafka.svc.cluster.local:9092
       - name: KAFKA_TOPIC
-        value: payment-events
+        value: paymentevents
