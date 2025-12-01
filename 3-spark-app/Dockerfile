@@ -1,7 +1,7 @@
 FROM apache/spark:3.5.1-python3
 
 USER root
-
+RUN apt-get update && apt-get install -y unzip
 # --- Add Required Jars ---
 # Spark-Kafka integration (connector + matching Kafka client)
 RUN curl -L -o /opt/spark/jars/spark-sql-kafka-0-10_2.12-3.5.1.jar \
