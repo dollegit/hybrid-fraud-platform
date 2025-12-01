@@ -40,6 +40,9 @@ def main():
         .option("kafka.bootstrap.servers", kafka_bootstrap_servers)
         .option("subscribe", kafka_topic)
         .option("startingOffsets", "earliest")
+        .option("kafka.group.id", "spark-payment-etl-group")  # Explicit consumer group
+        .option("kafka.session.timeout.ms", "30000")
+        .option("failOnDataLoss", "false")  # Don't fail on offset errors
         .load()
     )
 
