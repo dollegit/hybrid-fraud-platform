@@ -25,7 +25,6 @@ def main():
     bronze_path = "s3a://datalake/bronze/payments"
     silver_path = "s3a://datalake/silver/transactions"
     bronze_checkpoint_path = "s3a://spark-logs/checkpoints/bronze"
-    silver_checkpoint_path = "s3a://spark-logs/checkpoints/silver"
 
     # --- SPARK SESSION: NO S3A CONFIGS (already in sparkConf) ---
     spark = SparkSession.builder \
