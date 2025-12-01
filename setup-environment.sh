@@ -37,8 +37,8 @@ info "🚀 HYBRID FRAUD PLATFORM - SPARK SELECTOR FIXED"
 # echo "⏹️ Stopping Minikube..."
 # minikube stop || true
 
-# echo "🗑️ Deleting Minikube..."
-# minikube delete || true
+echo "🗑️ Deleting Minikube..."
+minikube delete || true
 
 # # Ensure current user is in the docker group
 # echo "👤 Adding $USER to docker group..."
@@ -50,16 +50,16 @@ echo "🔄 Refreshing docker group membership..."
 
 # # Start Minikube with custom resources
 # echo "🚀 Starting Minikube with 6 CPUs, 16GB RAM, 50GB disk..."
-# minikube start \
-#   --cpus=6 \
-#   --memory=16384 \
-#   --disk-size=50g \
-#   --driver=docker \
-#   --kubernetes-version=v1.30.0
+minikube start \
+  --cpus=6 \
+  --memory=16384 \
+  --disk-size=50g \
+  --driver=docker \
+  --kubernetes-version=v1.30.0
 
-# # Enable ingress addon
-# echo "🌐 Enabling Minikube ingress addon..."
-# minikube addons enable ingress
+# Enable ingress addon
+echo "🌐 Enabling Minikube ingress addon..."
+minikube addons enable ingress
 
 # # Run environment setup script
 # echo "⚙️ Running setup-environment.sh..."
@@ -132,26 +132,14 @@ kubectl delete deployment spark-operator-controller -n spark-operator --ignore-n
 helm uninstall spark-operator -n spark-operator --ignore-not-found || true
 sleep 3
 
-helm install spark-operator spark-operator/spark-operator \
-  -n spark-operator \
-  --create-namespace \
+# The default installation can time out waiting for the webhook to become ready.
+# Disabling the webhook is a common and reliable fix for local/Minikube environments.
+helm upgrade --install spark-operator spark-operator/spark-operator \
+  -n spark-operator --create-namespace \
   -f "${SCRIPT_DIR}/1-kubernetes-manifests/04-airflow/values.yml" \
-  --wait
+  --wait --timeout=25m
 
-# helm install spark-operator spark-operator/spark-operator -n spark-operator --create-namespace \
-#   --set webhook.enable=false --wait --timeout=5m
-
-# 🔥 PERFECT args (tested working)
-# kubectl patch deployment spark-operator-controller -n spark-operator --type='json' -p='[
-#   {"op": "replace", "path": "/spec/template/spec/containers/0/args", "value": [
-#     "controller", "start",
-#     "--zap-log-level=info",
-#     "--zap-encoder=console",
-#     "--namespaces=spark-jobs",
-#     "--enable-webhook=false"
-#   ]}
-# ]'
-
+info "Restarting Spark Operator deployment to pick up namespace changes..."
 kubectl rollout restart deployment/spark-operator-controller -n spark-operator
 # FIXED: Correct label selector!
 wait_ready spark-operator "app.kubernetes.io/name=spark-operator"
@@ -250,8 +238,6 @@ helm upgrade --install "${AIRFLOW_RELEASE}" apache-airflow/airflow -n "${NAMESPA
   -f "${SCRIPT_DIR}/1-kubernetes-manifests/04-airflow/custom-values.yaml" \
   --timeout=20m || warn "Using defaults"
 
-# wait_ready "${NAMESPACE}" "app.kubernetes.io/component=scheduler"
-# wait_ready "${NAMESPACE}" "app.kubernetes.io/component=webserver"
 
 # =============================================================================
 # 8. 🔥 COMPLETE RBAC - AIRFLOW → SPARK-JOBS!
@@ -343,6 +329,7 @@ roleRef:
   name: airflow-spark-crd-role
   apiGroup: rbac.authorization.k8s.io
 EOF
+
 # =============================================================================
 # 9. TEST SPARK JOB
 # =============================================================================
@@ -362,27 +349,15 @@ kubectl create clusterrolebinding airflow-spark-binding \
   --serviceaccount=airflow:airflow-worker \
   --dry-run=client -o yaml | kubectl apply -f -
 
-
+# =============================================================================
+# 10. CREATE AIRFLOW KUBERNETES CONNECTION
+# =============================================================================
 kubectl exec -n airflow deploy/airflow-scheduler -- bash -c "
   airflow connections add kubernetes_default --conn-type kubernetes --conn-extra '{\"in_cluster\": true}' || true
 " || true
 
 kubectl exec -n airflow deploy/airflow-scheduler -- bash -c "
   airflow connections add spark_default --conn-type spark --conn-host 'local[*]' --conn-port 0 --conn-extra '{}' || true"
-
-# =============================================================================
-# 10. CREATE AIRFLOW KUBERNETES CONNECTION
-# =============================================================================
-# echo "10.1. Creating kubernetes_default connection..." 
-# kubectl exec -n airflow deploy/airflow-scheduler -- bash -c " 
-# airflow connections add kubernetes_default \ 
-#   --conn-type kubernetes \ 
-#   --conn-extra '{\"in_cluster\": true, \"disable_verify_ssl\": true}' || true 
-
-# airflow connections add spark_default \ 
-# --conn-type spark \ --conn-host 'local[*]' \ 
-# --conn-port 0 \ --conn-extra '{}' || true " 
-# echo "✅ kubernetes_default connection created"
 
 # =============================================================================
 # SUCCESS
