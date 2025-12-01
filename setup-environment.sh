@@ -118,7 +118,7 @@ kubectl wait kafka/my-kafka-cluster --for=condition=Ready -n kafka --timeout=15m
 
 info "Creating Kafka topic 'payment-events'..."
 kubectl apply -f 1-kubernetes-manifests/02-kafka-strimzi/kafka-topic-payments.yaml -n kafka
-kubectl wait kafkatopic/payment-events --for=condition=Ready -n kafka --timeout=2m
+kubectl wait kafkatopic/paymentevents --for=condition=Ready -n kafka --timeout=2m
 
 # =============================================================================
 # 3. SPARK OPERATOR - FIXED SELECTOR!
@@ -177,13 +177,25 @@ wait_ready "${NAMESPACE}" "app.kubernetes.io/name=postgresql"
 # 5. CUSTOM AIRFLOW IMAGE
 # =============================================================================
 info "5. CUSTOM AIRFLOW BUILD..."
-CONN="postgresql+psycopg2://airflow:airflow@${PG_RELEASE}:5432/airflow"
-kubectl create secret generic airflow-db-secret -n "${NAMESPACE}" \
-  --from-literal=connection="${CONN}" --dry-run=client -o yaml | kubectl apply -f -
 
-mkdir -p 2-airflow
-pushd 2-airflow >/dev/null
-cat > Dockerfile <<'EOF'
+# Set the Docker environment to Minikube's daemon.
+# All subsequent 'docker build' commands will build images directly inside Minikube.
+if [[ "${USE_MINIKUBE_DOCKER_ENV}" == "true" ]]; then
+  info "Setting Docker environment to Minikube's context..."
+  eval "$(minikube -p minikube docker-env)"
+  info "Logging into Docker Hub from Minikube's Docker daemon..."
+  # This will prompt for your Docker Hub username and password.
+  # Ensure you are logged in to Docker Hub on your host machine first,
+  # or provide credentials via environment variables if running non-interactively.
+  docker login
+fi
+
+# --- 5.1 Build Custom Airflow Image ---
+info "5.1. Building custom Airflow image..."
+AIRFLOW_IMAGE_FULL="${DOCKER_IMAGE}:${DOCKER_TAG}"
+AIRFLOW_BUILD_CONTEXT="2-airflow"
+mkdir -p "${AIRFLOW_BUILD_CONTEXT}"
+cat > "${AIRFLOW_BUILD_CONTEXT}/Dockerfile" <<'EOF'
 FROM apache/airflow:3.0.2-python3.12
 USER root
 RUN apt-get update && apt-get install -y default-jre-headless && apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -192,68 +204,39 @@ ENV PATH="${JAVA_HOME}/bin:${PATH}"
 USER airflow
 RUN pip install --no-cache-dir apache-airflow-providers-apache-spark apache-airflow-providers-cncf-kubernetes dbt-core dbt-postgres
 EOF
+info "Building ${AIRFLOW_IMAGE_FULL} inside Minikube..."
+docker build -t "${AIRFLOW_IMAGE_FULL}" "${AIRFLOW_BUILD_CONTEXT}"
 
-IMAGE_FULL="${DOCKER_IMAGE}:${DOCKER_TAG}"
-if [[ "${USE_MINIKUBE_DOCKER_ENV}" == "true" ]]; then
-  eval "$(minikube -p minikube docker-env)"
-fi
-info "Building $IMAGE_FULL..."
-docker build -t "$IMAGE_FULL" .
-minikube image load "$IMAGE_FULL"
-[[ "${USE_MINIKUBE_DOCKER_ENV}" == "true" ]] && eval "$(minikube docker-env --unset)"
-popd >/dev/null
-
-# =============================================================================
-# 5.1 BUILD AND PUSH SPARK TEST IMAGE
-# =============================================================================
-info "5.1. Building and pushing Spark test image..."
-
-# Define variables for the Spark test image
+# --- 5.2 Build Spark Test Image ---
+info "5.2. Building Spark test image..."
 SPARK_TEST_CONTEXT_DIR="${SCRIPT_DIR}/spark-test-app"
 SPARK_TEST_IMAGE_NAME="psalmprax/spark-test:3.4.1"
-
-# The Airflow image build uses the minikube docker-env. We should unset it
-# before pushing to an external registry like Docker Hub.
-if [[ "${USE_MINIKUBE_DOCKER_ENV}" == "true" ]]; then
-  eval "$(minikube docker-env --unset)"
-fi
-
-info "Building Spark test image: ${SPARK_TEST_IMAGE_NAME}"
+info "Building ${SPARK_TEST_IMAGE_NAME} inside Minikube..."
 docker build -t "${SPARK_TEST_IMAGE_NAME}" -f "${SPARK_TEST_CONTEXT_DIR}/Dockerfile" "${SPARK_TEST_CONTEXT_DIR}"
 
-info "Pushing Spark test image to Docker Hub..."
-docker push "${SPARK_TEST_IMAGE_NAME}"
-docker push "${SPARK_TEST_IMAGE_NAME}" || warn "Failed to push ${SPARK_TEST_IMAGE_NAME}. Continuing..."
-
-# =============================================================================
-# 5.2 BUILD AND PUSH SPARK MAIN APP IMAGE
-# =============================================================================
-info "5.2. Building and pushing Spark main application image..."
-
-# Define variables for the Spark main app image
+# --- 5.3 Build Spark Main App Image ---
+info "5.3. Building Spark main application image..."
 SPARK_APP_CONTEXT_DIR="${SCRIPT_DIR}/3-spark-app"
 SPARK_APP_IMAGE_NAME="psalmprax/spark-app:1.0.0"
-
-# Set minikube docker-env to build directly into minikube's daemon
-if [[ "${USE_MINIKUBE_DOCKER_ENV}" == "true" ]]; then
-  eval "$(minikube -p minikube docker-env)"
-fi
-
-info "Building Spark main app image: ${SPARK_APP_IMAGE_NAME}"
+info "Building ${SPARK_APP_IMAGE_NAME} inside Minikube..."
 docker build -t "${SPARK_APP_IMAGE_NAME}" -f "${SPARK_APP_CONTEXT_DIR}/Dockerfile" "${SPARK_APP_CONTEXT_DIR}"
 
-info "Loading Spark main app image into Minikube..."
-minikube image load "${SPARK_APP_IMAGE_NAME}"
-
-info "Pushing Spark main app image to Docker Hub..."
-docker push "${SPARK_APP_IMAGE_NAME}" || warn "Failed to push ${SPARK_APP_IMAGE_NAME}. Continuing..."
+# Unset the Minikube Docker environment to return to the host's daemon
+if [[ "${USE_MINIKUBE_DOCKER_ENV}" == "true" ]]; then
+  info "Unsetting Minikube Docker environment."
+  eval "$(minikube docker-env --unset)"
+fi
 
 # =============================================================================
 # 6. DB MIGRATION
 # =============================================================================
 info "6. DB MIGRATION..."
+CONN="postgresql+psycopg2://airflow:airflow@${PG_RELEASE}:5432/airflow"
+kubectl create secret generic airflow-db-secret -n "${NAMESPACE}" \
+  --from-literal=connection="${CONN}" --dry-run=client -o yaml | kubectl apply -f -
+
 kubectl run airflow-db-migrate -n "${NAMESPACE}" --rm -i --tty --restart=Never \
-  --image="$IMAGE_FULL" \
+  --image="$AIRFLOW_IMAGE_FULL" \
   --env "AIRFLOW__CORE__SQL_ALCHEMY_CONN=$CONN" \
   --command -- airflow db migrate
 
