@@ -1,4 +1,4 @@
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1
 kind: KafkaTopic
 metadata:
   name: payment-events
@@ -8,6 +8,16 @@ metadata:
 spec:
   partitions: 3
   replicas: 1
-  config:
-    retention.ms: 604800000 # 7 days
-    segment.bytes: 1073741824 # 1 GB
+# apiVersion: kafka.strimzi.io/v1
+# kind: KafkaTopic
+# metadata:
+#   name: payment-events
+#   namespace: kafka
+#   labels:
+#     strimzi.io/cluster: my-kafka-cluster
+# spec:
+#   partitions: 3
+#   replicas: 1
+#   config:
+#     retention.ms: 604800000 # 7 days
+#     segment.bytes: 1073741824 # 1 GB

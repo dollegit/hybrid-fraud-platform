@@ -33,6 +33,43 @@ wait_ready() {
 
 info "🚀 HYBRID FRAUD PLATFORM - SPARK SELECTOR FIXED"
 
+# # Stop and delete any existing Minikube cluster
+# echo "⏹️ Stopping Minikube..."
+# minikube stop || true
+
+# echo "🗑️ Deleting Minikube..."
+# minikube delete || true
+
+# # Ensure current user is in the docker group
+# echo "👤 Adding $USER to docker group..."
+# sudo usermod -aG docker "$USER"
+
+# Refresh group membership for current shell
+echo "🔄 Refreshing docker group membership..."
+# newgrp docker <<EONG
+
+# # Start Minikube with custom resources
+# echo "🚀 Starting Minikube with 6 CPUs, 16GB RAM, 50GB disk..."
+# minikube start \
+#   --cpus=6 \
+#   --memory=16384 \
+#   --disk-size=50g \
+#   --driver=docker \
+#   --kubernetes-version=v1.30.0
+
+# # Enable ingress addon
+# echo "🌐 Enabling Minikube ingress addon..."
+# minikube addons enable ingress
+
+# # Run environment setup script
+# echo "⚙️ Running setup-environment.sh..."
+# ./setup-environment.sh
+
+# EONG
+
+echo "✅ Minikube environment setup complete!"
+
+
 # Prerequisites
 for cmd in kubectl helm docker; do command -v "$cmd" >/dev/null || { error "$cmd missing"; exit 1; }; done
 
