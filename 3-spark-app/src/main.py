@@ -1,9 +1,16 @@
 # COMMAND ----------
 import os
-import sys
-from pyspark.sql import SparkSession
+from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql.functions import col, from_json, current_timestamp
 from pyspark.sql.types import StructType, StructField, StringType, DoubleType, TimestampType
+
+def process_micro_batch(df: DataFrame, epoch_id: int, bronze_path: str, silver_path: str):
+    """Processes one micro-batch: writes to bronze and silver layers."""
+    print(f"--- Processing micro-batch {epoch_id} ---")
+    # Write to Bronze (with processing timestamp)
+    df.withColumn("processing_ts", current_timestamp()).write.format("parquet").mode("append").save(bronze_path)
+    # Write to Silver (with risk score)
+    df.withColumn("risk_score", col("amount") * 0.01).write.format("parquet").mode("append").save(silver_path)
 
 def main():
     """
@@ -13,7 +20,7 @@ def main():
     # --- USE KUBERNETES ENV VARS ---
     kafka_bootstrap_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "my-kafka-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092")
     kafka_topic = os.getenv("KAFKA_TOPIC", "payment-events")
-    
+
     # ✅ S3A paths - sparkConf handles endpoint/auth automatically!
     bronze_path = "s3a://datalake/bronze/payments"
     silver_path = "s3a://datalake/silver/transactions"
@@ -24,7 +31,7 @@ def main():
     spark = SparkSession.builder \
         .appName("OnPremPaymentETL") \
         .getOrCreate()
-    
+
     print("✅ Spark Session created (S3A pre-configured by SparkApplication)")
     print(f"✅ Kafka servers: {kafka_bootstrap_servers}")
 
@@ -41,6 +48,7 @@ def main():
     payment_schema = StructType([
         StructField("transaction_id", StringType(), True),
         StructField("user_id", StringType(), True),
+        StructField("user_name", StringType(), True),
         StructField("amount", DoubleType(), True),
         StructField("currency", StringType(), True),
         StructField("merchant_id", StringType(), True),
@@ -51,31 +59,18 @@ def main():
         from_json(col("value").cast("string"), payment_schema).alias("data")
     ).select("data.*")
 
-    # --- Bronze Layer (Raw) ---
-    bronze_df = parsed_df.withColumn("processing_ts", current_timestamp())
-    bronze_writer = (
-        bronze_df.writeStream.format("parquet")
-        .outputMode("append")
-        .option("path", bronze_path)  # ✅ S3A works automatically
+    # --- Process and Write using foreachBatch ---
+    # This is the recommended way to write to multiple locations from one stream.
+    query = (
+        parsed_df.writeStream
+        .foreachBatch(lambda df, epoch_id: process_micro_batch(df, epoch_id, bronze_path, silver_path))
         .option("checkpointLocation", bronze_checkpoint_path)
-        .partitionBy("processing_ts")
+        .trigger(processingTime="1 minute")
         .start()
     )
-    print(f"✅ Bronze streaming to: {bronze_path}")
 
-    # --- Silver Layer (Transformed) ---
-    silver_df = parsed_df.withColumn("risk_score", col("amount") * 0.01)
-    silver_writer = (
-        silver_df.writeStream.format("parquet")
-        .outputMode("append")
-        .option("path", silver_path)
-        .option("checkpointLocation", silver_checkpoint_path)
-        .start()
-    )
-    print(f"✅ Silver streaming to: {silver_path}")
-
-    # Keep streaming
-    spark.streams.awaitAnyTermination()
+    print(f"✅ Streaming started. Writing to Bronze ({bronze_path}) and Silver ({silver_path}).")
+    query.awaitTermination()
 
 if __name__ == "__main__":
     main()
