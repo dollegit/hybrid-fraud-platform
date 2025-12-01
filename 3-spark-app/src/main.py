@@ -43,6 +43,12 @@ def main():
         .option("kafka.group.id", "spark-payment-etl-group")  # Explicit consumer group
         .option("kafka.session.timeout.ms", "30000")
         .option("failOnDataLoss", "false")  # Don't fail on offset errors
+        # --- Robust metadata & connection handling ---
+        .option("kafka.metadata.max.age.ms", "5000")  # Refresh metadata frequently
+        .option("kafka.request.timeout.ms", "60000")  # Longer timeout for metadata requests
+        .option("kafka.connections.max.idle.ms", "540000")  # 9 min idle timeout
+        .option("kafka.reconnect.backoff.ms", "50")  # Quick reconnect on error
+        .option("kafka.reconnect.backoff.max.ms", "1000")  # Max 1 sec backoff
         .load()
     )
 
