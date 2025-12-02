@@ -58,8 +58,8 @@ spec:
     "spark.hadoop.fs.s3a.connection.ssl.enabled": "false"
     "spark.hadoop.fs.s3a.impl": "org.apache.hadoop.fs.s3a.S3AFileSystem"
     "spark.sql.shuffle.partitions": "500"
-    "spark.driver.extraClassPath": "/opt/spark/jars/*"
-    "spark.executor.extraClassPath": "/opt/spark/jars/*"
+    # "spark.driver.extraClassPath": "/opt/spark/jars/*"
+    # "spark.executor.extraClassPath": "/opt/spark/jars/*"
     "spark.jars": >
       local:///opt/spark/jars/spark-sql-kafka-0-10_2.12-3.5.1.jar,
       local:///opt/spark/jars/kafka-clients-3.5.1.jar,
