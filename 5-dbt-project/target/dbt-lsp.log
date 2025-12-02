@@ -960,3 +960,30 @@ Hint: run `db run` to build upstreams.
 14:56:42.020730 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.account_risk_snapshot' (Expected at db/schemas/airflow/dev_psalmprax/account_risk_snapshot).
 Hint: run `db run` to build upstreams.
 14:56:42.031742 [info ]: Cached model count updated: 8 models (accurate)
+15:03:00.543157 [info ]: Cached model count updated: 8 models (estimate)
+15:03:00.671205 [info ]: Cached model count updated: 8 models (estimate)
+15:03:00.837371 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+15:03:00.838291 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:25:9
+15:03:00.840508 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+15:03:00.841435 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:33:9
+15:03:00.842329 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+15:03:00.843056 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:18:9
+15:03:00.843955 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:21:9
+15:03:00.845494 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+15:03:00.846055 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:29:9
+15:03:01.033231 [info ]: Cached model count updated: 8 models (accurate)
+15:03:01.040193 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+15:03:02.549357 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+15:03:02.673503 [info ]: Cached model count updated: 8 models (accurate)
