@@ -5,7 +5,8 @@ models:
     description: "The final, unified table for payment intelligence, joining payments with account, risk, and fraud data. This model provides a point-in-time correct view for analysis."
     tests:
       - assert_row_count_greater_than:
-          min_rows: 100 # Fails if the model has fewer than 100 rows
+          arguments:
+            min_rows: 100 # Fails if the model has fewer than 100 rows
     columns:
       - name: payment_id
         description: "The unique identifier for each payment. This is the primary key of the table."
@@ -17,17 +18,20 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('stg_accounts')
-              field: account_id
+              arguments:
+                to: ref('stg_accounts')
+                field: account_id
       - name: is_fraud_flag
         description: "Boolean flag indicating if the transaction was reported as fraudulent."
         tests:
           - accepted_values:
-              values: [true, false]
+              arguments:
+                values: [true, false]
               config:
                 severity: warn # You can configure tests to be warnings instead of errors
       - name: timestamp
         description: "The timestamp of the payment event."
         tests:
           - is_after:
-              other_column_name: source_opening_date
+              arguments:
+                other_column_name: source_opening_date

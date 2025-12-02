@@ -33,3 +33,930 @@
 01:59:32.371180 [info ]: Creating LSP service...
 01:59:32.663007 [info ]: Creating LSP server...
 01:59:32.663058 [info ]: Starting LSP server...
+11:26:32.405688 [info ]: Cached model count updated: 8 models (estimate)
+11:26:33.287190 [error]: dbt0102: Deprecated test arguments: ["min_rows"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:8:21
+11:26:33.298957 [error]: dbt0102: Deprecated test arguments: ["values"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:26:23
+11:26:33.304986 [error]: dbt0102: Deprecated test arguments: ["field", "to"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:21:22
+11:26:33.307261 [error]: dbt0102: Deprecated test arguments: ["other_column_name"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:33:34
+11:26:33.463417 [error]: dbt1005: Source 'raw_data.payments' not found in project. Searched for 'payments'
+  --> models/staging/stg_payments.sql:4:42
+11:26:33.469056 [info ]: Cached model count updated: 8 models (accurate)
+11:26:35.191028 [error]: dbt1501: Failed to render SQL not a key type: Source not found for source name: raw_data, table name: payments
+(in models/staging/stg_payments.sql:4:42)
+  --> models/staging/stg_payments.sql:4:42
+11:26:35.384746 [info ]: Cached model count updated: 8 models (accurate)
+==================== 2025-12-02 11:51:46.856245 | 128d659f-012e-4d23-a9a7-5969182c6587 ====================
+11:51:46.856505 [info ]: Starting dbt LSP server
+11:51:46.856541 [info ]: Connecting to LSP client on port 8000
+11:51:46.866977 [info ]: Successfully connected to LSP client
+11:51:46.867076 [info ]: Creating LSP service...
+11:51:47.925469 [info ]: Creating LSP server...
+11:51:47.925586 [info ]: Starting LSP server...
+11:51:49.188327 [info ]: Cached model count updated: 8 models (estimate)
+11:51:49.443791 [error]: dbt0102: Deprecated test arguments: ["min_rows"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:8:21
+11:51:49.444538 [error]: dbt0102: Deprecated test arguments: ["values"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:26:23
+11:51:49.449457 [error]: dbt0102: Deprecated test arguments: ["field", "to"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:21:22
+11:51:49.449896 [error]: dbt0102: Deprecated test arguments: ["other_column_name"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:33:34
+11:51:49.684119 [error]: dbt1005: Source 'raw_data.payments' not found in project. Searched for 'payments'
+  --> models/staging/stg_payments.sql:4:42
+11:51:49.699496 [info ]: Cached model count updated: 8 models (accurate)
+11:51:52.155319 [error]: dbt1501: Failed to render SQL not a key type: Source not found for source name: raw_data, table name: payments
+(in models/staging/stg_payments.sql:4:42)
+  --> models/staging/stg_payments.sql:4:42
+11:51:52.225521 [info ]: Cached model count updated: 8 models (accurate)
+12:04:09.911558 [info ]: Cached model count updated: 8 models (estimate)
+12:04:10.018438 [error]: dbt1005: Source 'on_prem_raw_data.raw_payments' not found in project. Searched for 'raw_payments'
+  --> models/staging/stg_payments.sql:5:19
+12:04:10.021353 [info ]: Cached model count updated: 8 models (accurate)
+12:04:10.025819 [debug]: Incremental compilation - 2 nodes selected: {"model.fraud_detection_dbt.stg_payments", "model.fraud_detection_dbt.unified_payment_intelligence"}
+12:04:10.048165 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+12:04:10.836062 [error]: dbt1501: Failed to render SQL not a key type: Source not found for source name: on_prem_raw_data, table name: raw_payments
+(in models/staging/stg_payments.sql:5:19)
+  --> models/staging/stg_payments.sql:5:19
+12:04:10.839986 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.account_risk_snapshot' (Expected at db/schemas/airflow/dev_psalmprax/account_risk_snapshot).
+Hint: run `db run` to build upstreams.
+12:04:10.840270 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_accounts' (Expected at db/schemas/airflow/dev_psalmprax/stg_accounts).
+Hint: run `db run` to build upstreams.
+12:04:10.840562 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_fraud_cases' (Expected at db/schemas/airflow/dev_psalmprax/stg_fraud_cases).
+Hint: run `db run` to build upstreams.
+12:04:10.852198 [info ]: Cached model count updated: 8 models (accurate)
+12:05:07.303217 [info ]: Cached model count updated: 8 models (estimate)
+12:05:07.517344 [info ]: Cached model count updated: 8 models (estimate)
+12:05:07.688744 [error]: dbt0102: Deprecated test arguments: ["min_rows"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:8:21
+12:05:07.689798 [error]: dbt0102: Deprecated test arguments: ["values"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:26:23
+12:05:07.701357 [error]: dbt0102: Deprecated test arguments: ["field", "to"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:21:22
+12:05:07.705502 [error]: dbt0102: Deprecated test arguments: ["other_column_name"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:33:34
+12:05:07.840627 [error]: dbt1005: Source 'on_prem_raw_data.raw_payments' not found in project. Searched for 'raw_payments'
+  --> models/staging/stg_payments.sql:5:19
+12:05:07.848950 [info ]: Cached model count updated: 8 models (accurate)
+12:05:08.768107 [error]: dbt1501: Failed to render SQL not a key type: Source not found for source name: on_prem_raw_data, table name: raw_payments
+(in models/staging/stg_payments.sql:5:19)
+  --> models/staging/stg_payments.sql:5:19
+12:05:08.774617 [info ]: Cached model count updated: 8 models (accurate)
+12:05:28.599686 [info ]: Cached model count updated: 8 models (estimate)
+12:05:29.554200 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+12:05:29.565088 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+12:05:29.565747 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+12:05:29.566289 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:17:9
+12:05:29.566681 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+12:05:29.621436 [info ]: Cached model count updated: 8 models (accurate)
+12:05:29.641530 [debug]: Incremental compilation - 6 nodes selected: {"model.fraud_detection_dbt.stg_payments", "model.fraud_detection_dbt.unified_payment_intelligence", "source.fraud_detection_dbt.on_prem_raw_data.raw_accounts", "source.fraud_detection_dbt.on_prem_raw_data.raw_fraud_cases", "source.fraud_detection_dbt.on_prem_raw_data.raw_payments", "source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed"}
+12:05:29.722499 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+12:05:30.633703 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_fraud_cases' (Expected at db/schemas/airflow/dev_psalmprax/stg_fraud_cases).
+Hint: run `db run` to build upstreams.
+12:05:30.640433 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.account_risk_snapshot' (Expected at db/schemas/airflow/dev_psalmprax/account_risk_snapshot).
+Hint: run `db run` to build upstreams.
+12:05:30.640650 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+12:05:30.653335 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_accounts' (Expected at db/schemas/airflow/dev_psalmprax/stg_accounts).
+Hint: run `db run` to build upstreams.
+12:05:30.755127 [info ]: Cached model count updated: 8 models (accurate)
+12:08:49.116448 [info ]: Cached model count updated: 8 models (estimate)
+12:08:49.181136 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:12:9
+12:08:49.181609 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:15:9
+12:08:49.214713 [info ]: Cached model count updated: 8 models (accurate)
+12:08:49.215410 [debug]: Incremental compilation - 6 nodes selected: {"model.fraud_detection_dbt.stg_payments", "model.fraud_detection_dbt.unified_payment_intelligence", "source.fraud_detection_dbt.on_prem_raw_data.raw_accounts", "source.fraud_detection_dbt.on_prem_raw_data.raw_fraud_cases", "source.fraud_detection_dbt.on_prem_raw_data.raw_payments", "source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed"}
+12:08:49.225640 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+12:08:49.881496 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_fraud_cases' (Expected at db/schemas/airflow/dev_psalmprax/stg_fraud_cases).
+Hint: run `db run` to build upstreams.
+12:08:49.881617 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.account_risk_snapshot' (Expected at db/schemas/airflow/dev_psalmprax/account_risk_snapshot).
+Hint: run `db run` to build upstreams.
+12:08:49.881896 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+12:08:49.882210 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_accounts' (Expected at db/schemas/airflow/dev_psalmprax/stg_accounts).
+Hint: run `db run` to build upstreams.
+12:08:49.895451 [info ]: Cached model count updated: 8 models (accurate)
+12:09:43.820627 [info ]: Cached model count updated: 8 models (estimate)
+12:09:43.881384 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:12:9
+12:09:43.896453 [info ]: Cached model count updated: 8 models (accurate)
+12:09:43.897422 [debug]: Incremental compilation - 6 nodes selected: {"model.fraud_detection_dbt.stg_payments", "model.fraud_detection_dbt.unified_payment_intelligence", "source.fraud_detection_dbt.on_prem_raw_data.raw_accounts", "source.fraud_detection_dbt.on_prem_raw_data.raw_fraud_cases", "source.fraud_detection_dbt.on_prem_raw_data.raw_payments", "source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed"}
+12:09:43.901300 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+12:09:44.356171 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+12:09:44.356281 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.account_risk_snapshot' (Expected at db/schemas/airflow/dev_psalmprax/account_risk_snapshot).
+Hint: run `db run` to build upstreams.
+12:09:44.356310 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_accounts' (Expected at db/schemas/airflow/dev_psalmprax/stg_accounts).
+Hint: run `db run` to build upstreams.
+12:09:44.357496 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_fraud_cases' (Expected at db/schemas/airflow/dev_psalmprax/stg_fraud_cases).
+Hint: run `db run` to build upstreams.
+12:09:44.372895 [info ]: Cached model count updated: 8 models (accurate)
+12:14:29.366187 [info ]: Cached model count updated: 8 models (estimate)
+12:14:29.555687 [info ]: Cached model count updated: 8 models (estimate)
+12:14:29.611449 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:12:9
+12:14:29.627911 [info ]: Cached model count updated: 8 models (accurate)
+12:14:29.628879 [debug]: Incremental compilation - 6 nodes selected: {"model.fraud_detection_dbt.stg_payments", "model.fraud_detection_dbt.unified_payment_intelligence", "source.fraud_detection_dbt.on_prem_raw_data.raw_accounts", "source.fraud_detection_dbt.on_prem_raw_data.raw_fraud_cases", "source.fraud_detection_dbt.on_prem_raw_data.raw_payments", "source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed"}
+12:14:29.633146 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+12:14:30.450446 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+12:14:30.451070 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_fraud_cases' (Expected at db/schemas/airflow/dev_psalmprax/stg_fraud_cases).
+Hint: run `db run` to build upstreams.
+12:14:30.451172 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_accounts' (Expected at db/schemas/airflow/dev_psalmprax/stg_accounts).
+Hint: run `db run` to build upstreams.
+12:14:30.451256 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.account_risk_snapshot' (Expected at db/schemas/airflow/dev_psalmprax/account_risk_snapshot).
+Hint: run `db run` to build upstreams.
+12:14:30.521060 [info ]: Cached model count updated: 8 models (accurate)
+12:15:33.433203 [info ]: Cached model count updated: 8 models (estimate)
+12:15:33.506423 [info ]: Cached model count updated: 8 models (accurate)
+12:15:33.507464 [debug]: Incremental compilation - 6 nodes selected: {"model.fraud_detection_dbt.stg_payments", "model.fraud_detection_dbt.unified_payment_intelligence", "source.fraud_detection_dbt.on_prem_raw_data.raw_accounts", "source.fraud_detection_dbt.on_prem_raw_data.raw_fraud_cases", "source.fraud_detection_dbt.on_prem_raw_data.raw_payments", "source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed"}
+12:15:33.510953 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+12:15:34.111457 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+12:15:34.112109 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_accounts' (Expected at db/schemas/airflow/dev_psalmprax/stg_accounts).
+Hint: run `db run` to build upstreams.
+12:15:34.112198 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_fraud_cases' (Expected at db/schemas/airflow/dev_psalmprax/stg_fraud_cases).
+Hint: run `db run` to build upstreams.
+12:15:34.112668 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.account_risk_snapshot' (Expected at db/schemas/airflow/dev_psalmprax/account_risk_snapshot).
+Hint: run `db run` to build upstreams.
+12:15:34.161209 [info ]: Cached model count updated: 8 models (accurate)
+12:16:58.131562 [info ]: Cached model count updated: 8 models (estimate)
+12:16:58.259771 [info ]: Cached model count updated: 8 models (estimate)
+12:16:58.796319 [info ]: Cached model count updated: 8 models (estimate)
+12:16:58.917728 [error]: dbt1060: Ignored unexpected key 'count'. Try '+count' instead. YAML path: 'on_prem_raw_data.freshness.error_after.count'.
+  --> dbt_project.yml:38:28
+12:16:58.918127 [error]: dbt1060: Ignored unexpected key 'period'. Try '+period' instead. YAML path: 'on_prem_raw_data.freshness.error_after.period'.
+  --> dbt_project.yml:38:40
+12:16:58.918720 [error]: dbt1060: Ignored unexpected key 'count'. Try '+count' instead. YAML path: 'on_prem_raw_data.freshness.warn_after.count'.
+  --> dbt_project.yml:37:27
+12:16:58.921751 [error]: dbt1060: Ignored unexpected key 'period'. Try '+period' instead. YAML path: 'on_prem_raw_data.freshness.warn_after.period'.
+  --> dbt_project.yml:37:39
+12:16:58.922537 [error]: dbt1060: Ignored unexpected key 'loaded_at_field'. Try '+loaded_at_field' instead. YAML path: 'on_prem_raw_data.loaded_at_field'.
+  --> dbt_project.yml:35:22
+12:16:58.993599 [error]: dbt1060: Ignored unexpected key 'count'. Try '+count' instead. YAML path: 'on_prem_raw_data.freshness.error_after.count'.
+  --> dbt_project.yml:38:28
+12:16:58.993897 [error]: dbt1060: Ignored unexpected key 'period'. Try '+period' instead. YAML path: 'on_prem_raw_data.freshness.error_after.period'.
+  --> dbt_project.yml:38:40
+12:16:58.994036 [error]: dbt1060: Ignored unexpected key 'count'. Try '+count' instead. YAML path: 'on_prem_raw_data.freshness.warn_after.count'.
+  --> dbt_project.yml:37:27
+12:16:58.994091 [error]: dbt1060: Ignored unexpected key 'period'. Try '+period' instead. YAML path: 'on_prem_raw_data.freshness.warn_after.period'.
+  --> dbt_project.yml:37:39
+12:16:58.994147 [error]: dbt1060: Ignored unexpected key 'loaded_at_field'. Try '+loaded_at_field' instead. YAML path: 'on_prem_raw_data.loaded_at_field'.
+  --> dbt_project.yml:35:22
+12:16:59.055868 [error]: dbt0102: Deprecated test arguments: ["min_rows"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:8:21
+12:16:59.057412 [error]: dbt0102: Deprecated test arguments: ["values"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:26:23
+12:16:59.061831 [error]: dbt0102: Deprecated test arguments: ["field", "to"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:21:22
+12:16:59.062849 [error]: dbt0102: Deprecated test arguments: ["other_column_name"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:33:34
+12:16:59.165289 [info ]: Cached model count updated: 8 models (accurate)
+12:16:59.190971 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+12:17:00.200904 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+12:17:00.280326 [info ]: Cached model count updated: 8 models (accurate)
+12:19:55.151683 [error]: dbt1060: Ignored unexpected key `"+warn_after"`. YAML path: `sources.on_prem_raw_data.+freshness.+warn_after`.
+  --> dbt_project.yml:37:7
+12:19:55.153448 [error]: dbt1060: Ignored unexpected key `"+error_after"`. YAML path: `sources.on_prem_raw_data.+freshness.+error_after`.
+  --> dbt_project.yml:40:7
+12:19:55.156763 [info ]: Cached model count updated: 8 models (estimate)
+12:19:55.205220 [error]: dbt1060: Ignored unexpected key `"+warn_after"`. YAML path: `sources.on_prem_raw_data.+freshness.+warn_after`.
+  --> dbt_project.yml:37:7
+12:19:55.205367 [error]: dbt1060: Ignored unexpected key `"+error_after"`. YAML path: `sources.on_prem_raw_data.+freshness.+error_after`.
+  --> dbt_project.yml:40:7
+12:19:55.212585 [info ]: Cached model count updated: 8 models (estimate)
+12:19:55.306662 [error]: dbt0102: Deprecated test arguments: ["min_rows"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:8:21
+12:19:55.307235 [error]: dbt0102: Deprecated test arguments: ["values"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:26:23
+12:19:55.308844 [error]: dbt0102: Deprecated test arguments: ["field", "to"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:21:22
+12:19:55.309503 [error]: dbt0102: Deprecated test arguments: ["other_column_name"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:33:34
+12:19:55.373200 [info ]: Cached model count updated: 8 models (accurate)
+12:19:55.377038 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+12:19:55.820675 [error]: dbt1060: Ignored unexpected key `"+warn_after"`. YAML path: `sources.on_prem_raw_data.+freshness.+warn_after`.
+  --> dbt_project.yml:37:7
+12:19:55.821837 [error]: dbt1060: Ignored unexpected key `"+error_after"`. YAML path: `sources.on_prem_raw_data.+freshness.+error_after`.
+  --> dbt_project.yml:40:7
+12:19:56.024153 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+12:19:56.053683 [info ]: Cached model count updated: 8 models (accurate)
+12:20:57.056867 [info ]: Cached model count updated: 8 models (estimate)
+12:20:57.151208 [info ]: Cached model count updated: 8 models (estimate)
+12:20:57.259353 [error]: dbt0102: Deprecated test arguments: ["min_rows"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:8:21
+12:20:57.260026 [error]: dbt0102: Deprecated test arguments: ["values"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:26:23
+12:20:57.261550 [error]: dbt0102: Deprecated test arguments: ["field", "to"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:21:22
+12:20:57.262001 [error]: dbt0102: Deprecated test arguments: ["other_column_name"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:33:34
+12:20:57.289576 [info ]: Cached model count updated: 8 models (accurate)
+12:20:57.291622 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+12:20:57.691212 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+12:20:57.720349 [info ]: Cached model count updated: 8 models (accurate)
+12:22:09.211870 [info ]: Cached model count updated: 8 models (estimate)
+12:22:09.253520 [info ]: Cached model count updated: 8 models (estimate)
+12:22:09.336856 [error]: dbt0102: Deprecated test arguments: ["min_rows"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:8:21
+12:22:09.337728 [error]: dbt0102: Deprecated test arguments: ["values"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:26:23
+12:22:09.340019 [error]: dbt0102: Deprecated test arguments: ["field", "to"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:21:22
+12:22:09.340662 [error]: dbt0102: Deprecated test arguments: ["other_column_name"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:33:34
+12:22:09.362416 [info ]: Cached model count updated: 8 models (accurate)
+12:22:09.364445 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+12:22:11.706552 [info ]: Cached model count updated: 8 models (estimate)
+12:22:11.869040 [error]: dbt0102: Deprecated test arguments: ["min_rows"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:8:21
+12:22:11.869865 [error]: dbt0102: Deprecated test arguments: ["values"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:26:23
+12:22:11.874227 [error]: dbt0102: Deprecated test arguments: ["field", "to"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:21:22
+12:22:11.875276 [error]: dbt0102: Deprecated test arguments: ["other_column_name"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:33:34
+12:22:11.939911 [info ]: Cached model count updated: 8 models (accurate)
+12:22:11.947127 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+12:22:12.367945 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+12:22:12.382994 [info ]: Cached model count updated: 8 models (accurate)
+==================== 2025-12-02 12:51:34.337279 | 3d757ff1-7117-40e4-8ab5-0092ee09dd21 ====================
+12:51:34.337477 [info ]: Starting dbt LSP server
+12:51:34.337510 [info ]: Connecting to LSP client on port 8000
+12:51:34.339712 [info ]: Successfully connected to LSP client
+12:51:34.339742 [info ]: Creating LSP service...
+12:51:34.764831 [info ]: Creating LSP server...
+12:51:34.764971 [info ]: Starting LSP server...
+12:51:35.517878 [info ]: Cached model count updated: 8 models (estimate)
+12:51:36.562114 [error]: dbt0102: Deprecated test arguments: ["min_rows"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:8:21
+12:51:36.563128 [error]: dbt0102: Deprecated test arguments: ["values"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:26:23
+12:51:36.564548 [error]: dbt0102: Deprecated test arguments: ["field", "to"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:21:22
+12:51:36.565136 [error]: dbt0102: Deprecated test arguments: ["other_column_name"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:33:34
+12:51:36.834390 [info ]: Cached model count updated: 8 models (accurate)
+12:51:37.124037 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+12:51:37.582332 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+12:51:37.612277 [info ]: Cached model count updated: 8 models (accurate)
+12:56:36.663186 [info ]: Cached model count updated: 8 models (estimate)
+12:56:36.735006 [info ]: Cached model count updated: 8 models (estimate)
+12:56:36.927611 [error]: dbt0102: Deprecated test arguments: ["min_rows"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:8:21
+12:56:36.928533 [error]: dbt0102: Deprecated test arguments: ["values"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:26:23
+12:56:36.932292 [error]: dbt0102: Deprecated test arguments: ["field", "to"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:21:22
+12:56:36.933241 [error]: dbt0102: Deprecated test arguments: ["other_column_name"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:33:34
+12:56:36.984904 [info ]: Cached model count updated: 8 models (accurate)
+12:56:36.991659 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+12:56:37.669707 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+12:56:37.722760 [info ]: Cached model count updated: 8 models (accurate)
+12:56:49.014303 [info ]: Cached model count updated: 8 models (estimate)
+12:56:49.080992 [info ]: Cached model count updated: 8 models (estimate)
+12:56:49.204252 [warn ]: dbt0102: Duplicate definition for table 'raw_payments' in source 'on_prem_raw_data' found in file 'models/sources_test.yml'. Using definition from 'models/sources.yml'.
+12:56:49.204359 [warn ]: dbt0102: Duplicate definition for table 'raw_accounts' in source 'on_prem_raw_data' found in file 'models/sources_test.yml'. Using definition from 'models/sources.yml'.
+12:56:49.204405 [warn ]: dbt0102: Duplicate definition for table 'raw_risk_feed' in source 'on_prem_raw_data' found in file 'models/sources_test.yml'. Using definition from 'models/sources.yml'.
+12:56:49.204443 [warn ]: dbt0102: Duplicate definition for table 'raw_fraud_cases' in source 'on_prem_raw_data' found in file 'models/sources_test.yml'. Using definition from 'models/sources.yml'.
+12:56:49.206497 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+12:56:49.206796 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+12:56:49.207007 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+12:56:49.207164 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:17:9
+12:56:49.207345 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+12:56:49.239231 [error]: dbt0102: Deprecated test arguments: ["min_rows"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:8:21
+12:56:49.239741 [error]: dbt0102: Deprecated test arguments: ["values"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:26:23
+12:56:49.241494 [error]: dbt0102: Deprecated test arguments: ["field", "to"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:21:22
+12:56:49.241962 [error]: dbt0102: Deprecated test arguments: ["other_column_name"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:33:34
+12:56:49.272295 [info ]: Cached model count updated: 8 models (accurate)
+12:56:49.279235 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+12:56:49.622952 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+12:56:49.653019 [info ]: Cached model count updated: 8 models (accurate)
+12:57:20.291349 [info ]: Cached model count updated: 8 models (estimate)
+12:57:20.371712 [info ]: Cached model count updated: 8 models (estimate)
+12:57:20.503383 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+12:57:20.503745 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+12:57:20.503987 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+12:57:20.505890 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:17:9
+12:57:20.506211 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+12:57:20.552419 [error]: dbt0102: Deprecated test arguments: ["min_rows"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:8:21
+12:57:20.553443 [error]: dbt0102: Deprecated test arguments: ["values"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:26:23
+12:57:20.556555 [error]: dbt0102: Deprecated test arguments: ["field", "to"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:21:22
+12:57:20.557247 [error]: dbt0102: Deprecated test arguments: ["other_column_name"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:33:34
+12:57:20.589107 [info ]: Cached model count updated: 8 models (accurate)
+12:57:20.591153 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+12:57:21.292781 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+12:57:21.337362 [info ]: Cached model count updated: 8 models (accurate)
+12:57:32.627560 [info ]: Cached model count updated: 8 models (estimate)
+12:57:32.690646 [info ]: Cached model count updated: 8 models (estimate)
+12:57:32.772213 [warn ]: dbt0102: Duplicate definition for table 'raw_payments' in source 'on_prem_raw_data' found in file 'models/sources_test.yml'. Using definition from 'models/sources.yml'.
+12:57:32.772308 [warn ]: dbt0102: Duplicate definition for table 'raw_accounts' in source 'on_prem_raw_data' found in file 'models/sources_test.yml'. Using definition from 'models/sources.yml'.
+12:57:32.773394 [warn ]: dbt0102: Duplicate definition for table 'raw_risk_feed' in source 'on_prem_raw_data' found in file 'models/sources_test.yml'. Using definition from 'models/sources.yml'.
+12:57:32.773474 [warn ]: dbt0102: Duplicate definition for table 'raw_fraud_cases' in source 'on_prem_raw_data' found in file 'models/sources_test.yml'. Using definition from 'models/sources.yml'.
+12:57:32.775594 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+12:57:32.775892 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+12:57:32.776142 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+12:57:32.776288 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:17:9
+12:57:32.776501 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+12:57:32.838561 [error]: dbt0102: Deprecated test arguments: ["min_rows"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:8:21
+12:57:32.839706 [error]: dbt0102: Deprecated test arguments: ["values"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:26:23
+12:57:32.842273 [error]: dbt0102: Deprecated test arguments: ["field", "to"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:21:22
+12:57:32.844245 [error]: dbt0102: Deprecated test arguments: ["other_column_name"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:33:34
+12:57:32.900024 [info ]: Cached model count updated: 8 models (accurate)
+12:57:32.903048 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+12:57:33.597411 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+12:57:33.791431 [info ]: Cached model count updated: 8 models (accurate)
+12:57:48.784970 [info ]: Cached model count updated: 8 models (estimate)
+12:57:48.941117 [info ]: Cached model count updated: 8 models (estimate)
+12:57:49.119433 [error]: dbt0102: Deprecated test arguments: ["min_rows"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:8:21
+12:57:49.120324 [error]: dbt0102: Deprecated test arguments: ["values"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:26:23
+12:57:49.122566 [error]: dbt0102: Deprecated test arguments: ["field", "to"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:21:22
+12:57:49.123318 [error]: dbt0102: Deprecated test arguments: ["other_column_name"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:33:34
+12:57:49.150425 [info ]: Cached model count updated: 8 models (accurate)
+12:57:49.152522 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+12:57:49.660483 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+12:57:49.708674 [info ]: Cached model count updated: 8 models (accurate)
+13:00:05.845551 [info ]: Cached model count updated: 8 models (estimate)
+13:00:05.979058 [info ]: Cached model count updated: 8 models (estimate)
+13:00:06.091230 [error]: dbt0102: Deprecated test arguments: ["min_rows"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:8:21
+13:00:06.092646 [error]: dbt0102: Deprecated test arguments: ["values"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:26:23
+13:00:06.095814 [error]: dbt0102: Deprecated test arguments: ["field", "to"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:21:22
+13:00:06.096726 [error]: dbt0102: Deprecated test arguments: ["other_column_name"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:33:34
+13:00:06.167433 [info ]: Cached model count updated: 8 models (accurate)
+13:00:06.171335 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+13:00:06.865471 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+13:00:06.919949 [info ]: Cached model count updated: 8 models (accurate)
+13:01:39.377908 [info ]: Cached model count updated: 8 models (estimate)
+13:01:39.439988 [info ]: Cached model count updated: 8 models (estimate)
+13:01:39.621282 [error]: dbt0102: Deprecated test arguments: ["min_rows"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:8:21
+13:01:39.622321 [error]: dbt0102: Deprecated test arguments: ["values"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:26:23
+13:01:39.627670 [error]: dbt0102: Deprecated test arguments: ["field", "to"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:21:22
+13:01:39.628255 [error]: dbt0102: Deprecated test arguments: ["other_column_name"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:33:34
+13:01:39.646785 [info ]: Cached model count updated: 8 models (accurate)
+13:01:39.648867 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+13:01:40.084105 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+13:01:40.099047 [info ]: Cached model count updated: 8 models (accurate)
+13:01:40.732813 [info ]: Cached model count updated: 8 models (estimate)
+13:01:40.812618 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:01:40.812946 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:01:40.813158 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:01:40.813263 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:17:9
+13:01:40.813502 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:01:40.847565 [info ]: Cached model count updated: 8 models (accurate)
+13:01:40.891763 [debug]: Incremental compilation - 6 nodes selected: {"model.fraud_detection_dbt.stg_payments", "model.fraud_detection_dbt.unified_payment_intelligence", "source.fraud_detection_dbt.on_prem_raw_data.raw_accounts", "source.fraud_detection_dbt.on_prem_raw_data.raw_fraud_cases", "source.fraud_detection_dbt.on_prem_raw_data.raw_payments", "source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed"}
+13:01:40.894824 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+13:01:41.428632 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_fraud_cases' (Expected at db/schemas/airflow/dev_psalmprax/stg_fraud_cases).
+Hint: run `db run` to build upstreams.
+13:01:41.428835 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_accounts' (Expected at db/schemas/airflow/dev_psalmprax/stg_accounts).
+Hint: run `db run` to build upstreams.
+13:01:41.428962 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.account_risk_snapshot' (Expected at db/schemas/airflow/dev_psalmprax/account_risk_snapshot).
+Hint: run `db run` to build upstreams.
+13:01:41.429109 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+13:01:41.442535 [info ]: Cached model count updated: 8 models (accurate)
+13:03:18.925683 [info ]: Cached model count updated: 8 models (estimate)
+13:03:19.067395 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:03:19.067650 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:21:9
+13:03:19.067905 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:03:19.068075 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:29:9
+13:03:19.068283 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:03:19.068485 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:17:9
+13:03:19.068731 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:03:19.069009 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:25:9
+13:03:19.154473 [info ]: Cached model count updated: 8 models (accurate)
+13:03:19.158611 [debug]: Incremental compilation - 6 nodes selected: {"model.fraud_detection_dbt.stg_payments", "model.fraud_detection_dbt.unified_payment_intelligence", "source.fraud_detection_dbt.on_prem_raw_data.raw_accounts", "source.fraud_detection_dbt.on_prem_raw_data.raw_fraud_cases", "source.fraud_detection_dbt.on_prem_raw_data.raw_payments", "source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed"}
+13:03:19.168267 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+13:03:21.238210 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+13:03:21.238522 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_fraud_cases' (Expected at db/schemas/airflow/dev_psalmprax/stg_fraud_cases).
+Hint: run `db run` to build upstreams.
+13:03:21.238708 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_accounts' (Expected at db/schemas/airflow/dev_psalmprax/stg_accounts).
+Hint: run `db run` to build upstreams.
+13:03:21.238806 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.account_risk_snapshot' (Expected at db/schemas/airflow/dev_psalmprax/account_risk_snapshot).
+Hint: run `db run` to build upstreams.
+13:03:21.271737 [info ]: Cached model count updated: 8 models (accurate)
+13:04:57.480474 [info ]: Cached model count updated: 8 models (estimate)
+13:05:52.215689 [info ]: Cached model count updated: 8 models (estimate)
+13:05:52.335793 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:05:52.336695 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:21:9
+13:05:52.338840 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:05:52.339393 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:29:9
+13:05:52.340159 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:05:52.340667 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:17:9
+13:05:52.343939 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:05:52.344198 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:25:9
+13:05:52.392331 [info ]: Cached model count updated: 8 models (accurate)
+13:05:52.393870 [debug]: Incremental compilation - 6 nodes selected: {"model.fraud_detection_dbt.stg_payments", "model.fraud_detection_dbt.unified_payment_intelligence", "source.fraud_detection_dbt.on_prem_raw_data.raw_accounts", "source.fraud_detection_dbt.on_prem_raw_data.raw_fraud_cases", "source.fraud_detection_dbt.on_prem_raw_data.raw_payments", "source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed"}
+13:05:52.403531 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+13:05:53.406094 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+13:05:53.410382 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_fraud_cases' (Expected at db/schemas/airflow/dev_psalmprax/stg_fraud_cases).
+Hint: run `db run` to build upstreams.
+13:05:53.411172 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_accounts' (Expected at db/schemas/airflow/dev_psalmprax/stg_accounts).
+Hint: run `db run` to build upstreams.
+13:05:53.411269 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.account_risk_snapshot' (Expected at db/schemas/airflow/dev_psalmprax/account_risk_snapshot).
+Hint: run `db run` to build upstreams.
+13:05:53.433101 [info ]: Cached model count updated: 8 models (accurate)
+13:08:28.557519 [info ]: Cached model count updated: 8 models (estimate)
+13:08:28.727057 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:08:28.766013 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:35:9
+13:08:28.775736 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:08:28.807473 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:62:9
+13:08:28.810291 [error]: dbt0102: Deprecated test arguments: ["field", "to"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/sources.yml:76:26
+13:08:28.810995 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:08:28.811315 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:17:9
+13:08:28.812751 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:08:28.813065 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:49:9
+13:08:28.813508 [error]: dbt0102: Deprecated test arguments: ["field", "to"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/sources.yml:58:26
+13:08:29.057309 [info ]: Cached model count updated: 8 models (accurate)
+13:08:29.058982 [debug]: Incremental compilation - 6 nodes selected: {"model.fraud_detection_dbt.stg_payments", "model.fraud_detection_dbt.unified_payment_intelligence", "source.fraud_detection_dbt.on_prem_raw_data.raw_accounts", "source.fraud_detection_dbt.on_prem_raw_data.raw_fraud_cases", "source.fraud_detection_dbt.on_prem_raw_data.raw_payments", "source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed"}
+13:08:29.081142 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+13:08:30.133375 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+13:08:30.133612 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_accounts' (Expected at db/schemas/airflow/dev_psalmprax/stg_accounts).
+Hint: run `db run` to build upstreams.
+13:08:30.133740 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.account_risk_snapshot' (Expected at db/schemas/airflow/dev_psalmprax/account_risk_snapshot).
+Hint: run `db run` to build upstreams.
+13:08:30.133787 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_fraud_cases' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_fraud_cases' (Expected at db/schemas/airflow/public/raw_fraud_cases).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+13:08:30.133885 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed' (Expected at db/schemas/airflow/public/raw_risk_feed).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+13:08:30.136355 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_fraud_cases' (Expected at db/schemas/airflow/dev_psalmprax/stg_fraud_cases).
+Hint: run `db run` to build upstreams.
+13:08:30.136641 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_accounts' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_accounts' (Expected at db/schemas/airflow/public/raw_accounts).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+13:08:30.195513 [info ]: Cached model count updated: 8 models (accurate)
+13:10:03.659344 [info ]: Cached model count updated: 8 models (estimate)
+13:10:03.795571 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:9:5
+13:10:03.806768 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:38:9
+13:10:03.810597 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:9:5
+13:10:03.810908 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:68:9
+13:10:03.817825 [error]: dbt0102: Deprecated test arguments: ["field", "to"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/sources.yml:82:26
+13:10:03.824237 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:9:5
+13:10:03.826162 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:18:9
+13:10:03.856692 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:9:5
+13:10:03.857249 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:54:9
+13:10:03.865710 [error]: dbt0102: Deprecated test arguments: ["field", "to"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/sources.yml:63:26
+13:10:04.405596 [info ]: Cached model count updated: 8 models (accurate)
+13:10:04.406864 [debug]: Incremental compilation - 6 nodes selected: {"model.fraud_detection_dbt.stg_payments", "model.fraud_detection_dbt.unified_payment_intelligence", "source.fraud_detection_dbt.on_prem_raw_data.raw_accounts", "source.fraud_detection_dbt.on_prem_raw_data.raw_fraud_cases", "source.fraud_detection_dbt.on_prem_raw_data.raw_payments", "source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed"}
+13:10:04.424392 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+13:10:05.648623 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_fraud_cases' (Expected at db/schemas/airflow/dev_psalmprax/stg_fraud_cases).
+Hint: run `db run` to build upstreams.
+13:10:05.648871 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_accounts' (Expected at db/schemas/airflow/dev_psalmprax/stg_accounts).
+Hint: run `db run` to build upstreams.
+13:10:05.649117 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed' (Expected at db/schemas/airflow/public/raw_risk_feed).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+13:10:05.649181 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_accounts' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_accounts' (Expected at db/schemas/airflow/public/raw_accounts).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+13:10:05.649233 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_fraud_cases' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_fraud_cases' (Expected at db/schemas/airflow/public/raw_fraud_cases).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+13:10:05.649408 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.account_risk_snapshot' (Expected at db/schemas/airflow/dev_psalmprax/account_risk_snapshot).
+Hint: run `db run` to build upstreams.
+13:10:05.649544 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+13:10:05.759111 [info ]: Cached model count updated: 8 models (accurate)
+13:13:44.170283 [info ]: Cached model count updated: 8 models (estimate)
+13:13:44.294280 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:13:44.294692 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:27:9
+13:13:44.295145 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:13:44.295388 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:43:9
+13:13:44.295756 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:13:44.295911 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:19:9
+13:13:44.296115 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:13:44.296226 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:35:9
+13:13:44.335357 [info ]: Cached model count updated: 8 models (accurate)
+13:13:44.344945 [debug]: Incremental compilation - 6 nodes selected: {"model.fraud_detection_dbt.stg_payments", "model.fraud_detection_dbt.unified_payment_intelligence", "source.fraud_detection_dbt.on_prem_raw_data.raw_accounts", "source.fraud_detection_dbt.on_prem_raw_data.raw_fraud_cases", "source.fraud_detection_dbt.on_prem_raw_data.raw_payments", "source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed"}
+13:13:44.350321 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+13:13:45.469823 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+13:13:45.470001 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_fraud_cases' (Expected at db/schemas/airflow/dev_psalmprax/stg_fraud_cases).
+Hint: run `db run` to build upstreams.
+13:13:45.470055 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_accounts' (Expected at db/schemas/airflow/dev_psalmprax/stg_accounts).
+Hint: run `db run` to build upstreams.
+13:13:45.470085 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.account_risk_snapshot' (Expected at db/schemas/airflow/dev_psalmprax/account_risk_snapshot).
+Hint: run `db run` to build upstreams.
+13:13:45.502734 [info ]: Cached model count updated: 8 models (accurate)
+==================== 2025-12-02 13:46:47.168616 | 2420d820-450b-476c-831a-aadffd665b07 ====================
+13:46:47.182305 [info ]: Starting dbt LSP server
+13:46:47.182461 [info ]: Connecting to LSP client on port 8000
+13:46:47.186284 [info ]: Successfully connected to LSP client
+13:46:47.186376 [info ]: Creating LSP service...
+13:46:47.864430 [info ]: Creating LSP server...
+13:46:47.864474 [info ]: Starting LSP server...
+13:46:49.786989 [info ]: Cached model count updated: 8 models (estimate)
+13:46:50.230874 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:46:50.236573 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:27:9
+13:46:50.246628 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:46:50.249224 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:43:9
+13:46:50.249573 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:46:50.249758 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:19:9
+13:46:50.251972 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:46:50.252215 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:35:9
+13:46:50.451426 [error]: dbt0102: Deprecated test arguments: ["min_rows"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:8:21
+13:46:50.472804 [error]: dbt0102: Deprecated test arguments: ["values"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:26:23
+13:46:50.489156 [error]: dbt0102: Deprecated test arguments: ["field", "to"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:21:22
+13:46:50.492053 [error]: dbt0102: Deprecated test arguments: ["other_column_name"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:33:34
+13:46:50.849989 [info ]: Cached model count updated: 8 models (accurate)
+13:46:51.270711 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+13:46:52.492308 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+13:46:52.607006 [info ]: Cached model count updated: 8 models (accurate)
+13:48:40.910995 [info ]: Cached model count updated: 8 models (estimate)
+13:48:41.344444 [error]: dbt0102: Deprecated test arguments: ["min_rows"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:8:21
+13:48:41.380414 [error]: dbt0102: Deprecated test arguments: ["values"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:27:23
+13:48:41.383138 [error]: dbt0102: Deprecated test arguments: ["other_column_name"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:34:34
+13:48:41.469865 [info ]: Cached model count updated: 8 models (accurate)
+13:48:41.470451 [debug]: Incremental compilation - 0 nodes selected: {}
+13:48:41.520108 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+13:48:42.686542 [info ]: Cached model count updated: 8 models (accurate)
+13:49:25.412463 [info ]: Cached model count updated: 8 models (estimate)
+13:49:25.741432 [error]: dbt0102: Deprecated test arguments: ["min_rows"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:8:21
+13:49:25.742209 [error]: dbt0102: Deprecated test arguments: ["values"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:27:23
+13:49:25.813562 [info ]: Cached model count updated: 8 models (accurate)
+13:49:25.814003 [debug]: Incremental compilation - 0 nodes selected: {}
+13:49:25.836338 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+13:49:27.243996 [info ]: Cached model count updated: 8 models (accurate)
+13:50:06.643464 [info ]: Cached model count updated: 8 models (estimate)
+13:50:06.780232 [error]: dbt0102: Deprecated test arguments: ["min_rows"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:8:21
+13:50:06.849989 [info ]: Cached model count updated: 8 models (accurate)
+13:50:06.850382 [debug]: Incremental compilation - 0 nodes selected: {}
+13:50:06.865088 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+13:50:08.061094 [info ]: Cached model count updated: 8 models (accurate)
+13:51:26.664878 [info ]: Cached model count updated: 8 models (estimate)
+13:51:27.013257 [info ]: Cached model count updated: 8 models (accurate)
+13:51:27.013888 [debug]: Incremental compilation - 0 nodes selected: {}
+13:51:27.027245 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+13:51:29.093072 [info ]: Cached model count updated: 8 models (accurate)
+13:56:16.053175 [info ]: Cached model count updated: 8 models (estimate)
+13:56:16.134957 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:56:16.135721 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:56:16.136572 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:56:16.137377 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+13:56:16.219683 [info ]: Cached model count updated: 8 models (accurate)
+13:56:16.226525 [debug]: Incremental compilation - 6 nodes selected: {"model.fraud_detection_dbt.stg_payments", "model.fraud_detection_dbt.unified_payment_intelligence", "source.fraud_detection_dbt.on_prem_raw_data.raw_accounts", "source.fraud_detection_dbt.on_prem_raw_data.raw_fraud_cases", "source.fraud_detection_dbt.on_prem_raw_data.raw_payments", "source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed"}
+13:56:16.244169 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+13:56:17.882482 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+13:56:17.883937 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_fraud_cases' (Expected at db/schemas/airflow/dev_psalmprax/stg_fraud_cases).
+Hint: run `db run` to build upstreams.
+13:56:17.891202 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_accounts' (Expected at db/schemas/airflow/dev_psalmprax/stg_accounts).
+Hint: run `db run` to build upstreams.
+13:56:17.891740 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.account_risk_snapshot' (Expected at db/schemas/airflow/dev_psalmprax/account_risk_snapshot).
+Hint: run `db run` to build upstreams.
+13:56:17.924205 [info ]: Cached model count updated: 8 models (accurate)
+==================== 2025-12-02 14:42:19.052162 | e01eee2b-399c-485a-a13b-ac46709d47a0 ====================
+14:42:19.062264 [info ]: Starting dbt LSP server
+14:42:19.062357 [info ]: Connecting to LSP client on port 8000
+14:42:19.111486 [info ]: Successfully connected to LSP client
+14:42:19.111524 [info ]: Creating LSP service...
+14:42:19.584060 [info ]: Creating LSP server...
+14:42:19.584111 [info ]: Starting LSP server...
+14:42:22.476784 [info ]: Cached model count updated: 8 models (estimate)
+14:42:23.059602 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+14:42:23.061561 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:25:9
+14:42:23.067142 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+14:42:23.067579 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:33:9
+14:42:23.069538 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+14:42:23.072183 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:18:9
+14:42:23.072404 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:21:9
+14:42:23.073199 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+14:42:23.073807 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:29:9
+14:42:23.537367 [info ]: Cached model count updated: 8 models (accurate)
+14:42:23.885542 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+14:42:25.502417 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+14:42:25.605463 [info ]: Cached model count updated: 8 models (accurate)
+14:42:51.465723 [info ]: Cached model count updated: 8 models (estimate)
+14:42:51.680663 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:17:9
+14:42:51.680899 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:20:9
+14:42:51.681289 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:29:9
+14:42:51.681431 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:32:9
+14:42:51.681806 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:11:9
+14:42:51.681983 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:14:9
+14:42:51.682279 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:23:9
+14:42:51.682354 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:26:9
+14:42:51.725818 [info ]: Cached model count updated: 8 models (accurate)
+14:42:51.729405 [debug]: Incremental compilation - 6 nodes selected: {"model.fraud_detection_dbt.stg_payments", "model.fraud_detection_dbt.unified_payment_intelligence", "source.fraud_detection_dbt.on_prem_raw_data.raw_accounts", "source.fraud_detection_dbt.on_prem_raw_data.raw_fraud_cases", "source.fraud_detection_dbt.on_prem_raw_data.raw_payments", "source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed"}
+14:42:51.764007 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+14:42:52.766948 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_fraud_cases' (Expected at db/schemas/airflow/dev_psalmprax/stg_fraud_cases).
+Hint: run `db run` to build upstreams.
+14:42:52.767034 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+14:42:52.767141 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_accounts' (Expected at db/schemas/airflow/dev_psalmprax/stg_accounts).
+Hint: run `db run` to build upstreams.
+14:42:52.767186 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.account_risk_snapshot' (Expected at db/schemas/airflow/dev_psalmprax/account_risk_snapshot).
+Hint: run `db run` to build upstreams.
+14:42:52.796515 [info ]: Cached model count updated: 8 models (accurate)
+14:43:02.628447 [info ]: Cached model count updated: 8 models (estimate)
+14:43:02.702833 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+14:43:02.703013 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:25:9
+14:43:02.703194 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+14:43:02.703496 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:33:9
+14:43:02.703728 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+14:43:02.703844 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:18:9
+14:43:02.703898 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:21:9
+14:43:02.704087 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+14:43:02.704188 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:29:9
+14:43:02.766820 [info ]: Cached model count updated: 8 models (accurate)
+14:43:02.773299 [debug]: Incremental compilation - 6 nodes selected: {"model.fraud_detection_dbt.stg_payments", "model.fraud_detection_dbt.unified_payment_intelligence", "source.fraud_detection_dbt.on_prem_raw_data.raw_accounts", "source.fraud_detection_dbt.on_prem_raw_data.raw_fraud_cases", "source.fraud_detection_dbt.on_prem_raw_data.raw_payments", "source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed"}
+14:43:02.776832 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+14:43:04.070260 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_fraud_cases' (Expected at db/schemas/airflow/dev_psalmprax/stg_fraud_cases).
+Hint: run `db run` to build upstreams.
+14:43:04.070557 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_accounts' (Expected at db/schemas/airflow/dev_psalmprax/stg_accounts).
+Hint: run `db run` to build upstreams.
+14:43:04.074390 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.account_risk_snapshot' (Expected at db/schemas/airflow/dev_psalmprax/account_risk_snapshot).
+Hint: run `db run` to build upstreams.
+14:43:04.074606 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+14:43:04.135693 [info ]: Cached model count updated: 8 models (accurate)
+14:47:27.983485 [info ]: Cached model count updated: 8 models (estimate)
+14:47:28.044118 [error]: dbt1059: Duplicate key `loaded_at_field`. This key overwrites a previous definition of the same key at line 28 column 9. YAML path: `sources[0].tables[3].loaded_at_field`.
+  --> models/sources.yml:33:9
+14:47:28.045438 [warn ]: dbt0102: Duplicate definition for table 'raw_accounts' in source 'on_prem_raw_data' found in file 'models/sources.yml'. Using definition from 'models/sources.yml'.
+14:47:28.045585 [warn ]: dbt0102: Duplicate definition for table 'raw_risk_feed' in source 'on_prem_raw_data' found in file 'models/sources.yml'. Using definition from 'models/sources.yml'.
+14:47:28.046779 [warn ]: dbt0102: Duplicate definition for table 'raw_fraud_cases' in source 'on_prem_raw_data' found in file 'models/sources.yml'. Using definition from 'models/sources.yml'.
+14:47:28.048983 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:20:9
+14:47:28.049339 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:28:9
+14:47:28.049415 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:30:9
+14:47:28.049650 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:13:9
+14:47:28.049718 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:16:9
+14:47:28.050026 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:24:9
+14:47:28.187407 [info ]: Cached model count updated: 8 models (accurate)
+14:47:28.188261 [debug]: Incremental compilation - 6 nodes selected: {"model.fraud_detection_dbt.stg_payments", "model.fraud_detection_dbt.unified_payment_intelligence", "source.fraud_detection_dbt.on_prem_raw_data.raw_accounts", "source.fraud_detection_dbt.on_prem_raw_data.raw_fraud_cases", "source.fraud_detection_dbt.on_prem_raw_data.raw_payments", "source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed"}
+14:47:28.218313 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+14:47:32.196766 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+14:47:32.196985 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_accounts' (Expected at db/schemas/airflow/dev_psalmprax/stg_accounts).
+Hint: run `db run` to build upstreams.
+14:47:32.197042 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.account_risk_snapshot' (Expected at db/schemas/airflow/dev_psalmprax/account_risk_snapshot).
+Hint: run `db run` to build upstreams.
+14:47:32.197102 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_fraud_cases' (Expected at db/schemas/airflow/dev_psalmprax/stg_fraud_cases).
+Hint: run `db run` to build upstreams.
+14:47:32.308359 [info ]: Cached model count updated: 8 models (accurate)
+14:56:40.707679 [info ]: Cached model count updated: 8 models (estimate)
+14:56:40.798713 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+14:56:40.799354 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:25:9
+14:56:40.799684 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+14:56:40.799791 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:33:9
+14:56:40.800065 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+14:56:40.800167 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:18:9
+14:56:40.800233 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:21:9
+14:56:40.800430 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+14:56:40.800520 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:29:9
+14:56:40.857735 [info ]: Cached model count updated: 8 models (accurate)
+14:56:40.858341 [debug]: Incremental compilation - 6 nodes selected: {"model.fraud_detection_dbt.stg_payments", "model.fraud_detection_dbt.unified_payment_intelligence", "source.fraud_detection_dbt.on_prem_raw_data.raw_accounts", "source.fraud_detection_dbt.on_prem_raw_data.raw_fraud_cases", "source.fraud_detection_dbt.on_prem_raw_data.raw_payments", "source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed"}
+14:56:40.894200 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+14:56:42.016863 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+14:56:42.017416 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_fraud_cases' (Expected at db/schemas/airflow/dev_psalmprax/stg_fraud_cases).
+Hint: run `db run` to build upstreams.
+14:56:42.017533 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_accounts' (Expected at db/schemas/airflow/dev_psalmprax/stg_accounts).
+Hint: run `db run` to build upstreams.
+14:56:42.020730 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.account_risk_snapshot' (Expected at db/schemas/airflow/dev_psalmprax/account_risk_snapshot).
+Hint: run `db run` to build upstreams.
+14:56:42.031742 [info ]: Cached model count updated: 8 models (accurate)

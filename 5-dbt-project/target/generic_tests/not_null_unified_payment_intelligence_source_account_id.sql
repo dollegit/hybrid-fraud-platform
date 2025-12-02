@@ -1,0 +1,1 @@
+{{ test_not_null(column_name="source_account_id", model=get_where_subquery(ref('unified_payment_intelligence'))) }}

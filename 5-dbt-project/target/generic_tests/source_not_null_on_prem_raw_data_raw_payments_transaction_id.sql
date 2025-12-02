@@ -1,0 +1,1 @@
+{{ test_not_null(column_name="transaction_id", model=get_where_subquery(source('on_prem_raw_data', 'raw_payments'))) }}

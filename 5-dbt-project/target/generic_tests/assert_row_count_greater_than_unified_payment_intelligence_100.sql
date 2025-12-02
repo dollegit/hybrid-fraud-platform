@@ -1,0 +1,1 @@
+{{ test_assert_row_count_greater_than(min_rows=100, model=get_where_subquery(ref('unified_payment_intelligence'))) }}

@@ -1,0 +1,1 @@
+{{ test_relationships(column_name="source_account_id", field="account_id", model=get_where_subquery(ref('unified_payment_intelligence')), to=ref('stg_accounts')) }}

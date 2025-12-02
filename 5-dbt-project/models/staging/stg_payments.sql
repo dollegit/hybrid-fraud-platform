@@ -1,9 +1,8 @@
 -- models/staging/stg_payments.sql
 
 with source as (
-    -- In a real project, this would be `{{ source('raw_data', 'payments') }}`
-    -- after defining sources. For now, we assume a 'raw_payments' table exists.
-    select * from raw_payments
+    -- Reference the raw_payments table from your sources.yml file
+    select * from {{ source('on_prem_raw_data', 'raw_payments') }}
 ),
 
 renamed_and_casted as (

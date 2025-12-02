@@ -1,0 +1,1 @@
+{{ test_relationships(column_name="transaction_id", field="transaction_id", model=get_where_subquery(source('on_prem_raw_data', 'raw_fraud_cases')), to=source('on_prem_raw_data', 'raw_payments')) }}

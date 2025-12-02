@@ -1,0 +1,1 @@
+{{ test_unique(column_name="case_id", model=get_where_subquery(source('on_prem_raw_data', 'raw_fraud_cases'))) }}
