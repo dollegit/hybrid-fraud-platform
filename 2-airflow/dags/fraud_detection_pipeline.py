@@ -5,10 +5,12 @@ import pendulum
 from pathlib import Path
 
 from airflow.models.dag import DAG
-from airflow.operators.bash import BashOperator
-from airflow.providers.apache.spark.operators.spark_submit import SparkSubmitOperator
-from airflow.utils.task_group import TaskGroup
 from airflow.providers.cncf.kubernetes.operators.spark_kubernetes import SparkKubernetesOperator
+
+# Cosmos imports
+from cosmos.providers.dbt.task_group import DbtTaskGroup, DbtTask
+from cosmos.config import ProjectConfig, ProfileConfig
+from cosmos.constants import ExecutionMode
 
 # =============================================================================
 # CONFIGURATION
@@ -20,18 +22,17 @@ from airflow.providers.cncf.kubernetes.operators.spark_kubernetes import SparkKu
 # This assumes the DAG file is in a 'dags' folder and the project is checked out alongside it.
 PROJECT_ROOT = Path(__file__).parent.parent.parent # Corrected: Go up three levels to reach 'hybrid-fraud-platform'
 
-# Adjust paths to match the project's directory structure (e.g., '3-spark-app/src')
-SPARK_APP_DIR = PROJECT_ROOT / "3-spark-app" / "src"
-SPARK_APP_DIR_YAML = PROJECT_ROOT / "2-airflow" / "dags" / "jobs"
+DBT_PROJECT_PATH = PROJECT_ROOT / "5-dbt-project"
+DBT_EXECUTABLE_PATH = PROJECT_ROOT / "dbt_venv/bin/dbt"
 
-DBT_PROJECT_DIR = PROJECT_ROOT / "dbt_project" # Assuming a 'dbt_project' folder exists at the root
-
-# The directory containing the dbt `profiles.yml` file.
-# It's a best practice to keep this separate from your project code.
-DBT_PROFILES_DIR = DBT_PROJECT_DIR # For simplicity, assuming it's in the dbt project dir for this example
-
-# Airflow Connection ID for the Spark cluster.
-SPARK_CONN_ID = "spark_default"
+# Define the profile for dbt to use. This assumes you have a `profiles.yml`
+# file in your dbt project directory and an Airflow connection named `dbt_postgres_conn`.
+profile_config = ProfileConfig(
+    profile_name="fraud_detection_dbt",
+    # For production runs, we explicitly set the target to 'prod'.
+    target_name="prod",
+    profiles_yml_filepath=(DBT_PROJECT_PATH / "profiles.yml"),
+)
 
 # =============================================================================
 # DAG DEFINITION
@@ -75,24 +76,61 @@ with DAG(
         """
     )
 
-    # --- Task Group for dbt ---
-    # Using a TaskGroup helps organize the UI for related tasks.
-    with TaskGroup(group_id="dbt_transformation_and_tests") as dbt_group:
-        # Task 2: Trigger `dbt run`
-        transform_with_dbt = BashOperator(
-            task_id='transform_with_dbt',
-            bash_command=f"dbt run --project-dir {DBT_PROJECT_DIR} --profiles-dir {DBT_PROFILES_DIR}"
-        )
+    # --- Task 2: Check Source Freshness ---
+    # This task runs `dbt source freshness` to check if the raw data was loaded on time by the Spark job.
+    dbt_source_freshness = DbtTask(
+        task_id="dbt_source_freshness",
+        project_config=ProjectConfig(dbt_project_path=DBT_PROJECT_PATH),
+        profile_config=profile_config,
+        command="source freshness",
+        operator_args={
+            "install_deps": True,
+        },
+    )
 
-        # Task 3: Trigger `dbt test`
-        test_with_dbt = BashOperator(
-            task_id='test_with_dbt',
-            bash_command=f"dbt test --project-dir {DBT_PROJECT_DIR} --profiles-dir {DBT_PROFILES_DIR}"
-        )
+    # --- Task 3: Run dbt snapshot to capture historical changes ---
+    # This task runs `dbt snapshot` to update the SCD Type 2 table before the main models run.
+    dbt_snapshot = DbtTask(
+        task_id="dbt_snapshot",
+        project_config=ProjectConfig(dbt_project_path=DBT_PROJECT_PATH),
+        profile_config=profile_config,
+        command="snapshot",
+        operator_args={
+            "install_deps": True, # Ensures dbt deps is run before execution
+        },
+    )
 
-        # Define dependencies within the dbt TaskGroup
-        transform_with_dbt >> test_with_dbt
+    # --- Task 4: Trigger dbt transformations and tests using Cosmos ---
+    # This DbtTaskGroup will run `dbt build` by default, which includes `dbt run` and `dbt test`.
+    dbt_group = DbtTaskGroup(
+        group_id="dbt_transformation_and_tests",
+        project_config=ProjectConfig(dbt_project_path=DBT_PROJECT_PATH),
+        profile_config=profile_config,
+        operator_args={
+            "install_deps": True,
+            # Pass variables to dbt models.
+            # This allows for dynamic, incremental runs based on the DAG's execution date.
+            "vars": {
+                "start_date": "{{ ds }}",
+                "end_date": "{{ next_ds }}"
+            }
+        },
+    )
+
+    # --- Task 5: Generate dbt documentation ---
+    # This task runs `dbt docs generate` to compile the project's documentation.
+    # The static files can then be picked up by a separate process and hosted.
+    dbt_docs_generate = DbtTask(
+        task_id="dbt_docs_generate",
+        project_config=ProjectConfig(dbt_project_path=DBT_PROJECT_PATH),
+        profile_config=profile_config,
+        command="docs generate",
+        operator_args={
+            "install_deps": True,
+        },
+    )
 
     # --- Define Overall Task Dependencies ---
-    # The Spark job must complete successfully before the dbt tasks can begin.
-    load_staging_data >> dbt_group
+    # The main transformation group must succeed before we generate docs.
+    load_staging_data >> dbt_source_freshness >> dbt_snapshot >> dbt_group
+    dbt_group >> dbt_docs_generate

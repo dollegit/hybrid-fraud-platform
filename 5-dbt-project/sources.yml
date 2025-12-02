@@ -1,0 +1,26 @@
+version: 2
+
+sources:
+  - name: on_prem_raw_data
+    description: "Raw data loaded from the on-premise system by the Spark ETL job."
+    database: "{{ target.database }}" # Uses the database defined in your profile
+    schema: public # Assuming raw tables are in the 'public' schema
+
+    # This block configures freshness tests for all tables in this source.
+    freshness:
+      warn_after: {count: 12, period: hour}
+      error_after: {count: 25, period: hour}
+
+    tables:
+      - name: raw_payments
+        description: "Raw payment events as ingested from the source system."
+        loaded_at_field: "processing_ts" # The column your Spark job creates
+
+      - name: raw_accounts
+        description: "Raw account details, including opening dates."
+
+      - name: raw_risk_feed
+        description: "An external feed providing risk flags for accounts."
+
+      - name: raw_fraud_cases
+        description: "Historical fraud cases reported against specific payments."

@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: stg_payments
+    description: "This model cleans and standardizes the raw payment data. It performs basic type casting and column renaming."
+    columns:
+      - name: payment_id
+        description: "The unique identifier for the payment."
+        tests:
+          - unique
+          - not_null
+      - name: source_account_id
+        description: "The account from which the payment was made."
+      - name: payment_timestamp
+        description: "The timestamp when the payment event occurred."
