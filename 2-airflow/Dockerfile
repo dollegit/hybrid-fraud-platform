@@ -8,11 +8,3 @@ USER airflow
 # Copy and install Python dependencies
 COPY --chown=airflow:airflow requirements.txt /
 RUN pip install --no-cache-dir -r /requirements.txt 
-# RUN pip install --no-cache-dir \
-#     apache-airflow-providers-fab \
-#     apache-airflow-providers-apache-spark \
-#     apache-airflow-providers-cncf-kubernetes \
-#     dbt-core \
-#     dbt-postgres \
-#     apache-airflow-providers-microsoft-azure \
-#     astronomer-cosmos
