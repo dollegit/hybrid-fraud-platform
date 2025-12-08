@@ -354,12 +354,25 @@ kubectl create clusterrolebinding airflow-spark-binding \
 # =============================================================================
 # 10. CREATE AIRFLOW KUBERNETES CONNECTION
 # =============================================================================
+
+# Create kubernetes_default
 kubectl exec -n airflow deploy/airflow-scheduler -- bash -c "
-  airflow connections add kubernetes_default --conn-type kubernetes --conn-extra '{\"in_cluster\": true}' || true
+  airflow connections delete kubernetes_default || true
+  airflow connections add kubernetes_default \
+    --conn-type kubernetes \
+    --conn-extra '{\"in_cluster\": true}'
 " || true
 
+# Create spark_default
 kubectl exec -n airflow deploy/airflow-scheduler -- bash -c "
-  airflow connections add spark_default --conn-type spark --conn-host 'local[*]' --conn-port 0 --conn-extra '{}' || true"
+  airflow connections delete spark_default || true
+  airflow connections add spark_default \
+    --conn-type spark \
+    --conn-host \"local[*]\" \
+    --conn-port 0 \
+    --conn-extra '{}'
+" || true
+
 # =============================================================================
 # CONFIGURE MINIO CLIENT AND CREATE BUCKETS
 # =============================================================================

@@ -3,4 +3,5 @@ apache-airflow-providers-cncf-kubernetes
 dbt-core
 dbt-postgres
 apache-airflow-providers-microsoft-azure
+apache-airflow-providers-fab
 # astronomer-cosmos

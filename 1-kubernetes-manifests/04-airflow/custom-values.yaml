@@ -1,4 +1,6 @@
-# Airflow Helm Chart 1.18.0 - KubernetesExecutor + External Postgres + GitSync + Migrations
+# ===============================================================
+# Airflow Helm Chart 1.18.0 - KubernetesExecutor Setup
+# ===============================================================
 
 executor: KubernetesExecutor
 
@@ -32,23 +34,14 @@ images:
     tag: v4.3.0
     pullPolicy: Always
 
-  useDefaultImageForMigration: true
-  migrationsWaitTimeout: 600
+useDefaultImageForMigration: true
+migrationsWaitTimeout: 600
 
-# Environment for all pods
-
-# env:
-# - name: ENVIRONMENT
-#   value: dev
-
-# extraEnv: |
-#   name: AIRFLOW__CORE__DEFAULT_TIMEZONE
-#   value: "Asia/Shanghai"
-
-# DAGs configuration
+# ===============================================================
+# DAG Sync (GitSync)
+# ===============================================================
 
 dags:
-  # path: /opt/airflow/dags
   gitSync:
     enabled: true
     repo: "https://github.com/dollegit/hybrid-fraud-platform.git"
@@ -58,62 +51,89 @@ dags:
     subPath: "2-airflow/dags"
     wait: 30
 
-# Airflow-specific settings
+# ===============================================================
+# Airflow Environment Variables
+# ===============================================================
 
 airflow:
   env:
     - name: AIRFLOW__CORE__EXECUTOR
       value: "KubernetesExecutor"
     - name: AIRFLOW__CORE__AUTH_MANAGER
-      value: "airflow.api_fastapi.auth.managers.basic.BasicAuthManager"
-    # REQUIRED for Airflow 3.x with external DB
+      value: "airflow.auth.managers.simple.SimpleAuthManager"
+    - name: AIRFLOW__KUBERNETES_EXECUTOR__LOG_SERVER_HOST
+      value: "airflow-api-server.airflow.svc.cluster.local"
+    - name: AIRFLOW__KUBERNETES_EXECUTOR__LOG_SERVER_PORT
+      value: "8793"
     - name: AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
       valueFrom:
         secretKeyRef:
           name: airflow-db-secret
           key: connection
+    - name: AIRFLOW__DATABASE__SQL_ALCHEMY_SCHEMA
+      value: "public"
+    - name: AIRFLOW__CORE__REMOTE_LOGGING
+      value: "True"
+    - name: AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER
+      value: "s3://airflow-logs/"
     - name: TZ
       value: "Asia/Shanghai"
+
+  config:
+    kubernetes_executor:
+      in_cluster: "true"
+      delete_worker_pods: "true"
+      worker_pods_termination_grace_period: "120"
+      verify_ssl: "false"
+    kubernetes:
+      worker_pods_creation_batch_size: 16
+      worker_pods_pending_timeout: 300
+    logging:
+      remote_logging: "True"
+      remote_log_conn_id: "minio_default"
+    AIRFLOW__KUBERNETES__WORKER_POD_IP_WHEN_DOWNSTREAM: "True"
+
   securityContext:
     runAsUser: 65534
     runAsGroup: 0
     fsGroup: 65533
-  logging:
-    remote_logging: "True"
-    colored_console_log: true
-    remote_log_conn_id: "minio_default"
-    remote_base_log_folder: "s3://airflow-logs/"
-  config:
-    kubernetes_executor:
-      in_cluster: "true"
-      delete_worker_pods: "false"
-      worker_pods_termination_grace_period: "150"
-      verify_ssl: "false"
-  kubernetesPodTemplate: |
-    apiVersion: v1
-    kind: Pod
-    metadata:
-      name: airflow-task-pod
-    spec:
-      securityContext:
-        fsGroup: 65533
-        restartPolicy: Never
 
-# Service accounts
+# ===============================================================
+# Kubernetes Pod Template (Worker Pods)
+# ===============================================================
 
-serviceAccount:
-  create: true
-  name: airflow
+kubernetesPodTemplate: |
+  apiVersion: v1
+  kind: Pod
+  metadata:
+    name: airflow-task-pod
+  spec:
+    restartPolicy: Never
+    securityContext:
+      fsGroup: 65533
+    containers:
+      - name: base
+        image: psalmprax/airflow-custom:2.9.2-p1
+        imagePullPolicy: Always
+        env:
+          - name: AIRFLOW__CORE__EXECUTOR
+            value: KubernetesExecutor
+        volumeMounts:
+          - mountPath: /opt/airflow/dags
+            name: dags
+    volumes:
+      - name: dags
+        emptyDir: {}
 
-worker_service_account:
-  create: true
-  name: airflow-worker
+# ===============================================================
+# Webserver / Scheduler / Worker / Roles
+# ===============================================================
 
 scheduler:
   replicas: 1
   env:
-  - name: AIRFLOW__CORE__LOAD_EXAMPLES
-    value: "false"
+    - name: AIRFLOW__CORE__LOAD_EXAMPLES
+      value: "false"
 
 webserver:
   enabled: true
@@ -130,12 +150,44 @@ triggerer:
 dagProcessor:
   enabled: true
 
-workers:
-  persistence:
-    enabled: false
-  serviceAccount:
-    create: false
-    name: airflow-worker
+# ===============================================================
+# Service Accounts & RBAC
+# ===============================================================
+
+serviceAccount:
+  create: true
+  name: airflow-worker
+
+extraResources:
+  - apiVersion: rbac.authorization.k8s.io/v1
+    kind: Role
+    metadata:
+      name: airflow-k8s-role
+      namespace: airflow
+    rules:
+      - apiGroups: [""]
+        resources: ["pods", "pods/log", "pods/exec"]
+        verbs: ["get", "list", "watch", "create", "delete", "patch"]
+      - apiGroups: [""]
+        resources: ["events"]
+        verbs: ["create", "patch"]
+  - apiVersion: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    metadata:
+      name: airflow-k8s-rolebinding
+      namespace: airflow
+    subjects:
+      - kind: ServiceAccount
+        name: airflow-worker
+        namespace: airflow
+    roleRef:
+      kind: Role
+      name: airflow-k8s-role
+      apiGroup: rbac.authorization.k8s.io
+
+# ===============================================================
+# External PostgreSQL (RDS / CloudSQL / External)
+# ===============================================================
 
 postgresql:
   enabled: false
@@ -150,75 +202,32 @@ externalDatabase:
   existingSecret: airflow-db-secret
   existingSecretKey: connection
 
-# pgbouncer:
-#   enabled: true
-
-statsd:
-  enabled: true
-  securityContext:
-    runAsUser: 65534
-    runAsGroup: 0
-    fsGroup: 0
+# ===============================================================
+# Logging Storage (Persistent)
+# ===============================================================
 
 logs:
   persistence:
     enabled: true
     size: 2Gi
 
+# No Redis needed for KubernetesExecutor
 redis:
   enabled: false
 
-# Migration jobs - required for schema upgrade
+# ===============================================================
+# Migration Jobs
+# ===============================================================
 
 jobs:
-  migrateDatabase:  
+  migrateDatabase:
     enabled: true
-    # useHelmHooks: false
-    # extraEnv:
-    #   - name: AIRFLOW__CORE__MIGRATION_WAIT_TIMEOUT
-    # value: "600"
-    # createUserJob:
-    #   useHelmHooks: false
 
 waitForMigrations:
   timeoutSeconds: 600
 
-# ===============================================================
-# GitOps Compatibility (Argo CD / Flux / Rancher / Terraform)
-# ===============================================================
 createUserJob:
   useHelmHooks: false
-  applyCustomEnv: false
 
 migrateDatabaseJob:
   useHelmHooks: false
-  applyCustomEnv: false
-
-# Extra RBAC for cross-namespace pods (optional)
-
-extraResources:
-- apiVersion: rbac.authorization.k8s.io/v1
-  kind: Role
-  metadata:
-    name: airflow-k8s-role
-    namespace: airflow
-  rules:
-  - apiGroups: [""]
-    resources: ["pods","pods/log","pods/exec"]
-    verbs: ["get","list","watch","create","delete","patch"]
-  - apiGroups: [""]
-    resources: ["events"]
-    verbs: ["create","patch"]
-- apiVersion: rbac.authorization.k8s.io/v1
-  kind: RoleBinding
-  metadata:
-    name: airflow-k8s-rolebinding
-    namespace: airflow
-  subjects:
-    - kind: ServiceAccount
-      name: airflow-worker
-      namespace: airflow
-  roleRef:
-    kind: Role
-    name: airflow-k8s-role
-    apiGroup: rbac.authorization.k8s.io
