@@ -55,10 +55,8 @@ spec:
       - name: DB_NAME
         value: "airflow"  # Airflow's default DB name
       - name: DB_USER
-        valueFrom:
         value: "{{ conn.postgres_default.login }}"
       - name: DB_PASSWORD
-        valueFrom:
         value: "{{ conn.postgres_default.password }}"
       - name: KAFKA_BOOTSTRAP_SERVERS
         value: my-kafka-cluster-my-nodepool-0.my-kafka-cluster-kafka-brokers.kafka.svc.cluster.local:9092
