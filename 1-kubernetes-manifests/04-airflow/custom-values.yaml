@@ -1,128 +1,129 @@
-# ---------------------------------------
-# EXECUTOR
-# ---------------------------------------
-executor: KubernetesExecutor
-
-# ---------------------------------------
-# IMAGES
-# ---------------------------------------
+# ===============================================================
+# Images
+# ===============================================================
 images:
   airflow:
     repository: psalmprax/airflow-custom
-    tag: 2.9.2-p1
+    tag: "2.9.2-p1"
     pullPolicy: Always
-
+  useDefaultImageForMigration: false
+  migrationsWaitTimeout: 600
   pod_template:
     repository: psalmprax/airflow-custom
-    tag: 2.9.2-p1
+    tag: "2.9.2-p1"
     pullPolicy: Always
 
-# ---------------------------------------
-# Kubernetes Settings
-# ---------------------------------------
-kubernetes:
-  namespace: airflow
-  delete_worker_pods: false
-  worker_service_account_name: airflow-worker
-  worker_pods_termination_grace_period: 30
+  flower:
+    repository: psalmprax/airflow-custom
+    tag: "2.9.2-p1"
+    pullPolicy: Always
 
-# ---------------------------------------
-# DAGs via GitSync
-# ---------------------------------------
-dags:
-  persistence:
-    enabled: false
+  statsd:
+    repository: prom/statsd-exporter
+    tag: "v0.28.0"
+
+  pgbouncer:
+    repository: psalmprax/airflow-custom
+    tag: "2.9.2-p1"
+
+  pgbouncerExporter:
+    repository: psalmprax/airflow-custom
+    tag: "2.9.2-p1"
+
   gitSync:
-    enabled: true
-    repo: "https://github.com/dollegit/hybrid-fraud-platform.git"
-    branch: "master"
-    subPath: "2-airflow/dags"
+    repository: apache/git-sync
+    tag: v4.3.0
+# ===============================================================
+# Executor
+# ===============================================================
+executor: KubernetesExecutor
 
-# dags:
-#   persistence:
-#     enabled: true
-#     size: 2Gi
-#   gitSync:
-#     enabled: false
-
-# ---------------------------------------
-# Logging + Workers
-# ---------------------------------------
-logs:
-  persistence:
-    enabled: true       # persist logs for visibility
-    size: 2Gi
-
-workers:
-  persistence:
-    enabled: false      # worker ephemeral pods, no DAGs needed here
-
-# ---------------------------------------
-# Disable built-in Postgres + Redis
-# ---------------------------------------
-postgresql:
-  enabled: false
-
-redis:
-  enabled: false
-
-# ---------------------------------------
-# External DB Configuration
-# ---------------------------------------
-externalDatabase:
-  existingSecret: airflow-db-secret
-  host: airflow-postgresql
-  port: 5432
-
-jobs:
-  migrateDatabase:
-    enabled: true
-
-waitForMigrations:
-  timeoutSeconds: 600
-
-# ---------------------------------------
-# Airflow Config
-# ---------------------------------------
+# ===============================================================
+# Airflow Core
+# ===============================================================
 airflow:
-  extraEnv:
-    - name: AIRFLOW__CORE__LOAD_EXAMPLES
-      value: "false"
+  env:
+    - name: AIRFLOW__CORE__EXECUTOR
+      value: KubernetesExecutor
+    - name: AIRFLOW__CORE__AUTH_MANAGER
+      value: airflow.api_fastapi.auth.managers.basic.BasicAuthManager
+    - name: AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
+      valueFrom:
+        secretKeyRef:
+          name: airflow-db-secret
+          key: connection
+    - name: TZ
+      value: Asia/Shanghai
+    - name: GITSYNC_REPO
+      value: "https://github.com/dollegit/hybrid-fraud-platform.git"
+    - name: GITSYNC_REF
+      value: "master"
+    - name: GITSYNC_ROOT
+      value: "/opt/airflow/dags"
+    - name: GITSYNC_DEST
+      value: ""          # no repo folder
+    - name: GITSYNC_PERIOD
+      value: "60s"
+
+  securityContext:
+    runAsUser: 0
+    runAsGroup: 0
+    fsGroup: 0
+
+  dags:
+    # Airflow will read DAGs from /opt/airflow/dags directly
+    path: /opt/airflow/dags
+    persistence:
+      enabled: false
+    gitSync:
+      enabled: true
+      repo: "https://github.com/dollegit/hybrid-fraud-platform.git"
+      # Use the chart's fields; do not set git-sync via airflow.env
+      branch: "master"
+      dest: "repo"         # default; chart relies on this
+      depth: 1
+      maxFailures: 0
+      # Mount only the DAG subdirectory into /opt/airflow/dags
+      subPath: "2-airflow/dags"
+
+  logging:
+    remote_logging: "True"
+    colored_console_log: true
+    remote_log_conn_id: "minio_default"
+    remote_base_log_folder: "s3://airflow-logs/"
 
   config:
-    logging:
-      remote_logging: "True"
-      colored_console_log: true
-      remote_log_conn_id: "minio_default"
-      remote_base_log_folder: "s3://airflow-logs/"
-
     kubernetes_executor:
-      log_server_sidecar:
-        enabled: false
-      delete_worker_pods: false
-      worker_pods_termination_grace_period: 150
+      in_cluster: "true"
+      delete_worker_pods: "false"
+      worker_pods_termination_grace_period: "150"
+      verify_ssl: "false"
 
-    api:
-      auth_backends: airflow.api.auth.backend.basic_auth
-      
-# ROOT LEVEL - Connections
-connections:
-  - id: kubernetes_default
-    type: kubernetes
-    extra: |
-      {
-        "in_cluster": true,
-        "disable_verify_ssl": true
-      }
-  - id: spark_default
-    type: spark
-    host: local[*]
-    port: 0
-    extra: "{}"
+  kubernetesPodTemplate: |
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: airflow-task-pod
+    spec:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+        fsGroup: 0
+      restartPolicy: Never
+      containers:
+        - name: base
+          volumeMounts: []
 
-# ---------------------------------------
+# ===============================================================
+# Service Account
+# ===============================================================
+serviceAccount:
+  create: true
+  name: airflow-worker
+
+# ===============================================================
 # Components
-# ---------------------------------------
+# ===============================================================
 scheduler:
   replicas: 1
 
@@ -135,48 +136,111 @@ webserver:
     role: Admin
     email: admin@example.com
 
-triggerer: {}
-dagProcessor: {}
+triggerer:
+  enabled: false
 
-# ---------------------------------------
-# KubernetesExecutor Task Pod Template
-# ---------------------------------------
-kubernetesPodTemplate: |
-  apiVersion: v1
-  kind: Pod
-  metadata:
-    name: airflow-task-pod
-  spec:
-    restartPolicy: Never
-    containers:
-      - name: base
-        image: psalmprax/airflow-custom:2.9.2-p1
-        command: ["airflow"]
-        args: ["kubernetes", "worker"]
-        volumeMounts:
-          - name: dags
-            mountPath: /opt/airflow/dags
-    volumes:
-      - name: dags
-        emptyDir: {}
+dagProcessor:
+  enabled: true
+  # Ensure dag-processor sees only the subPath (clean DAGs), not git internals
+  extraVolumes:
+    - name: dags
+      emptyDir: {}
+  extraVolumeMounts:
+    - name: dags
+      mountPath: /opt/airflow/dags
+      subPath: repo/2-airflow/dags
+  # OPTIONAL: If your chart version doesn't inject git-sync into dagProcessor,
+  # keep this sidecar. If it does inject automatically, you can remove it.
+  extraContainers:
+    - name: git-sync
+      image: "registry.k8s.io/git-sync/git-sync:v4.2.3"
+      imagePullPolicy: Always
+      env:
+        - name: GITSYNC_REPO
+          value: "https://github.com/dollegit/hybrid-fraud-platform.git"
+        - name: GITSYNC_REF
+          value: "master"
+        - name: GITSYNC_ROOT
+          value: "/opt/airflow/dags"
+        - name: GITSYNC_DEST
+          value: "repo"
+        - name: GITSYNC_PERIOD
+          value: "60s"
+      volumeMounts:
+        - name: dags
+          mountPath: /opt/airflow/dags
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+        allowPrivilegeEscalation: false
 
-# ---------------------------------------
-# Airflow Service Account
-# ---------------------------------------
-serviceAccount:
-  create: true
-  name: airflow-worker
+workers:
+  persistence:
+    enabled: false
 
-rbac:
-  create: true
+# ===============================================================
+# Database (external only)
+# ===============================================================
+postgresql:
+  enabled: false
 
-# ---------------------------------------
-# EXTRA RESOURCES (RBAC for Airflow + Spark)
-# ---------------------------------------
+externalDatabase:
+  enabled: true
+  type: postgres
+  host: airflow-postgresql.airflow.svc.cluster.local
+  port: 5432
+  existingSecret: airflow-db-secret
+  existingSecretKey: connection
+
+# ===============================================================
+# StatsD
+# ===============================================================
+statsd:
+  enabled: true
+  securityContext:
+    runAsUser: 65534
+    runAsGroup: 0
+    fsGroup: 0
+
+# ===============================================================
+# Logs
+# ===============================================================
+logs:
+  persistence:
+    enabled: true
+    size: 2Gi
+
+# ===============================================================
+# Redis
+# ===============================================================
+redis:
+  enabled: false
+
+# ===============================================================
+# Jobs / Migrations
+# ===============================================================
+jobs:
+  migrateDatabase:
+    enabled: true
+
+waitForMigrations:
+  timeoutSeconds: 600
+
+# ===============================================================
+# GitOps Compatibility (Argo CD / Flux / Rancher / Terraform)
+# ===============================================================
+createUserJob:
+  useHelmHooks: false
+  applyCustomEnv: false
+
+migrateDatabaseJob:
+  useHelmHooks: false
+  applyCustomEnv: false
+
+# ===============================================================
+# RBAC
+# ===============================================================
 extraResources:
-  # ---------------------------------------
-  # RBAC: Airflow access inside AIRFLOW namespace
-  # ---------------------------------------
   - apiVersion: rbac.authorization.k8s.io/v1
     kind: Role
     metadata:
@@ -204,9 +268,6 @@ extraResources:
       name: airflow-k8s-role
       apiGroup: rbac.authorization.k8s.io
 
-  # ---------------------------------------
-  # RBAC: Airflow in spark-jobs namespace (SparkOperator)
-  # ---------------------------------------
   - apiVersion: rbac.authorization.k8s.io/v1
     kind: Role
     metadata:

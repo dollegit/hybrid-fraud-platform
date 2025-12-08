@@ -73,6 +73,21 @@ echo "✅ Minikube environment setup complete!"
 # Prerequisites
 for cmd in kubectl helm docker; do command -v "$cmd" >/dev/null || { error "$cmd missing"; exit 1; }; done
 
+# --- Install MinIO Client (mcli) if not present ---
+info "Checking for MinIO client (mcli)..."
+LOCAL_BIN_DIR="${SCRIPT_DIR}/.bin"
+export PATH="${LOCAL_BIN_DIR}:${PATH}" # Add local bin to PATH for this script's execution
+
+if ! command -v mcli &> /dev/null; then
+    warn "MinIO client 'mcli' not found. Attempting to install it locally to ${LOCAL_BIN_DIR}"
+    mkdir -p "${LOCAL_BIN_DIR}"
+    if curl -Lo "${LOCAL_BIN_DIR}/mcli" https://dl.min.io/client/mc/release/linux-amd64/mc; then
+        chmod +x "${LOCAL_BIN_DIR}/mcli"
+        info "✅ MinIO client 'mcli' installed successfully."
+    else
+        error "❌ Failed to download MinIO client. Please install it manually." && exit 1
+    fi
+fi
 # =============================================================================
 # 0. CLEANUP
 # =============================================================================
@@ -137,7 +152,7 @@ sleep 3
 helm upgrade --install spark-operator spark-operator/spark-operator \
   -n spark-operator --create-namespace \
   -f "${SCRIPT_DIR}/1-kubernetes-manifests/04-airflow/values.yml" \
-  --wait --timeout=25m
+  --wait --timeout=275m
 
 info "Restarting Spark Operator deployment to pick up namespace changes..."
 kubectl rollout restart deployment/spark-operator-controller -n spark-operator
@@ -181,18 +196,9 @@ fi
 # --- 5.1 Build Custom Airflow Image ---
 info "5.1. Building custom Airflow image..."
 AIRFLOW_IMAGE_FULL="${DOCKER_IMAGE}:${DOCKER_TAG}"
-AIRFLOW_BUILD_CONTEXT="2-airflow"
-mkdir -p "${AIRFLOW_BUILD_CONTEXT}"
-cat > "${AIRFLOW_BUILD_CONTEXT}/Dockerfile" <<'EOF'
-FROM apache/airflow:3.0.2-python3.12
-USER root
-RUN apt-get update && apt-get install -y default-jre-headless && apt-get clean && rm -rf /var/lib/apt/lists/*
-ENV JAVA_HOME=/usr/lib/jvm/default-java
-ENV PATH="${JAVA_HOME}/bin:${PATH}"
-USER airflow
-RUN pip install --no-cache-dir apache-airflow-providers-apache-spark apache-airflow-providers-cncf-kubernetes dbt-core dbt-postgres
-EOF
+AIRFLOW_BUILD_CONTEXT="${SCRIPT_DIR}/2-airflow" # Use the existing Dockerfile
 info "Building ${AIRFLOW_IMAGE_FULL} inside Minikube..."
+info "Using Dockerfile from: ${AIRFLOW_BUILD_CONTEXT}/Dockerfile"
 docker build -t "${AIRFLOW_IMAGE_FULL}" "${AIRFLOW_BUILD_CONTEXT}"
 
 # --- 5.2 Build Spark Test Image ---
@@ -216,17 +222,12 @@ if [[ "${USE_MINIKUBE_DOCKER_ENV}" == "true" ]]; then
 fi
 
 # =============================================================================
-# 6. DB MIGRATION
+# 6. CREATE DB SECRET & DEPLOY AIRFLOW
 # =============================================================================
-info "6. DB MIGRATION..."
-CONN="postgresql+psycopg2://airflow:airflow@${PG_RELEASE}:5432/airflow"
+info "6. Creating DB secret and deploying Airflow..."
+CONN="postgresql+psycopg2://airflow:airflow@${PG_RELEASE}.airflow.svc.cluster.local:5432/airflow"
 kubectl create secret generic airflow-db-secret -n "${NAMESPACE}" \
   --from-literal=connection="${CONN}" --dry-run=client -o yaml | kubectl apply -f -
-
-kubectl run airflow-db-migrate -n "${NAMESPACE}" --rm -i --tty --restart=Never \
-  --image="$AIRFLOW_IMAGE_FULL" \
-  --env "AIRFLOW__CORE__SQL_ALCHEMY_CONN=$CONN" \
-  --command -- airflow db migrate
 
 # =============================================================================
 # 7. AIRFLOW DEPLOY
@@ -235,8 +236,9 @@ info "7. Airflow deploy..."
 helm repo add apache-airflow https://airflow.apache.org || true
 helm repo update
 helm upgrade --install "${AIRFLOW_RELEASE}" apache-airflow/airflow -n "${NAMESPACE}" \
-  -f "${SCRIPT_DIR}/1-kubernetes-manifests/04-airflow/custom-values.yaml" \
-  --timeout=20m || warn "Using defaults"
+  --set postgresql.enabled=false \
+  --set redis.enabled=false \
+  -f "${SCRIPT_DIR}/1-kubernetes-manifests/04-airflow/custom-values.yaml" --wait --timeout=30m
 
 
 # =============================================================================
@@ -358,6 +360,56 @@ kubectl exec -n airflow deploy/airflow-scheduler -- bash -c "
 
 kubectl exec -n airflow deploy/airflow-scheduler -- bash -c "
   airflow connections add spark_default --conn-type spark --conn-host 'local[*]' --conn-port 0 --conn-extra '{}' || true"
+# =============================================================================
+# CONFIGURE MINIO CLIENT AND CREATE BUCKETS
+# =============================================================================
+echo ">>> Configuring MinIO client and creating buckets..."
+info "Checking for MinIO client (mc or mcli)..."
+MC_COMMAND=""
+if command -v mcli &> /dev/null; then
+    MC_COMMAND="mcli"
+    info "✅ Found MinIO client as 'mcli'."
+elif command -v mc &> /dev/null; then
+    # Verify 'mc' is not Midnight Commander by checking its help output
+    if mc --help 2>&1 | grep -q "MinIO"; then
+        MC_COMMAND="mc"
+        info "✅ Found MinIO client as 'mc'."
+    else
+        warn "'mc' command is installed but appears to be Midnight Commander, not the MinIO client."
+    fi
+fi
+
+if [ -z "$MC_COMMAND" ]; then
+    error "MinIO client not found."
+    error "Please install the MinIO client, preferably as 'mcli' to avoid conflicts."
+    error "See: https://min.io/docs/minio/linux/reference/minio-client.html"
+    exit 1
+fi
+
+# 1. Get MinIO service URL
+export MINIO_URL=$(minikube service minio -n storage --url)
+if [ -z "$MINIO_URL" ]; then
+    echo "❌ Could not get MinIO service URL. Please check if MinIO is running."
+    exit 1
+fi
+info "MinIO URL found: $MINIO_URL"
+
+# 2. Configure MinIO Client (mc) alias
+$MC_COMMAND alias set myminio "$MINIO_URL" minio minio123 --api S3v4
+
+# 3. Create 'bronze' and 'silver' buckets if they don't exist
+for bucket in bronze silver datalake; do
+    if $MC_COMMAND ls myminio/$bucket > /dev/null 2>&1; then
+        echo "✅ Bucket '$bucket' already exists."
+    else
+        echo "Creating bucket: $bucket"
+        $MC_COMMAND mb myminio/$bucket
+        $MC_COMMAND policy set public myminio/$bucket
+        echo "✅ Bucket '$bucket' created and set to public."
+    fi
+done
+
+echo ">>> MinIO configuration complete."
 
 # =============================================================================
 # SUCCESS
