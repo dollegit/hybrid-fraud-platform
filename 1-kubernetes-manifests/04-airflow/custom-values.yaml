@@ -1,104 +1,94 @@
-# ===============================================================
-# Images
-# ===============================================================
+# Airflow Helm Chart 1.18.0 - KubernetesExecutor + External Postgres + GitSync + Migrations
+
+executor: KubernetesExecutor
+
 images:
   airflow:
     repository: psalmprax/airflow-custom
     tag: "2.9.2-p1"
     pullPolicy: Always
-  useDefaultImageForMigration: false
-  migrationsWaitTimeout: 600
   pod_template:
     repository: psalmprax/airflow-custom
     tag: "2.9.2-p1"
     pullPolicy: Always
-
   flower:
     repository: psalmprax/airflow-custom
     tag: "2.9.2-p1"
     pullPolicy: Always
-
   statsd:
     repository: prom/statsd-exporter
     tag: "v0.28.0"
-
+    pullPolicy: Always
   pgbouncer:
     repository: psalmprax/airflow-custom
     tag: "2.9.2-p1"
-
+    pullPolicy: Always
   pgbouncerExporter:
     repository: psalmprax/airflow-custom
     tag: "2.9.2-p1"
-
+    pullPolicy: Always
   gitSync:
-    repository: apache/git-sync
+    repository: registry.k8s.io/git-sync/git-sync
     tag: v4.3.0
-# ===============================================================
-# Executor
-# ===============================================================
-executor: KubernetesExecutor
+    pullPolicy: Always
 
-# ===============================================================
-# Airflow Core
-# ===============================================================
+  useDefaultImageForMigration: true
+  migrationsWaitTimeout: 600
+
+# Environment for all pods
+
+# env:
+# - name: ENVIRONMENT
+#   value: dev
+
+# extraEnv: |
+#   name: AIRFLOW__CORE__DEFAULT_TIMEZONE
+#   value: "Asia/Shanghai"
+
+# DAGs configuration
+
+dags:
+  # path: /opt/airflow/dags
+  gitSync:
+    enabled: true
+    repo: "https://github.com/dollegit/hybrid-fraud-platform.git"
+    branch: "master"
+    rev: "HEAD"
+    depth: 1
+    subPath: "2-airflow/dags"
+    wait: 30
+
+# Airflow-specific settings
+
 airflow:
   env:
     - name: AIRFLOW__CORE__EXECUTOR
-      value: KubernetesExecutor
+      value: "KubernetesExecutor"
     - name: AIRFLOW__CORE__AUTH_MANAGER
-      value: airflow.api_fastapi.auth.managers.basic.BasicAuthManager
+      value: "airflow.api_fastapi.auth.managers.basic.BasicAuthManager"
+    # REQUIRED for Airflow 3.x with external DB
     - name: AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
       valueFrom:
         secretKeyRef:
           name: airflow-db-secret
           key: connection
     - name: TZ
-      value: Asia/Shanghai
-    - name: GITSYNC_REPO
-      value: "https://github.com/dollegit/hybrid-fraud-platform.git"
-    - name: GITSYNC_REF
-      value: "master"
-    - name: GITSYNC_ROOT
-      value: "/opt/airflow/dags"
-    - name: GITSYNC_DEST
-      value: ""          # no repo folder
-    - name: GITSYNC_PERIOD
-      value: "60s"
-
+      value: "Asia/Shanghai"
   securityContext:
-    runAsUser: 0
+    runAsUser: 65534
     runAsGroup: 0
-    fsGroup: 0
-
-  dags:
-    # Airflow will read DAGs from /opt/airflow/dags directly
-    path: /opt/airflow/dags
-    persistence:
-      enabled: false
-    gitSync:
-      enabled: true
-      repo: "https://github.com/dollegit/hybrid-fraud-platform.git"
-      # Use the chart's fields; do not set git-sync via airflow.env
-      branch: "master"
-      dest: "repo"         # default; chart relies on this
-      depth: 1
-      maxFailures: 0
-      # Mount only the DAG subdirectory into /opt/airflow/dags
-      subPath: "2-airflow/dags"
-
+    fsGroup: 65533
   logging:
     remote_logging: "True"
     colored_console_log: true
     remote_log_conn_id: "minio_default"
     remote_base_log_folder: "s3://airflow-logs/"
-
   config:
     kubernetes_executor:
       in_cluster: "true"
       delete_worker_pods: "false"
       worker_pods_termination_grace_period: "150"
       verify_ssl: "false"
-
   kubernetesPodTemplate: |
     apiVersion: v1
     kind: Pod
@@ -106,26 +96,24 @@ airflow:
       name: airflow-task-pod
     spec:
       securityContext:
-        runAsUser: 0
-        runAsGroup: 0
-        fsGroup: 0
-      restartPolicy: Never
-      containers:
-        - name: base
-          volumeMounts: []
+        fsGroup: 65533
+        restartPolicy: Never
 
-# ===============================================================
-# Service Account
-# ===============================================================
+# Service accounts
+
 serviceAccount:
+  create: true
+  name: airflow
+
+worker_service_account:
   create: true
   name: airflow-worker
 
-# ===============================================================
-# Components
-# ===============================================================
 scheduler:
   replicas: 1
+  env:
+  - name: AIRFLOW__CORE__LOAD_EXAMPLES
+    value: "false"
 
 webserver:
   enabled: true
@@ -141,60 +129,30 @@ triggerer:
 
 dagProcessor:
   enabled: true
-  # Ensure dag-processor sees only the subPath (clean DAGs), not git internals
-  extraVolumes:
-    - name: dags
-      emptyDir: {}
-  extraVolumeMounts:
-    - name: dags
-      mountPath: /opt/airflow/dags
-      subPath: repo/2-airflow/dags
-  # OPTIONAL: If your chart version doesn't inject git-sync into dagProcessor,
-  # keep this sidecar. If it does inject automatically, you can remove it.
-  extraContainers:
-    - name: git-sync
-      image: "registry.k8s.io/git-sync/git-sync:v4.2.3"
-      imagePullPolicy: Always
-      env:
-        - name: GITSYNC_REPO
-          value: "https://github.com/dollegit/hybrid-fraud-platform.git"
-        - name: GITSYNC_REF
-          value: "master"
-        - name: GITSYNC_ROOT
-          value: "/opt/airflow/dags"
-        - name: GITSYNC_DEST
-          value: "repo"
-        - name: GITSYNC_PERIOD
-          value: "60s"
-      volumeMounts:
-        - name: dags
-          mountPath: /opt/airflow/dags
-      securityContext:
-        runAsUser: 0
-        runAsGroup: 0
-        allowPrivilegeEscalation: false
 
 workers:
   persistence:
     enabled: false
+  serviceAccount:
+    create: false
+    name: airflow-worker
 
-# ===============================================================
-# Database (external only)
-# ===============================================================
 postgresql:
   enabled: false
 
 externalDatabase:
   enabled: true
-  type: postgres
+  type: postgresql
   host: airflow-postgresql.airflow.svc.cluster.local
   port: 5432
+  database: airflow
+  user: airflow
   existingSecret: airflow-db-secret
   existingSecretKey: connection
 
-# ===============================================================
-# StatsD
-# ===============================================================
+# pgbouncer:
+#   enabled: true
+
 statsd:
   enabled: true
   securityContext:
@@ -202,26 +160,25 @@ statsd:
     runAsGroup: 0
     fsGroup: 0
 
-# ===============================================================
-# Logs
-# ===============================================================
 logs:
   persistence:
     enabled: true
     size: 2Gi
 
-# ===============================================================
-# Redis
-# ===============================================================
 redis:
   enabled: false
 
-# ===============================================================
-# Jobs / Migrations
-# ===============================================================
+# Migration jobs - required for schema upgrade
+
 jobs:
-  migrateDatabase:
+  migrateDatabase:  
     enabled: true
+    # useHelmHooks: false
+    # extraEnv:
+    #   - name: AIRFLOW__CORE__MIGRATION_WAIT_TIMEOUT
+    # value: "600"
+    # createUserJob:
+    #   useHelmHooks: false
 
 waitForMigrations:
   timeoutSeconds: 600
@@ -237,60 +194,31 @@ migrateDatabaseJob:
   useHelmHooks: false
   applyCustomEnv: false
 
-# ===============================================================
-# RBAC
-# ===============================================================
+# Extra RBAC for cross-namespace pods (optional)
+
 extraResources:
-  - apiVersion: rbac.authorization.k8s.io/v1
-    kind: Role
-    metadata:
-      name: airflow-k8s-role
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: Role
+  metadata:
+    name: airflow-k8s-role
+    namespace: airflow
+  rules:
+  - apiGroups: [""]
+    resources: ["pods","pods/log","pods/exec"]
+    verbs: ["get","list","watch","create","delete","patch"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create","patch"]
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: RoleBinding
+  metadata:
+    name: airflow-k8s-rolebinding
+    namespace: airflow
+  subjects:
+    - kind: ServiceAccount
+      name: airflow-worker
       namespace: airflow
-    rules:
-      - apiGroups: [""]
-        resources: ["pods", "pods/log", "pods/exec"]
-        verbs: ["get", "list", "watch", "create", "delete", "patch"]
-      - apiGroups: [""]
-        resources: ["events"]
-        verbs: ["create", "patch"]
-
-  - apiVersion: rbac.authorization.k8s.io/v1
-    kind: RoleBinding
-    metadata:
-      name: airflow-k8s-rolebinding
-      namespace: airflow
-    subjects:
-      - kind: ServiceAccount
-        name: airflow-worker
-        namespace: airflow
-    roleRef:
-      kind: Role
-      name: airflow-k8s-role
-      apiGroup: rbac.authorization.k8s.io
-
-  - apiVersion: rbac.authorization.k8s.io/v1
+  roleRef:
     kind: Role
-    metadata:
-      name: airflow-spark-role
-      namespace: spark-jobs
-    rules:
-      - apiGroups: ["sparkoperator.k8s.io"]
-        resources: ["sparkapplications", "sparkapplications/status"]
-        verbs: ["get", "list", "watch", "create", "delete"]
-      - apiGroups: [""]
-        resources: ["pods", "pods/log", "services"]
-        verbs: ["get", "list", "watch", "create", "delete", "patch"]
-
-  - apiVersion: rbac.authorization.k8s.io/v1
-    kind: RoleBinding
-    metadata:
-      name: airflow-spark-rolebinding
-      namespace: spark-jobs
-    subjects:
-      - kind: ServiceAccount
-        name: airflow-worker
-        namespace: airflow
-    roleRef:
-      kind: Role
-      name: airflow-spark-role
-      apiGroup: rbac.authorization.k8s.io
+    name: airflow-k8s-role
+    apiGroup: rbac.authorization.k8s.io
