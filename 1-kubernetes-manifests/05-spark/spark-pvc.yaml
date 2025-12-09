@@ -1,0 +1,14 @@
+# /home/psalmprax/dmolle_project/hybrid-fraud-platform/1-kubernetes-manifests/05-spark/spark-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: spark-pvc
+  namespace: spark-jobs # Important: Must match the namespace of your Spark jobs
+spec:
+  accessModes:
+    - ReadWriteOnce # Suitable for a single pod or jobs that don't run in parallel on the same volume
+  resources:
+    requests:
+      storage: 1Gi # Adjust the size as needed for your Spark jobs' working directory
+  # storageClassName: standard # Optional: Specify a StorageClass if you have one configured.
+  # If omitted, the default StorageClass will be used.

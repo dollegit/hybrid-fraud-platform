@@ -340,6 +340,7 @@ EOF
 info "9. TEST SPARK JOB..."
 kubectl delete configmap on-prem-etl-script -n spark-jobs --ignore-not-found || true
 kubectl delete configmap consolidate-data-script -n spark-jobs --ignore-not-found || true
+kubectl delete configmap generate-sample-data-script -n spark-jobs --ignore-not-found || true
 
 ./scripts/create_spark_configmaps.sh --namespace spark-jobs --root "$SCRIPT_DIR"/
 
@@ -436,6 +437,11 @@ for bucket in bronze silver datalake; do
 done
 
 echo ">>> MinIO configuration complete."
+
+# =============================================================================
+# Create spark pvc for data generation
+# =============================================================================
+kubectl apply -f 1-kubernetes-manifests/05-spark/spark-pvc.yaml
 
 # =============================================================================
 # SUCCESS
