@@ -10,7 +10,7 @@ spec:
   image: "psalmprax/spark-app:1.0.0"
   imagePullPolicy: Always
   mainApplicationFile: "local:///opt/spark/work-dir/streaming_processor.py"
-  sparkVersion: "3.5.1"
+  sparkVersion: "3.5.7" # Align with other jobs and Dockerfile
   restartPolicy:
     type: OnFailure
     onFailureRetries: 3
@@ -22,8 +22,6 @@ spec:
     memory: "1g"
     serviceAccount: "spark"
     env:
-      - name: KAFKA_BOOTSTRAP_SERVERS
-        value: "my-kafka-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
       - name: AWS_ACCESS_KEY_ID
         valueFrom:
           secretKeyRef:
@@ -43,8 +41,6 @@ spec:
     instances: 2
     memory: "2g"
     env:
-      - name: KAFKA_BOOTSTRAP_SERVERS
-        value: "my-kafka-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
       - name: AWS_ACCESS_KEY_ID
         valueFrom:
           secretKeyRef:
@@ -55,8 +51,6 @@ spec:
           secretKeyRef:
             name: minio-credentials
             key: secretkey
-      - name: KAFKA_BOOTSTRAP_SERVERS
-        value: my-kafka-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092
       - name: KAFKA_TOPIC
         value: paymentevents
   # 🔥 FIXED: COMPLETE sparkConf

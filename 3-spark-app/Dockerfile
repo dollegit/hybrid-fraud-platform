@@ -20,6 +20,10 @@ RUN curl -fL -o /opt/spark/jars/hadoop-aws-3.3.4.jar \
     curl -fL -o /opt/spark/jars/aws-java-sdk-bundle-1.12.470.jar \
       https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.470/aws-java-sdk-bundle-1.12.470.jar
 
+# PostgreSQL JDBC Driver (for writing to the staging database)
+RUN curl -fL -o /opt/spark/jars/postgresql-42.6.0.jar \
+      https://repo1.maven.org/maven2/org/postgresql/postgresql/42.6.0/postgresql-42.6.0.jar
+
 WORKDIR /opt/spark/work-dir
 COPY ./src/ .
 COPY requirements.txt .
