@@ -1,0 +1,4 @@
+# dbt packages for data transformation
+dbt-core
+dbt-postgres
+# astronomer-cosmos

@@ -118,6 +118,8 @@ kubernetesPodTemplate: |
         env:
           - name: AIRFLOW__CORE__EXECUTOR
             value: KubernetesExecutor
+          - name: PATH
+            value: "/home/airflow/.local/bin:/usr/local/bin:/usr/bin:/bin"
         volumeMounts:
           - mountPath: /opt/airflow/dags
             name: dags

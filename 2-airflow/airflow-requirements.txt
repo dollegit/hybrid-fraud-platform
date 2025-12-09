@@ -1,0 +1,10 @@
+# # Airflow providers
+# apache-airflow-providers-apache-spark[jdbc]
+# apache-airflow-providers-cncf-kubernetes
+# # dbt packages for data transformation
+# dbt-core
+# dbt-postgres
+# # astronomer-cosmos
+# Airflow providers
+apache-airflow-providers-apache-spark[jdbc]
+apache-airflow-providers-cncf-kubernetes
