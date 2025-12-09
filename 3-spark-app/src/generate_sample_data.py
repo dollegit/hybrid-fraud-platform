@@ -1,10 +1,13 @@
 import pandas as pd
 import random
 from datetime import datetime, timedelta
+import os
 
 def generate_sample_data(num_payments=1000, num_accounts=200):
     """Generates and saves four sample CSV files for the consolidation task."""
     print("Generating sample data...")
+    # Define the output directory which is the mounted PVC in the Spark pod
+    output_dir = "/opt/spark/work-dir"
 
     # --- Account Details ---
     accounts = []
@@ -14,7 +17,8 @@ def generate_sample_data(num_payments=1000, num_accounts=200):
             'opening_date': (datetime(2020, 1, 1) + timedelta(days=random.randint(0, 1500))).strftime('%Y-%m-%d')
         })
     accounts_df = pd.DataFrame(accounts)
-    accounts_df.to_csv('account_details.csv', index=False)
+    output_path = os.path.join(output_dir, 'account_details.csv')
+    accounts_df.to_csv(output_path, index=False)
     print(f"Generated {len(accounts_df)} account details -> account_details.csv")
 
     account_ids = accounts_df['account_id'].tolist()
@@ -32,7 +36,8 @@ def generate_sample_data(num_payments=1000, num_accounts=200):
             'timestamp': (datetime.now() - timedelta(minutes=random.randint(1, 100000))).isoformat()
         })
     payments_df = pd.DataFrame(payments)
-    payments_df.to_csv('payment_transactions.csv', index=False)
+    output_path = os.path.join(output_dir, 'payment_transactions.csv')
+    payments_df.to_csv(output_path, index=False)
     print(f"Generated {len(payments_df)} payments -> payment_transactions.csv")
 
     # --- External Risk Feed ---
@@ -44,7 +49,8 @@ def generate_sample_data(num_payments=1000, num_accounts=200):
             'risk_flag': random.choice([1, 2]) # 1=suspicious, 2=confirmed
         })
     risk_feed_df = pd.DataFrame(risk_feed)
-    risk_feed_df.to_csv('external_risk_feed.csv', index=False)
+    output_path = os.path.join(output_dir, 'external_risk_feed.csv')
+    risk_feed_df.to_csv(output_path, index=False)
     print(f"Generated {len(risk_feed_df)} risk entries -> external_risk_feed.csv")
 
     # --- Historical Fraud Cases ---
@@ -57,7 +63,8 @@ def generate_sample_data(num_payments=1000, num_accounts=200):
             'fraud_reported_date': (datetime.now() - timedelta(days=random.randint(30, 90))).strftime('%Y-%m-%d')
         })
     fraud_cases_df = pd.DataFrame(fraud_cases)
-    fraud_cases_df.to_csv('historical_fraud_cases.csv', index=False)
+    output_path = os.path.join(output_dir, 'historical_fraud_cases.csv')
+    fraud_cases_df.to_csv(output_path, index=False)
     print(f"Generated {len(fraud_cases_df)} fraud cases -> historical_fraud_cases.csv")
 
     print("\nSample data generation complete.")
