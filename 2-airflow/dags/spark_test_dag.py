@@ -26,11 +26,8 @@ with DAG(
         task_id="submit_simple_print_job",
         # The namespace where the SparkApplication resource will be created.
         # This should match the namespace where your Spark Operator is running.
+        application_file=SPARK_TEST_YAML_PATH.read_text(),
         namespace="spark-jobs",
-        # The application_file should point to the YAML manifest for the SparkApplication.
-        # Airflow will read this file and use its content as the body for the API request.
-        # application_file=SPARK_TEST_YAML_PATH.as_posix(),
-        application_file="jobs/spark-test.yaml",
         # The Kubernetes connection ID configured in Airflow UI.
         # 'kubernetes_default' is the default connection ID created by the Helm chart.
         kubernetes_conn_id="kubernetes_default",

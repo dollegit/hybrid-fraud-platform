@@ -10,9 +10,8 @@ from airflow.providers.cncf.kubernetes.operators.spark_kubernetes import SparkKu
 # CONSTANTS
 # =============================================================================
 DAG_FOLDER = Path(__file__).parent
-PROJECT_ROOT = DAG_FOLDER.parent.parent # This should point to the root of your git repo
+PROJECT_ROOT = DAG_FOLDER.parent.parent # Resolves to /opt/airflow/dags/repo
 DBT_PROJECT_PATH = PROJECT_ROOT / "5-dbt-project"
-DBT_VENV_PATH = PROJECT_ROOT / "dbt_venv/bin/activate"
 
 # =============================================================================
 # DBT CONFIGURATION
@@ -64,12 +63,11 @@ with DAG(
     )
 
     # Task 3: Run dbt models to transform the staged data
-    # We use a BashOperator to activate the virtual environment and run dbt.
+    # We use a BashOperator to run dbt. This assumes `dbt` is installed in the
+    # Airflow worker's container image.
     dbt_run = BashOperator(
         task_id="dbt_run_models",
         bash_command=f"""
-        set -e
-        source {DBT_VENV_PATH}
         dbt run --project-dir {DBT_PROJECT_PATH} --profiles-dir {DBT_PROJECT_PATH} --target prod
         """,
         env=DBT_ENV_VARS,
@@ -79,8 +77,6 @@ with DAG(
     dbt_test = BashOperator(
         task_id="dbt_test_models",
         bash_command=f"""
-        set -e
-        source {DBT_VENV_PATH}
         dbt test --project-dir {DBT_PROJECT_PATH} --profiles-dir {DBT_PROJECT_PATH} --target prod
         """,
         env=DBT_ENV_VARS,
