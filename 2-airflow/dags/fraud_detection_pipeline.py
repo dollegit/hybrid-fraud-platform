@@ -49,6 +49,11 @@ with DAG(
     doc_md="""
     ### Fraud Detection Pipeline (dbt-core)
 
+    **Note on Data Generation**: This pipeline includes a `generate_sample_data` task that creates sample CSV files.
+    The subsequent Spark job (`consolidate_data`) reads these files. In a real-world scenario, the initial data
+    would likely come from external sources (e.g., Kafka streams processed into a data lake like MinIO),
+    and this generation step would be replaced by a task that waits for or triggers that data's arrival.
+
     This DAG orchestrates the end-to-end fraud detection data pipeline.
     1.  **Consolidate Data**: A Spark job consolidates raw data from various sources into staging tables in PostgreSQL.
     2.  **DBT Run**: dbt models are executed to transform staging data into a unified analytics table.
@@ -56,6 +61,18 @@ with DAG(
     """,
 ) as dag:
     # --- Task 1: Consolidate data with Spark ---
+    # NOTE: In a real pipeline, this step would be replaced by data arriving from upstream sources.
+    # Here, we generate sample data and place it where the consolidate_data job expects it.
+    generate_sample_data = SparkKubernetesOperator(
+        task_id="generate_sample_data",
+        application_file="jobs/generate_sample_data.yaml",
+        namespace="spark-jobs",
+        kubernetes_conn_id="kubernetes_default",
+        do_xcom_push=False,
+        delete_on_termination=True,
+        deferrable=False,
+    )
+
     consolidate_data = SparkKubernetesOperator(
         task_id="consolidate_data_to_staging",
         application_file="jobs/consolidate_data.yaml",
@@ -94,4 +111,4 @@ with DAG(
     )
 
     # --- Define Task Dependencies ---
-    consolidate_data >> dbt_run >> dbt_test
+    generate_sample_data >> consolidate_data >> dbt_run >> dbt_test
