@@ -127,7 +127,9 @@ helm upgrade --install strimzi-kafka-operator strimzi/strimzi-kafka-operator \
   -n kafka --create-namespace --version 0.49.0 --wait --timeout 30m
 
 info "Deploying Kafka cluster..."
-kubectl apply -f 1-kubernetes-manifests/02-kafka-strimzi/kafka-cluster.yaml -n kafka || true
+# Using a dedicated YAML file is cleaner and more maintainable.
+kubectl apply -f 1-kubernetes-manifests/02-kafka-strimzi/kafka-cluster.yaml -n kafka
+
 info "Waiting for Kafka cluster to be ready..."
 kubectl wait kafka/my-kafka-cluster --for=condition=Ready -n kafka --timeout=15m
 
