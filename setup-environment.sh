@@ -375,6 +375,17 @@ kubectl exec -n airflow deploy/airflow-scheduler -- bash -c "
     --conn-extra '{}'
 " || true
 
+# Create postgres_default for Spark jobs to connect to the DB
+kubectl exec -n airflow deploy/airflow-scheduler -- bash -c "
+  airflow connections delete postgres_default || true
+  airflow connections add postgres_default \
+    --conn-type postgres \
+    --conn-host airflow-postgresql.airflow.svc.cluster.local \
+    --conn-login airflow \
+    --conn-password airflow \
+    --conn-schema airflow
+" || true
+
 # =============================================================================
 # CONFIGURE MINIO CLIENT AND CREATE BUCKETS
 # =============================================================================

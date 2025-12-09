@@ -59,8 +59,11 @@ with DAG(
     consolidate_data = SparkKubernetesOperator(
         task_id="consolidate_data_to_staging",
         application_file="jobs/consolidate_data.yaml",
-        namespace="airflow",
+        namespace="spark-jobs",
+        kubernetes_conn_id="kubernetes_default",
         do_xcom_push=True,
+        delete_on_termination=True,
+        deferrable=False,
         doc_md="""
         #### Spark Data Consolidation
         Submits a Spark application to Kubernetes. This job reads data from MinIO (or other sources),
