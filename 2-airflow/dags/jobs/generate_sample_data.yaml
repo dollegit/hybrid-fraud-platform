@@ -8,11 +8,11 @@ spec:
   pythonVersion: "3"
   mode: cluster
   image: "psalmprax/spark-app:1.0.0"
-  imagePullPolicy: Always
   mainApplicationFile: "local:///opt/spark/work-dir/generate_sample_data.py"
+  imagePullPolicy: IfNotPresent # More stable for production than 'Always'
   sparkVersion: "3.5.7"
   restartPolicy:
-    type: Always
+    type: OnFailure # Safer than 'Always' to prevent infinite restart loops on persistent errors
 
   # This job doesn't need all the heavy dependencies of the consolidation job,
   # but we include them for consistency and simplicity. In a production
@@ -53,8 +53,8 @@ spec:
       # - name: NUM_RECORDS
       #   value: "1000"
     volumeMounts:
-      - name: spark-work-dir
-        mountPath: /opt/spark/work-dir
+      - name: spark-data-volume
+        mountPath: /opt/spark/data # Mount PVC to a dedicated data directory
 
   executor:
     cores: 1
@@ -75,12 +75,12 @@ spec:
       # - name: NUM_RECORDS
       #   value: "1000"
     volumeMounts:
-      - name: spark-work-dir
-        mountPath: /opt/spark/work-dir
+      - name: spark-data-volume
+        mountPath: /opt/spark/data # Mount PVC to a dedicated data directory
 
   # This job needs access to the shared volume to write the CSV files
   # that the `consolidate_data` job will read.
   volumes:
-    - name: spark-work-dir
+    - name: spark-data-volume
       persistentVolumeClaim:
         claimName: spark-pvc

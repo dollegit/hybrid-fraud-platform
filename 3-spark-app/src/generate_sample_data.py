@@ -9,7 +9,7 @@ def generate_sample_data(num_payments=1000, num_accounts=200):
     print("Generating sample data...")
     # Define the output directory which is the mounted PVC in the Spark pod.
     # This path is consistent with the volumeMount in the SparkApplication YAML.
-    output_dir = os.getenv("DATA_OUTPUT_PATH", "/opt/spark/work-dir")
+    output_dir = os.getenv("DATA_OUTPUT_PATH", "/opt/spark/data")
 
     # --- Account Details ---
     accounts = []
