@@ -1,63 +1,64 @@
-# COMMAND ----------
 import os
 from pyspark.sql import SparkSession
 
-def load_to_staging(spark, source_path, table_name, jdbc_url, connection_properties):
-    """
-    Reads CSV from container and loads to PostgreSQL staging table.
-    """
+def load_to_staging(spark, source_file, table_name, jdbc_url, connection_properties):
+    """Reads a CSV from the shared volume and writes it to a PostgreSQL table."""
+    
+    # Use an environment variable for the base path, defaulting to /opt/spark/data
+    input_dir = os.getenv("DATA_INPUT_PATH", "/opt/spark/data")
+    source_path = os.path.join(input_dir, source_file)
+    
+    print(f"📖 Reading {source_file} from {source_path} -> {table_name}")
+    
     try:
-        print(f"📖 Reading {source_path} → {table_name}")
         df = spark.read.option("header", "true").option("inferSchema", "true").csv(source_path)
-
-        print(f"💾 Loading to PostgreSQL: {table_name}")
-        df.write \
-            .format("jdbc") \
-            .mode("overwrite") \
-            .option("url", jdbc_url) \
-            .option("dbtable", table_name) \
-            .option("user", connection_properties["user"]) \
-            .option("password", connection_properties["password"]) \
-            .option("driver", "org.postgresql.Driver") \
-            .save()
-            
-        print(f"✅ {table_name}: {df.count()} rows loaded")
+        
+        df.write.jdbc(
+            url=jdbc_url,
+            table=table_name,
+            mode="overwrite",
+            properties=connection_properties
+        )
+        print(f"✅ SUCCESS {table_name}: Wrote {df.count()} rows.")
+        
     except Exception as e:
         print(f"❌ FAILED {table_name}: {e}")
-        raise
+        # Re-raise the exception to make the Spark job fail
+        raise e
 
 def main():
     """
-    Load CSV files → PostgreSQL staging → Ready for dbt.
+    Main entry point for the data consolidation job.
+    Reads CSVs from the shared PVC and loads them into a staging PostgreSQL database.
     """
-    # ✅ PERFECT - Uses Kubernetes env vars
-    jdbc_hostname = os.getenv("DB_HOSTNAME", "postgres.airflow.svc.cluster.local")
-    jdbc_port = os.getenv("DB_PORT", "5432")
-    jdbc_database = os.getenv("DB_NAME", "fraud_db")
-    jdbc_url = f"jdbc:postgresql://{jdbc_hostname}:{jdbc_port}/{jdbc_database}"
+    spark = SparkSession.builder.appName("ConsolidateData").getOrCreate()
+
+    # Get database connection details from environment variables
+    jdbc_url = os.getenv("STAGING_DB_URL")
+    db_user = os.getenv("STAGING_DB_USER")
+    db_password = os.getenv("STAGING_DB_PASSWORD")
+
+    if not all([jdbc_url, db_user, db_password]):
+        raise ValueError("Missing one or more required database environment variables (STAGING_DB_URL, STAGING_DB_USER, STAGING_DB_PASSWORD)")
 
     connection_properties = {
-        "user": os.getenv("DB_USER"),
-        "password": os.getenv("DB_PASSWORD"),
+        "user": db_user,
+        "password": db_password,
         "driver": "org.postgresql.Driver"
     }
 
-    # ✅ Source files in custom image /opt/spark/work-dir/
-    sources_to_tables = {
-        "payment_transactions.csv": "stg_payments",
-        "account_details.csv": "stg_accounts", 
-        "external_risk_feed.csv": "stg_risk_feed",
-        "historical_fraud_cases.csv": "stg_fraud_cases"
+    # Define the mapping of source files to destination table names
+    files_to_tables = {
+        "payment_transactions.csv": "raw_payments",
+        "account_details.csv": "raw_accounts",
+        "external_risk_feed.csv": "raw_risk_feed",
+        "historical_fraud_cases.csv": "raw_fraud_cases"
     }
 
-    spark = SparkSession.builder \
-        .appName("FraudDetection_LoadToStaging") \
-        .getOrCreate()
-
-    for source_file, table_name in sources_to_tables.items():
+    for source_file, table_name in files_to_tables.items():
         load_to_staging(spark, source_file, table_name, jdbc_url, connection_properties)
 
-    print("🎉 All staging tables loaded → Ready for dbt!")
+    print("🛑 Stopping SparkSession.")
     spark.stop()
 
 if __name__ == "__main__":

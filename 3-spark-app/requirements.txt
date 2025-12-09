@@ -2,3 +2,6 @@
 # as pyspark is already in the base image.
 # If you used other libraries like 'requests', you would add them here.
 gunicorn
+pandas
+numpy
+scikit-learn
