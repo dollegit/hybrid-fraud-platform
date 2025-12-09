@@ -1,3 +1,4 @@
+# COMMAND ----------
 import pendulum
 from pathlib import Path
 
@@ -8,7 +9,8 @@ from airflow.providers.cncf.kubernetes.operators.spark_kubernetes import SparkKu
 # =============================================================================
 # CONSTANTS
 # =============================================================================
-PROJECT_ROOT = Path(__file__).parent.parent
+DAG_FOLDER = Path(__file__).parent
+PROJECT_ROOT = DAG_FOLDER.parent.parent # This should point to the root of your git repo
 DBT_PROJECT_PATH = PROJECT_ROOT / "5-dbt-project"
 DBT_VENV_PATH = PROJECT_ROOT / "dbt_venv/bin/activate"
 

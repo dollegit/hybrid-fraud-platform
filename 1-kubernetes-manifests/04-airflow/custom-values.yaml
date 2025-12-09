@@ -121,8 +121,12 @@ kubernetesPodTemplate: |
         volumeMounts:
           - mountPath: /opt/airflow/dags
             name: dags
+          - name: xcom
+            mountPath: /airflow/xcom
     volumes:
       - name: dags
+        emptyDir: {}
+      - name: xcom
         emptyDir: {}
 
 # ===============================================================
