@@ -6,8 +6,9 @@ import os
 def generate_sample_data(num_payments=1000, num_accounts=200):
     """Generates and saves four sample CSV files for the consolidation task."""
     print("Generating sample data...")
-    # Define the output directory which is the mounted PVC in the Spark pod
-    output_dir = "/opt/spark/work-dir"
+    # Define the output directory which is the mounted PVC in the Spark pod.
+    # This path is consistent with the volumeMount in the SparkApplication YAML.
+    output_dir = os.getenv("DATA_OUTPUT_PATH", "/opt/spark/work-dir")
 
     # --- Account Details ---
     accounts = []
@@ -70,4 +71,15 @@ def generate_sample_data(num_payments=1000, num_accounts=200):
     print("\nSample data generation complete.")
 
 if __name__ == "__main__":
+    """
+    Main entry point for the Spark job.
+    Initializes a SparkSession, runs the data generation, and then stops the session.
+    """
+    spark = SparkSession.builder.appName("GenerateSampleData").getOrCreate()
+
+    print("🎉 SparkSession created. Starting data generation...")
+
     generate_sample_data()
+
+    print("🛑 Stopping SparkSession.")
+    spark.stop()
