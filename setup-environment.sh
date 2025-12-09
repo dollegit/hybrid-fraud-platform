@@ -388,6 +388,11 @@ kubectl exec -n airflow deploy/airflow-scheduler -- bash -c "
 " || true
 
 # =============================================================================
+# Create spark pvc for data generation
+# =============================================================================
+kubectl apply -f 1-kubernetes-manifests/05-spark/spark-pvc.yaml
+
+# =============================================================================
 # CONFIGURE MINIO CLIENT AND CREATE BUCKETS
 # =============================================================================
 echo ">>> Configuring MinIO client and creating buckets..."
@@ -437,11 +442,6 @@ for bucket in bronze silver datalake; do
 done
 
 echo ">>> MinIO configuration complete."
-
-# =============================================================================
-# Create spark pvc for data generation
-# =============================================================================
-kubectl apply -f 1-kubernetes-manifests/05-spark/spark-pvc.yaml
 
 # =============================================================================
 # SUCCESS

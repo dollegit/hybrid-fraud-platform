@@ -2,6 +2,7 @@ import pandas as pd
 import random
 from datetime import datetime, timedelta
 import os
+from pyspark.sql import SparkSession
 
 def generate_sample_data(num_payments=1000, num_accounts=200):
     """Generates and saves four sample CSV files for the consolidation task."""
@@ -69,8 +70,8 @@ def generate_sample_data(num_payments=1000, num_accounts=200):
     print(f"Generated {len(fraud_cases_df)} fraud cases -> historical_fraud_cases.csv")
 
     print("\nSample data generation complete.")
-
-if __name__ == "__main__":
+    
+def main():
     """
     Main entry point for the Spark job.
     Initializes a SparkSession, runs the data generation, and then stops the session.
@@ -83,3 +84,6 @@ if __name__ == "__main__":
 
     print("🛑 Stopping SparkSession.")
     spark.stop()
+
+if __name__ == "__main__":
+    main()
