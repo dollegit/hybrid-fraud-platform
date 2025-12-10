@@ -8,5 +8,7 @@ with source as (
 
 select
     payment_id,
-    is_fraud as is_fraud_flag
+    true as is_fraud_flag, -- If a record exists in the source, it is a confirmed fraud case.
+    fraud_type,
+    fraud_reported_date
 from source
