@@ -77,7 +77,7 @@ with DAG(
     dbt_seed = BashOperator(
         task_id="dbt_seed_models",
         bash_command=f"""
-        dbt seed --project-dir {DBT_PROJECT_PATH} --profiles-dir {DBT_PROJECT_PATH} --target prod
+        /home/airflow/.local/bin/dbt seed --project-dir {DBT_PROJECT_PATH} --profiles-dir {DBT_PROJECT_PATH} --target prod
         """,
         env=DBT_ENV_VARS,
     )
