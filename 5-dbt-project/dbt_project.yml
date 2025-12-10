@@ -34,7 +34,7 @@ models:
     mart:
       # Mart models perform light transformations on raw data.
       # Materializing as views is fast and avoids storing duplicate data.
-      +materialized: view
+      +materialized: table
       # All mart models will be built in the 'mart' schema.
       +schema: mart
 # Add top-level flags for dbt commands
