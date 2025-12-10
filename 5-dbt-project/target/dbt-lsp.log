@@ -1728,3 +1728,22 @@ Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` t
 Schemas should be fetched during pre-compile (Downloading Schemas).
 Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
 15:26:14.568964 [info ]: Cached model count updated: 5 models (accurate)
+15:33:37.507042 [info ]: Cached model count updated: 5 models (estimate)
+15:33:37.563351 [info ]: Cached model count updated: 5 models (accurate)
+15:33:37.563995 [debug]: Incremental compilation - 4 nodes selected: {"model.fraud_detection_dbt.stg_risk_feed", "model.fraud_detection_dbt.unified_payment_intelligence", "snapshot.fraud_detection_dbt.account_risk_snapshot", "source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed"}
+15:33:37.570543 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+15:33:38.095307 [info ]: Cached model count updated: 5 models (estimate)
+15:33:38.152886 [info ]: Cached model count updated: 5 models (accurate)
+15:33:38.153200 [debug]: Incremental compilation - 4 nodes selected: {"model.fraud_detection_dbt.stg_risk_feed", "model.fraud_detection_dbt.unified_payment_intelligence", "snapshot.fraud_detection_dbt.account_risk_snapshot", "source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed"}
+15:33:38.156972 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+15:33:38.481129 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed' (Expected at db/schemas/airflow/public/raw_risk_feed).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+15:33:38.481727 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_payments' (Expected at db/schemas/airflow/dev_psalmprax_staging/stg_payments).
+Hint: run `db run` to build upstreams.
+15:33:38.481779 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_accounts' (Expected at db/schemas/airflow/dev_psalmprax_staging/stg_accounts).
+Hint: run `db run` to build upstreams.
+15:33:38.481811 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_fraud_cases' (Expected at db/schemas/airflow/dev_psalmprax_staging/stg_fraud_cases).
+Hint: run `db run` to build upstreams.
+15:33:38.494635 [info ]: Cached model count updated: 5 models (accurate)
