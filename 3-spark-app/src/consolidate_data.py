@@ -51,8 +51,8 @@ def main():
     files_to_tables = {
         "payment_transactions.csv": "raw_payments",
         "account_details.csv": "raw_accounts",
-        "external_risk_feed.csv": "raw_risk_feed",
-        "historical_fraud_cases.csv": "raw_fraud_cases"
+        "risk_feed.csv": "raw_risk_feed",
+        "fraud_cases.csv": "raw_fraud_cases"
     }
 
     for source_file, table_name in files_to_tables.items():
