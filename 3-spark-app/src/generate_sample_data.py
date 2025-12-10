@@ -74,19 +74,17 @@ def generate_sample_data(num_payments=1000, num_accounts=200):
 
     print("\nSample data generation complete.")
     
-def main():
+if __name__ == "__main__":
     """
-    Main entry point for the Spark job.
-    Initializes a SparkSession, runs the data generation, and then stops the session.
+    This entry point is for local execution and testing.
+    When run via Spark submit, the script body is executed directly.
     """
     spark = SparkSession.builder.appName("GenerateSampleData").getOrCreate()
-
-    print("🎉 SparkSession created. Starting data generation...")
-
+    print("🎉 SparkSession created for local run. Starting data generation...")
     generate_sample_data()
-
-    print("🛑 Stopping SparkSession.")
+    print("🛑 Stopping SparkSession for local run.")
     spark.stop()
-
-if __name__ == "__main__":
-    main()
+else:
+    # This block runs when the script is executed by a Spark cluster
+    print("🚀 Script is running in a Spark environment. Generating data...")
+    generate_sample_data()
