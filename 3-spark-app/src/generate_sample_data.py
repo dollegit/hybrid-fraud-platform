@@ -49,12 +49,13 @@ def generate_sample_data(num_payments=1000, num_accounts=200):
     for acc_id in accounts_with_risk_score:
         risk_feed.append({
             'account_id': acc_id,
-            'risk_score': random.randint(50, 100) # Assign a higher risk score
+            'risk_score': random.randint(50, 100)  # Assign a higher risk score
         })
     risk_feed_df = pd.DataFrame(risk_feed)
-    output_path = os.path.join(output_dir, 'external_risk_feed.csv')
+    # The consolidation script expects 'risk_feed.csv'
+    output_path = os.path.join(output_dir, 'risk_feed.csv')
     risk_feed_df.to_csv(output_path, index=False)
-    print(f"Generated {len(risk_feed_df)} risk entries -> external_risk_feed.csv")
+    print(f"Generated {len(risk_feed_df)} risk entries -> risk_feed.csv")
 
     # --- Historical Fraud Cases ---
     fraudulent_payments = random.sample(payments_df['payment_id'].tolist(), k=int(num_payments * 0.05))
@@ -62,13 +63,14 @@ def generate_sample_data(num_payments=1000, num_accounts=200):
     for pay_id in fraudulent_payments:
         fraud_cases.append({
             'payment_id': pay_id,
+            'is_fraud': True,  # Add the missing is_fraud column
             'fraud_type': random.choice(['Money Mule', 'APP Fraud', 'Identity Theft']),
             'fraud_reported_date': (datetime.now() - timedelta(days=random.randint(30, 90))).strftime('%Y-%m-%d')
         })
     fraud_cases_df = pd.DataFrame(fraud_cases)
-    output_path = os.path.join(output_dir, 'historical_fraud_cases.csv')
+    output_path = os.path.join(output_dir, 'fraud_cases.csv')
     fraud_cases_df.to_csv(output_path, index=False)
-    print(f"Generated {len(fraud_cases_df)} fraud cases -> historical_fraud_cases.csv")
+    print(f"Generated {len(fraud_cases_df)} fraud cases -> fraud_cases.csv")
 
     print("\nSample data generation complete.")
     
