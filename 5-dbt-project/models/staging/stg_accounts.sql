@@ -1,14 +1,11 @@
 -- models/staging/stg_accounts.sql
 
-with source as (
-    select * from raw_accounts
-),
+-- This model cleans and standardizes the raw account data.
+-- It selects from the raw_accounts source and can be used for basic transformations.
 
-renamed_and_casted as (
-    select
-        "account_id"::varchar as account_id,
-        "opening_date"::date as opening_date
-    from source
-)
-
-select * from renamed_and_casted
+select
+    account_id,
+    account_holder_name,
+    opening_date as account_opening_date,
+    processing_ts
+from {{ source('on_prem_raw_data', 'raw_accounts') }}
