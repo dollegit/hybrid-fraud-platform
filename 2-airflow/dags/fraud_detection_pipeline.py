@@ -123,7 +123,8 @@ with DAG(
         --project-dir {DBT_PROJECT_PATH} \
         --profiles-dir {DBT_PROJECT_PATH} \
         --target prod \
-        --target-path {DBT_TARGET_PATH}
+        --target-path {DBT_TARGET_PATH} \
+        --select models
         """,
         env={**DBT_ENV_VARS, **extra_env},
     )
