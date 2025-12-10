@@ -7,7 +7,7 @@ with source as (
 renamed_and_casted as (
     select
         "account_id"::varchar as account_id,
-        "risk_flag"::integer as risk_flag
+        ("risk_flag"::integer = 1)::boolean as risk_flag
     from source
 )
 

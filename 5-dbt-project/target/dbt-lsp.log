@@ -1433,3 +1433,51 @@ Hint: run `db run` to build upstreams.
 10:32:51.172036 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_fraud_cases' (Expected at db/schemas/airflow/dev_psalmprax_staging/stg_fraud_cases).
 Hint: run `db run` to build upstreams.
 10:32:51.181271 [info ]: Cached model count updated: 5 models (accurate)
+==================== 2025-12-10 11:24:28.532017 | 88f87bdd-776f-4615-b45f-f51742a88a47 ====================
+11:24:28.536245 [info ]: Starting dbt LSP server
+11:24:28.536273 [info ]: Connecting to LSP client on port 8000
+11:24:28.537732 [info ]: Successfully connected to LSP client
+11:24:28.537799 [info ]: Creating LSP service...
+11:24:28.753556 [info ]: Creating LSP server...
+11:24:28.753646 [info ]: Starting LSP server...
+11:24:29.366590 [info ]: Cached model count updated: 5 models (estimate)
+11:24:29.542872 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+11:24:29.545820 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:25:9
+11:24:29.548722 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+11:24:29.549066 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:33:9
+11:24:29.549357 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+11:24:29.549623 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:18:9
+11:24:29.549767 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:21:9
+11:24:29.550561 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+11:24:29.551557 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:29:9
+11:24:29.644963 [info ]: Cached model count updated: 5 models (accurate)
+11:24:29.752730 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+11:24:30.159921 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_accounts' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_accounts' (Expected at db/schemas/airflow/public/raw_accounts).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+11:24:30.164162 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+11:24:30.204385 [info ]: Cached model count updated: 5 models (accurate)
+11:27:45.151870 [info ]: Cached model count updated: 5 models (estimate)
+11:27:45.271340 [info ]: Cached model count updated: 5 models (accurate)
+11:27:45.272381 [debug]: Incremental compilation - 3 nodes selected: {"model.fraud_detection_dbt.stg_risk_feed", "model.fraud_detection_dbt.unified_payment_intelligence", "snapshot.fraud_detection_dbt.account_risk_snapshot"}
+11:27:45.289559 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+11:27:45.644831 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_fraud_cases' (Expected at db/schemas/airflow/dev_psalmprax_staging/stg_fraud_cases).
+Hint: run `db run` to build upstreams.
+11:27:45.645155 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_accounts' (Expected at db/schemas/airflow/dev_psalmprax_staging/stg_accounts).
+Hint: run `db run` to build upstreams.
+11:27:45.645191 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_payments' (Expected at db/schemas/airflow/dev_psalmprax_staging/stg_payments).
+Hint: run `db run` to build upstreams.
+11:27:45.660116 [info ]: Cached model count updated: 5 models (accurate)
