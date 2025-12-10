@@ -164,7 +164,7 @@ with DAG(
         >> consolidate_data_to_staging
         >> dbt_seed
         >> dbt_run_staging
-        >> dbt_run_marts
         >> dbt_snapshot
+        >> dbt_run_marts
         >> dbt_test
     )
