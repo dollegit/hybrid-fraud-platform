@@ -31,11 +31,11 @@ def generate_sample_data(num_payments=1000, num_accounts=200):
         src, dest = random.sample(account_ids, 2)
         payments.append({
             'payment_id': f'pay_{50000 + i}',
-            'src_account_id': src,
-            'dest_account_id': dest,
+            'source_account_id': src,
+            'destination_account_id': dest,
             'payment_reference': f'ref_{random.randint(10000, 99999)}',
             'amount': round(random.uniform(1.0, 5000.0), 2),
-            'timestamp': (datetime.now() - timedelta(minutes=random.randint(1, 100000))).isoformat()
+            'payment_timestamp': (datetime.now() - timedelta(minutes=random.randint(1, 100000))).isoformat()
         })
     payments_df = pd.DataFrame(payments)
     output_path = os.path.join(output_dir, 'payment_transactions.csv')
