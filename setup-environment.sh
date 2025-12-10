@@ -171,6 +171,8 @@ info "4. PostgreSQL..."
 helm repo add bitnami https://charts.bitnami.com/bitnami || true
 helm repo update
 helm upgrade --install "${PG_RELEASE}" bitnami/postgresql -n "${NAMESPACE}" \
+  --set image.repository=bitnami/postgresql \
+  --set image.tag=16.4.0-debian-12-r0 \
   --set auth.username=airflow --set auth.password=airflow \
   --set auth.postgresPassword=postgres --set auth.database=airflow \
   --set primary.persistence.enabled=true --set primary.persistence.size=8Gi \
