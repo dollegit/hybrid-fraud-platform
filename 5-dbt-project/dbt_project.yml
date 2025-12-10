@@ -39,6 +39,12 @@ models:
       +materialized: table
       # All mart models will be built in the 'mart' schema.
       +schema: mart
+
+# Configuring snapshots
+snapshots:
+  fraud_detection_dbt:
+    +target_schema: snapshots
+
 # Add top-level flags for dbt commands
 flags:
   debug: true
