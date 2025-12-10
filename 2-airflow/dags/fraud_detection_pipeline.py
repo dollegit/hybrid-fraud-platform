@@ -19,12 +19,21 @@ DBT_PROJECT_PATH = PROJECT_ROOT / "5-dbt-project"
 # Common environment variables for all dbt tasks.
 # We pass the database credentials via environment variables, which dbt's `profiles.yml`
 # is configured to use. This is more secure than hardcoding them.
+# DBT_ENV_VARS = {
+#     "DB_HOSTNAME": "{{ conn.postgres_default.host }}",
+#     "DB_USER": "{{ conn.postgres_default.login }}",
+#     "DB_PASSWORD": "{{ conn.postgres_default.password }}",
+#     "DB_NAME": "{{ conn.postgres_default.schema }}",
+# }
 DBT_ENV_VARS = {
-    "DB_HOSTNAME": "{{ conn.postgres_default.host }}",
-    "DB_USER": "{{ conn.postgres_default.login }}",
-    "DB_PASSWORD": "{{ conn.postgres_default.password }}",
-    "DB_NAME": "{{ conn.postgres_default.schema }}",
+    "DB_HOSTNAME": "airflow-postgresql.airflow.svc.cluster.local",
+    "DB_USER": "airflow",
+    "DB_PASSWORD": "airflow",
+    "DB_NAME": "airflow",
+    # optionally:
+    "PGPASSWORD": "airflow"
 }
+
 
 # =============================================================================
 # DAG DEFINITION
