@@ -34,3 +34,14 @@ models:
           - not_null
       - name: risk_score
         description: "The risk score associated with the account at a point in time."
+
+  - name: stg_fraud_cases
+    description: "This model cleans and standardizes the raw fraud case data."
+    columns:
+      - name: payment_id
+        description: "The unique identifier for the payment associated with the fraud case."
+        tests:
+          - unique
+          - not_null
+      - name: is_fraud_flag
+        description: "A boolean flag indicating if the payment was determined to be fraudulent."
