@@ -95,6 +95,19 @@ with DAG(
         env={**DBT_ENV_VARS, **extra_env},
     )
 
+    dbt_snapshot = BashOperator(
+        task_id="dbt_snapshot",
+        bash_command=f"""
+        mkdir -p {DBT_TARGET_PATH} {DBT_LOG_PATH}
+        /home/airflow/.local/bin/dbt snapshot \
+        --project-dir {DBT_PROJECT_PATH} \
+        --profiles-dir {DBT_PROJECT_PATH} \
+        --target prod \
+        --target-path {DBT_TARGET_PATH}
+        """,
+        env={**DBT_ENV_VARS, **extra_env},
+    )
+
     
     dbt_run = BashOperator(
         task_id="dbt_run_models",
@@ -136,6 +149,7 @@ with DAG(
         generate_sample_data
         >> consolidate_data_to_staging
         >> dbt_seed
+        >> dbt_snapshot
         >> dbt_run
         >> dbt_test
     )
