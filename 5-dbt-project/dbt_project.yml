@@ -25,10 +25,18 @@ clean-targets:         # directories to be removed by `dbt clean`
 # Configuring models
 models:
   fraud_detection_dbt:
-    +materialized: table
-    example:
+    staging:
+      # Staging models perform light transformations on raw data.
+      # Materializing as views is fast and avoids storing duplicate data.
+      +materialized: table
+      # All staging models will be built in the 'staging' schema.
+      +schema: staging
+    mart:
+      # Mart models perform light transformations on raw data.
+      # Materializing as views is fast and avoids storing duplicate data.
       +materialized: view
-
+      # All mart models will be built in the 'mart' schema.
+      +schema: mart
 # Add top-level flags for dbt commands
 flags:
   debug: true
