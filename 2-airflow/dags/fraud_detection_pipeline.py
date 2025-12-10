@@ -74,6 +74,14 @@ with DAG(
     # Task 3: Run dbt models to transform the staged data
     # We use a BashOperator to run dbt. This assumes `dbt` is installed in the
     # Airflow worker's container image.
+    dbt_seed = BashOperator(
+        task_id="dbt_seed_models",
+        bash_command=f"""
+        dbt seed --project-dir {DBT_PROJECT_PATH} --profiles-dir {DBT_PROJECT_PATH} --target prod
+        """,
+        env=DBT_ENV_VARS,
+    )
+    
     dbt_run = BashOperator(
         task_id="dbt_run_models",
         bash_command=f"""
@@ -98,6 +106,7 @@ with DAG(
     (
         generate_sample_data
         >> consolidate_data_to_staging
+        >> dbt_seed
         >> dbt_run
         >> dbt_test
     )
