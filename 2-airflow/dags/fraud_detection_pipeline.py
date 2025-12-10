@@ -68,6 +68,7 @@ with DAG(
     dbt_run = BashOperator(
         task_id="dbt_run_models",
         bash_command=f"""
+        env;  # dump all env vars
         /home/airflow/.local/bin/dbt run --project-dir {DBT_PROJECT_PATH} --profiles-dir {DBT_PROJECT_PATH} --target prod
         """,
         env=DBT_ENV_VARS,
@@ -77,6 +78,7 @@ with DAG(
     dbt_test = BashOperator(
         task_id="dbt_test_models",
         bash_command=f"""
+        env;  # dump all env vars
         /home/airflow/.local/bin/dbt test --project-dir {DBT_PROJECT_PATH} --profiles-dir {DBT_PROJECT_PATH} --target prod
         """,
         env=DBT_ENV_VARS,
