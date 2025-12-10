@@ -1384,3 +1384,52 @@ Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` t
 Schemas should be fetched during pre-compile (Downloading Schemas).
 Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
 09:53:30.682205 [info ]: Cached model count updated: 5 models (accurate)
+10:30:28.756045 [info ]: Cached model count updated: 5 models (estimate)
+10:30:28.811984 [info ]: Cached model count updated: 5 models (accurate)
+10:30:28.812590 [debug]: Incremental compilation - 3 nodes selected: {"model.fraud_detection_dbt.stg_payments", "model.fraud_detection_dbt.unified_payment_intelligence", "source.fraud_detection_dbt.on_prem_raw_data.raw_payments"}
+10:30:28.827319 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+10:30:29.195471 [info ]: Cached model count updated: 5 models (estimate)
+10:30:29.261415 [info ]: Cached model count updated: 5 models (accurate)
+10:30:29.261902 [debug]: Incremental compilation - 3 nodes selected: {"model.fraud_detection_dbt.stg_payments", "model.fraud_detection_dbt.unified_payment_intelligence", "source.fraud_detection_dbt.on_prem_raw_data.raw_payments"}
+10:30:29.265853 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+10:30:29.554049 [error]: dbt1053: Missing schema for 'snapshot.fraud_detection_dbt.account_risk_snapshot' (Expected at db/schemas/airflow/snapshots/account_risk_snapshot).
+Hint: run `db snapshot` or `db run` to  build upstreams.
+10:30:29.554135 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+10:30:29.554205 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_fraud_cases' (Expected at db/schemas/airflow/dev_psalmprax_staging/stg_fraud_cases).
+Hint: run `db run` to build upstreams.
+10:30:29.554240 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_accounts' (Expected at db/schemas/airflow/dev_psalmprax_staging/stg_accounts).
+Hint: run `db run` to build upstreams.
+10:30:29.559993 [info ]: Cached model count updated: 5 models (accurate)
+10:31:03.557944 [info ]: Cached model count updated: 5 models (estimate)
+10:31:03.585877 [info ]: Cached model count updated: 5 models (accurate)
+10:31:03.586252 [debug]: Incremental compilation - 3 nodes selected: {"model.fraud_detection_dbt.stg_payments", "model.fraud_detection_dbt.unified_payment_intelligence", "source.fraud_detection_dbt.on_prem_raw_data.raw_payments"}
+10:31:03.588453 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+10:31:03.858333 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+10:31:03.858571 [error]: dbt1053: Missing schema for 'snapshot.fraud_detection_dbt.account_risk_snapshot' (Expected at db/schemas/airflow/snapshots/account_risk_snapshot).
+Hint: run `db snapshot` or `db run` to  build upstreams.
+10:31:03.859023 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_accounts' (Expected at db/schemas/airflow/dev_psalmprax_staging/stg_accounts).
+Hint: run `db run` to build upstreams.
+10:31:03.859119 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_fraud_cases' (Expected at db/schemas/airflow/dev_psalmprax_staging/stg_fraud_cases).
+Hint: run `db run` to build upstreams.
+10:31:03.866121 [info ]: Cached model count updated: 5 models (accurate)
+10:32:50.723793 [info ]: Cached model count updated: 5 models (estimate)
+10:32:50.764623 [info ]: Cached model count updated: 5 models (accurate)
+10:32:50.765180 [debug]: Incremental compilation - 3 nodes selected: {"model.fraud_detection_dbt.stg_accounts", "model.fraud_detection_dbt.unified_payment_intelligence", "source.fraud_detection_dbt.on_prem_raw_data.raw_accounts"}
+10:32:50.769827 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+10:32:51.171322 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_accounts' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_accounts' (Expected at db/schemas/airflow/public/raw_accounts).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+10:32:51.171600 [error]: dbt1053: Missing schema for 'snapshot.fraud_detection_dbt.account_risk_snapshot' (Expected at db/schemas/airflow/snapshots/account_risk_snapshot).
+Hint: run `db snapshot` or `db run` to  build upstreams.
+10:32:51.171687 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_payments' (Expected at db/schemas/airflow/dev_psalmprax_staging/stg_payments).
+Hint: run `db run` to build upstreams.
+10:32:51.172036 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_fraud_cases' (Expected at db/schemas/airflow/dev_psalmprax_staging/stg_fraud_cases).
+Hint: run `db run` to build upstreams.
+10:32:51.181271 [info ]: Cached model count updated: 5 models (accurate)

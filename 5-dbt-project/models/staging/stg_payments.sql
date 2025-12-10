@@ -8,10 +8,10 @@ with source as (
 renamed_and_casted as (
     select
         "payment_id"::varchar as payment_id,
-        "source_account_id"::varchar as source_account_id,
-        "destination_account_id"::varchar as destination_account_id,
+        "src_account_id"::varchar as source_account_id,
+        "dest_account_id"::varchar as destination_account_id,
         "amount"::numeric(18, 2) as amount,
-        "payment_timestamp"::timestamp as payment_timestamp
+        "timestamp"::timestamp as payment_timestamp
     from source
 )
 

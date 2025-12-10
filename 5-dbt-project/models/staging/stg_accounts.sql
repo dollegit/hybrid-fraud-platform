@@ -5,7 +5,7 @@
 
 select
     account_id,
-    account_holder_name,
-    opening_date as account_opening_date,
-    processing_ts
+    -- account_holder_name,
+    opening_date as account_opening_date
+    -- processing_ts
 from {{ source('on_prem_raw_data', 'raw_accounts') }}
