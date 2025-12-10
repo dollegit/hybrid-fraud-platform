@@ -6,16 +6,18 @@
       unique_key='account_id',
       strategy='check',
       check_cols=['risk_flag'],
-      invalidate_hard_deletes=True,
+      invalidate_hard_deletes=True
     )
 }}
 
--- This selects the data that we want to track for historical changes.
--- When you run `dbt snapshot`, dbt will compare the current state of this
--- query's result with the existing records in the snapshot table.
--- If the `risk_flag` for an `account_id` has changed, it will expire the old
--- record (setting `dbt_valid_to`) and insert a new one.
+-- The `check` strategy in snapshots computes an MD5 hash of the `check_cols`
+-- to determine if a row has changed. PostgreSQL's `md5()` function does not
+-- support boolean types directly, so we must cast the `risk_flag` to text
+-- for the hash comparison to work.
 
-select * from {{ ref('stg_risk_feed') }}
+select
+    account_id,
+    risk_flag::text as risk_flag -- Cast boolean to text for MD5 hashing
+from {{ ref('stg_risk_feed') }}
 
 {% endsnapshot %}
