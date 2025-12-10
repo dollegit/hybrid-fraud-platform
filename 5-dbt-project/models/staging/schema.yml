@@ -11,6 +11,16 @@ models:
           - not_null
       - name: source_account_id
         description: "The account from which the payment was made."
+      - name: destination_account_id
+        description: "The account to which the payment was sent."
+      - name: payment_reference
+        description: "A reference string for the payment, provided by the payment system."
+      - name: amount
+        description: "The amount of the payment."
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+              config: {severity: warn}
       - name: payment_timestamp
         description: "The timestamp when the payment event occurred."
 
