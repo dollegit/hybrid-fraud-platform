@@ -28,3 +28,7 @@ models:
     +materialized: table
     example:
       +materialized: view
+
+# Add top-level flags for dbt commands
+flags:
+  debug: true
