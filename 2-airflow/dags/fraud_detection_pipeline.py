@@ -34,6 +34,14 @@ DBT_ENV_VARS = {
     "PGPASSWORD": "airflow"
 }
 
+DBT_TARGET_PATH = "/tmp/dbt-target"
+DBT_LOG_PATH = "/tmp/dbt-logs"
+
+extra_env = {
+    "DBT_LOG_FORMAT": "text",
+    "DBT_LOG_LEVEL": "debug",
+    "DBT_LOG_PATH": DBT_LOG_PATH,
+}
 
 # =============================================================================
 # DAG DEFINITION
@@ -77,29 +85,50 @@ with DAG(
     dbt_seed = BashOperator(
         task_id="dbt_seed_models",
         bash_command=f"""
-        /home/airflow/.local/bin/dbt seed --project-dir {DBT_PROJECT_PATH} --profiles-dir {DBT_PROJECT_PATH} --target prod
+        mkdir -p {DBT_TARGET_PATH} {DBT_LOG_PATH}
+        /home/airflow/.local/bin/dbt seed \
+        --project-dir {DBT_PROJECT_PATH} \
+        --profiles-dir {DBT_PROJECT_PATH} \
+        --target prod \
+        --target-path {DBT_TARGET_PATH}
         """,
-        env=DBT_ENV_VARS,
+        env={**DBT_ENV_VARS, **extra_env},
     )
+
     
     dbt_run = BashOperator(
         task_id="dbt_run_models",
         bash_command=f"""
-        env;  # dump all env vars
-        /home/airflow/.local/bin/dbt debug --project-dir {DBT_PROJECT_PATH} --profiles-dir {DBT_PROJECT_PATH} --target prod
-        /home/airflow/.local/bin/dbt run --project-dir {DBT_PROJECT_PATH} --profiles-dir {DBT_PROJECT_PATH} --target prod
+        env  # dump all env vars
+        mkdir -p {DBT_TARGET_PATH} {DBT_LOG_PATH}
+        /home/airflow/.local/bin/dbt debug \
+        --project-dir {DBT_PROJECT_PATH} \
+        --profiles-dir {DBT_PROJECT_PATH} \
+        --target prod \
+        --target-path {DBT_TARGET_PATH}
+        /home/airflow/.local/bin/dbt run \
+        --project-dir {DBT_PROJECT_PATH} \
+        --profiles-dir {DBT_PROJECT_PATH} \
+        --target prod \
+        --target-path {DBT_TARGET_PATH}
         """,
-        env=DBT_ENV_VARS,
+        env={**DBT_ENV_VARS, **extra_env},
     )
+
 
     # Task 4: Test the dbt models to ensure data quality
     dbt_test = BashOperator(
         task_id="dbt_test_models",
         bash_command=f"""
-        env;  # dump all env vars
-        /home/airflow/.local/bin/dbt test --project-dir {DBT_PROJECT_PATH} --profiles-dir {DBT_PROJECT_PATH} --target prod
+        env  # dump all env vars
+        mkdir -p {DBT_TARGET_PATH} {DBT_LOG_PATH}
+        /home/airflow/.local/bin/dbt test \
+        --project-dir {DBT_PROJECT_PATH} \
+        --profiles-dir {DBT_PROJECT_PATH} \
+        --target prod \
+        --target-path {DBT_TARGET_PATH}
         """,
-        env=DBT_ENV_VARS,
+        env={**DBT_ENV_VARS, **extra_env},
     )
 
     # Define the task dependencies
