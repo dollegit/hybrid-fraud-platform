@@ -13,3 +13,14 @@ models:
         description: "The account from which the payment was made."
       - name: payment_timestamp
         description: "The timestamp when the payment event occurred."
+
+  - name: stg_accounts
+    description: "This model cleans and standardizes the raw account data."
+    columns:
+      - name: account_id
+        description: "The unique identifier for the account."
+        tests:
+          - unique
+          - not_null
+      - name: opening_date
+        description: "The date the account was opened."
