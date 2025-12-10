@@ -24,3 +24,13 @@ models:
           - not_null
       - name: opening_date
         description: "The date the account was opened."
+
+  - name: stg_risk_feed
+    description: "This model cleans and standardizes the raw risk feed data."
+    columns:
+      - name: account_id
+        description: "The unique identifier for the account."
+        tests:
+          - not_null
+      - name: risk_score
+        description: "The risk score associated with the account at a point in time."

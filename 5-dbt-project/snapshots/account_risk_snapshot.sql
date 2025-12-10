@@ -5,14 +5,11 @@
       target_schema='snapshots',
       unique_key='account_id',
       strategy='check',
-      check_cols=['account_id','stg_risk_feed'],
-      invalidate_hard_deletes=True
+      check_cols=['risk_score'],
     )
 }}
 
-select
-    account_id,
-    stg_risk_feed
-from {{ ref('stg_risk_feed') }}
+-- Selects the data to be snapshotted
+select * from {{ ref('stg_risk_feed') }}
 
 {% endsnapshot %}
