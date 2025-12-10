@@ -65,7 +65,7 @@ joined_risk as (
         on ja.destination_account_id = dest_risk.account_id
         and ja.payment_timestamp >= dest_risk.dbt_valid_from
         and ja.payment_timestamp < coalesce(dest_risk.dbt_valid_to, '9999-12-31'::timestamp)
-),
+)
 
 -- Step 3: Final selection, cleaning, and transformation
 select
