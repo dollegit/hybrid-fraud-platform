@@ -26,7 +26,6 @@ sources:
 
       - name: raw_risk_feed
         description: "Risk scoring feed"
-        loaded_at_field: "processing_ts" # Inherits the default freshness
 
       - name: raw_fraud_cases
         description: "Fraud case history"
