@@ -69,6 +69,7 @@ with DAG(
         task_id="dbt_run_models",
         bash_command=f"""
         env;  # dump all env vars
+        /home/airflow/.local/bin/dbt debug --project-dir {DBT_PROJECT_PATH} --profiles-dir {DBT_PROJECT_PATH} --target prod
         /home/airflow/.local/bin/dbt run --project-dir {DBT_PROJECT_PATH} --profiles-dir {DBT_PROJECT_PATH} --target prod
         """,
         env=DBT_ENV_VARS,
