@@ -5,7 +5,7 @@
       target_schema='snapshots',
       unique_key='account_id',
       strategy='check',
-      check_cols=['risk_score'],
+      check_cols=['account_id','risk_flag_text'],
     )
 }}
 
