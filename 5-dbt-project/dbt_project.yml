@@ -33,12 +33,12 @@ models:
       +materialized: table
       # All staging models will be built in the 'staging' schema.
       +schema: staging
-    mart:
+    marts:
       # Mart models perform light transformations on raw data.
       # Materializing as views is fast and avoids storing duplicate data.
       +materialized: table
-      # All mart models will be built in the 'mart' schema.
-      +schema: mart
+      # All mart models will be built in the 'marts' schema.
+      +schema: marts
 
 # Configuring snapshots
 snapshots:
