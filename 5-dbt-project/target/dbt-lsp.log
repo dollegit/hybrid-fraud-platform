@@ -1886,3 +1886,36 @@ Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` t
 Schemas should be fetched during pre-compile (Downloading Schemas).
 Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
 15:54:20.608557 [info ]: Cached model count updated: 5 models (accurate)
+16:08:56.509001 [info ]: Cached model count updated: 5 models (estimate)
+16:08:56.555611 [info ]: Cached model count updated: 5 models (estimate)
+16:08:56.619410 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+16:08:56.620215 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:25:9
+16:08:56.621947 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+16:08:56.623196 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:32:9
+16:08:56.623742 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+16:08:56.624020 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:18:9
+16:08:56.624091 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:21:9
+16:08:56.624285 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+16:08:56.695437 [info ]: Cached model count updated: 5 models (accurate)
+16:08:56.701393 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+16:08:57.000290 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_accounts' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_accounts' (Expected at db/schemas/airflow/public/raw_accounts).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+16:08:57.000426 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+16:08:57.000574 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed' (Expected at db/schemas/airflow/public/raw_risk_feed).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+16:08:57.017539 [info ]: Cached model count updated: 5 models (accurate)
