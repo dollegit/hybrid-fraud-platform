@@ -43,12 +43,13 @@ def generate_sample_data(num_payments=1000, num_accounts=200):
     print(f"Generated {len(payments_df)} payments -> payment_transactions.csv")
 
     # --- External Risk Feed ---
-    risky_accounts = random.sample(account_ids, k=int(num_accounts * 0.15))
+    # Let's generate a risk score for a sample of accounts
+    accounts_with_risk_score = random.sample(account_ids, k=int(num_accounts * 0.20))
     risk_feed = []
-    for acc_id in risky_accounts:
+    for acc_id in accounts_with_risk_score:
         risk_feed.append({
             'account_id': acc_id,
-            'risk_flag': random.choice([1, 2]) # 1=suspicious, 2=confirmed
+            'risk_score': random.randint(50, 100) # Assign a higher risk score
         })
     risk_feed_df = pd.DataFrame(risk_feed)
     output_path = os.path.join(output_dir, 'external_risk_feed.csv')

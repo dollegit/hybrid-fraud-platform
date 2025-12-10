@@ -1,0 +1,1 @@
+{{ test_accepted_values(column_name="destination_risk_flag", model=get_where_subquery(ref('unified_payment_intelligence')), values=[true,false]) }}

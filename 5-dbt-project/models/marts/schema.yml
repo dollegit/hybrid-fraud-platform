@@ -35,3 +35,13 @@ models:
           - is_after:
               arguments:
                 other_column_name: source_opening_date
+      - name: source_risk_flag
+        description: "Boolean flag indicating if the source account was considered high risk at the time of the payment."
+        tests:
+          - not_null
+          - accepted_values: { values: [true, false] }
+      - name: destination_risk_flag
+        description: "Boolean flag indicating if the destination account was considered high risk at the time of the payment."
+        tests:
+          - not_null
+          - accepted_values: { values: [true, false] }
