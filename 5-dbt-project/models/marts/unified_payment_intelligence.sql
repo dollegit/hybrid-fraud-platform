@@ -76,8 +76,8 @@ select
     jr.payment_timestamp as timestamp,
     jr.source_opening_date,
     jr.destination_opening_date,
-    coalesce(jr.source_risk_flag, 0) as source_risk_flag, -- Default missing risk flags to 0
-    coalesce(jr.destination_risk_flag, 0) as destination_risk_flag, -- Default missing risk flags to 0
+    coalesce(jr.source_risk_flag, false) as source_risk_flag, -- Default missing risk flags to false
+    coalesce(jr.destination_risk_flag, false) as destination_risk_flag, -- Default missing risk flags to false
     (fc.fraud_type is not null) as is_fraud_flag, -- Create a boolean fraud flag
     fc.fraud_type,
     fc.fraud_reported_date
