@@ -109,7 +109,7 @@ with DAG(
     )
 
     
-    dbt_run = BashOperator(
+    dbt_run_staging = BashOperator(
         task_id="dbt_run_models",
         bash_command=f"""
         env  # dump all env vars
@@ -124,12 +124,25 @@ with DAG(
         --profiles-dir {DBT_PROJECT_PATH} \
         --target prod \
         --target-path {DBT_TARGET_PATH} \
-        --select models
+        --select path:models/staging
         """,
         env={**DBT_ENV_VARS, **extra_env},
     )
 
-
+    dbt_run_marts = BashOperator(
+        task_id="dbt_run_models",
+        bash_command=f"""
+        env  # dump all env vars
+        mkdir -p {DBT_TARGET_PATH} {DBT_LOG_PATH}
+        /home/airflow/.local/bin/dbt run \
+        --project-dir {DBT_PROJECT_PATH} \
+        --profiles-dir {DBT_PROJECT_PATH} \
+        --target prod \
+        --target-path {DBT_TARGET_PATH} \
+        --select path:models/marts
+        """,
+        env={**DBT_ENV_VARS, **extra_env},
+    )
     # Task 4: Test the dbt models to ensure data quality
     dbt_test = BashOperator(
         task_id="dbt_test_models",
@@ -150,7 +163,8 @@ with DAG(
         generate_sample_data
         >> consolidate_data_to_staging
         >> dbt_seed
-        >> dbt_run
+        >> dbt_run_staging
+        >> dbt_run_marts
         >> dbt_snapshot
         >> dbt_test
     )
