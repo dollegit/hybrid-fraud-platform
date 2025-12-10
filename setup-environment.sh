@@ -231,6 +231,13 @@ CONN="postgresql+psycopg2://airflow:airflow@${PG_RELEASE}.airflow.svc.cluster.lo
 kubectl create secret generic airflow-db-secret -n "${NAMESPACE}" \
   --from-literal=connection="${CONN}" --dry-run=client -o yaml | kubectl apply -f -
 
+
+kubectl create secret generic postgres-secret -n "${NAMESPACE}" \
+  --from-literal=hostname="postgresql+psycopg2://airflow:airflow@${PG_RELEASE}.airflow.svc.cluster.local:5432/airflow" \
+  --from-literal=username="airflow" \
+  --from-literal=password="airflow" \
+  --from-literal=dbname="airflow"
+
 # =============================================================================
 # 7. AIRFLOW DEPLOY
 # =============================================================================

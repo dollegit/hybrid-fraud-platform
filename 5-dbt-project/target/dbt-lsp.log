@@ -1115,3 +1115,36 @@ Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` t
 Schemas should be fetched during pre-compile (Downloading Schemas).
 Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
 13:36:03.693238 [info ]: Cached model count updated: 6 models (accurate)
+==================== 2025-12-09 23:39:21.489209 | 7637ceb6-e1cd-42de-981a-96ffe7da0b4a ====================
+23:39:21.499961 [info ]: Starting dbt LSP server
+23:39:21.500005 [info ]: Connecting to LSP client on port 8000
+23:39:21.508620 [info ]: Successfully connected to LSP client
+23:39:21.508766 [info ]: Creating LSP service...
+23:39:21.759308 [info ]: Creating LSP server...
+23:39:21.759361 [info ]: Starting LSP server...
+23:39:22.717209 [info ]: Cached model count updated: 6 models (estimate)
+23:39:22.855860 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+23:39:22.858010 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:25:9
+23:39:22.861893 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+23:39:22.862076 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:33:9
+23:39:22.862291 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+23:39:22.862442 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:18:9
+23:39:22.862499 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:21:9
+23:39:22.862671 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+23:39:22.863437 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:29:9
+23:39:22.942931 [info ]: Cached model count updated: 6 models (accurate)
+23:39:23.104789 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+23:39:23.671285 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+23:39:23.698712 [info ]: Cached model count updated: 6 models (accurate)
