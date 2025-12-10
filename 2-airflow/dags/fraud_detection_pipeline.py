@@ -110,7 +110,7 @@ with DAG(
 
     
     dbt_run_staging = BashOperator(
-        task_id="dbt_run_models",
+        task_id="dbt_run_staging",
         bash_command=f"""
         env  # dump all env vars
         mkdir -p {DBT_TARGET_PATH} {DBT_LOG_PATH}
@@ -130,7 +130,7 @@ with DAG(
     )
 
     dbt_run_marts = BashOperator(
-        task_id="dbt_run_models",
+        task_id="dbt_run_marts",
         bash_command=f"""
         env  # dump all env vars
         mkdir -p {DBT_TARGET_PATH} {DBT_LOG_PATH}
