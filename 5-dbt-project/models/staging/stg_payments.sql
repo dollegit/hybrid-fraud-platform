@@ -7,8 +7,8 @@ with source as (
 
 select
     payment_id,
-    src_account_id as source_account_id, -- Renaming for consistency
-    dest_account_id as destination_account_id, -- Renaming for consistency
+    source_account_id as source_account_id, -- Renaming for consistency
+    destination_account_id as destination_account_id, -- Renaming for consistency
     payment_reference,
     amount,
     timestamp as payment_timestamp -- Renaming for consistency
