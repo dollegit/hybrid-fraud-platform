@@ -2466,3 +2466,49 @@ Hint: run `db snapshot` or `db run` to  build upstreams.
 08:09:46.778764 [error]: dbt1053: Missing schema for 'model.fraud_detection_dbt.stg_accounts' (Expected at db/schemas/airflow/dev_psalmprax_staging/stg_accounts).
 Hint: run `db run` to build upstreams.
 08:09:46.789209 [info ]: Cached model count updated: 5 models (accurate)
+08:22:01.215548 [info ]: Cached model count updated: 5 models (estimate)
+08:22:01.428994 [info ]: Cached model count updated: 5 models (estimate)
+08:22:01.509099 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+08:22:01.510268 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:25:9
+08:22:01.511673 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+08:22:01.512556 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:33:9
+08:22:01.513659 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+08:22:01.514178 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:18:9
+08:22:01.514485 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:21:9
+08:22:01.515186 [error]: dbt1060: Ignored unexpected key `"freshness"`. YAML path: `freshness`.
+  --> models/sources.yml:10:5
+08:22:01.516800 [error]: dbt1060: Ignored unexpected key `"loaded_at_field"`. YAML path: `loaded_at_field`.
+  --> models/sources.yml:29:9
+08:22:01.569183 [error]: dbt0102: Deprecated test arguments: ["expression"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/staging/schema.yml:22:27
+08:22:01.590024 [error]: dbt0102: Deprecated test arguments: ["values"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:47:40
+08:22:01.600636 [error]: dbt0102: Deprecated test arguments: ["values"] at top-level detected. Please migrate to the new format under the 'arguments' field: https://docs.getdbt.com/reference/deprecations#missingargumentspropertyingenerictestdeprecation.
+  --> models/marts/schema.yml:42:40
+08:22:01.700427 [info ]: Cached model count updated: 5 models (accurate)
+08:22:01.704750 [warn ]: dbt1050: No metadata adapter found for adapter type postgres
+08:22:02.229476 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_accounts' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_accounts' (Expected at db/schemas/airflow/public/raw_accounts).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+08:22:02.229852 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_fraud_cases' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_fraud_cases' (Expected at db/schemas/airflow/public/raw_fraud_cases).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+08:22:02.230059 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_risk_feed' (Expected at db/schemas/airflow/public/raw_risk_feed).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+08:22:02.230456 [error]: dbt1053: Remote execution: failed to hydrate schema for source 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Missing schema for 'source.fraud_detection_dbt.on_prem_raw_data.raw_payments' (Expected at db/schemas/airflow/public/raw_payments).
+Hint: run `db seed` if seeds map to sources, or `db sample --persist local ..` to pull sample source data.).
+Schemas should be fetched during pre-compile (Downloading Schemas).
+Ensure remote connectivity/permissions or retry with '--static-analysis off' if appropriate.
+08:22:02.249811 [info ]: Cached model count updated: 5 models (accurate)
+08:22:21.070357 [info ]: Cached model count updated: 5 models (estimate)
