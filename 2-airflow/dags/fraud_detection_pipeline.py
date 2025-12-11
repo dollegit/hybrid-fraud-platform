@@ -173,8 +173,8 @@ with DAG(
     (
         generate_sample_data
         >> consolidate_data_to_staging
-        >> dbt_seed
         >> dbt_deps
+        >> dbt_seed
         >> dbt_run_staging
         >> dbt_snapshot
         >> dbt_run_marts
