@@ -36,6 +36,7 @@ DBT_ENV_VARS = {
 
 DBT_TARGET_PATH = "/tmp/dbt-target"
 DBT_LOG_PATH = "/tmp/dbt-logs"
+RUNTIME_PROJECT_PATH = "/tmp/dbt-project"
 
 extra_env = {
     "DBT_LOG_FORMAT": "text",
@@ -98,10 +99,12 @@ with DAG(
     dbt_deps = BashOperator(
         task_id="dbt_deps",
         bash_command=f"""
+        rm -rf {RUNTIME_PROJECT_PATH}
+        cp -R {DBT_PROJECT_PATH} {RUNTIME_PROJECT_PATH}
         mkdir -p {DBT_TARGET_PATH} {DBT_LOG_PATH}
         /home/airflow/.local/bin/dbt deps \
-        --project-dir {DBT_PROJECT_PATH} \
-        --profiles-dir {DBT_PROJECT_PATH}
+        --project-dir {RUNTIME_PROJECT_PATH} \
+        --profiles-dir {RUNTIME_PROJECT_PATH}
         """,
         env={**DBT_ENV_VARS, **extra_env},
     )
