@@ -427,16 +427,20 @@ if [ -z "$MC_COMMAND" ]; then
     exit 1
 fi
 
-# 1. Get MinIO service URL
-export MINIO_URL=$(minikube service minio -n storage --url)
-if [ -z "$MINIO_URL" ]; then
-    echo "❌ Could not get MinIO service URL. Please check if MinIO is running."
-    exit 1
+# 1. Get MinIO service URL for local access
+MINIO_LOCAL_URL=$(minikube service minio -n storage --url | head -n 1)
+if [ -z "$MINIO_LOCAL_URL" ]; then
+    warn "Could not get MinIO service URL for local access. This is okay for the script to continue, but you won't be able to connect from your machine with 'mcli'."
+    warn "This can happen if the service is not yet ready. You can try running 'minikube service minio -n storage --url' manually later."
+else
+    info "MinIO URL for local access: $MINIO_LOCAL_URL"
 fi
-info "MinIO URL found: $MINIO_URL"
+
+# The in-cluster URL is stable and should be used by services like Spark.
+MINIO_CLUSTER_URL="http://minio.storage.svc.cluster.local:9000"
 
 # 2. Configure MinIO Client (mc) alias
-$MC_COMMAND alias set myminio "$MINIO_URL" minio minio123 --api S3v4
+$MC_COMMAND alias set myminio "$MINIO_LOCAL_URL" minio minio123 --api S3v4
 
 # 3. Create 'bronze' and 'silver' buckets if they don't exist
 for bucket in bronze silver datalake; do
